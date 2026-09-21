@@ -1,0 +1,12 @@
+{
+  "app": {
+    "name": "Lærling Link"
+  },
+  "nav": {
+    "home": "Home",
+    "profile": "My profile",
+    "findApprenticeship": "Find apprenticeship",
+    "businessProfile": "Business profile",
+    "createPosition": "Create position"
+  }
+}

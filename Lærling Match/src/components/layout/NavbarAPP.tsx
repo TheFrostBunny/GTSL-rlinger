@@ -37,7 +37,7 @@ const collapsedWidth = 76;
 
 export default function NavbarAPP({
   appName = "Lærling Match",
-  logo = "/logo.png",
+  logo = "/logo.jpg",
   userName,
   userRole,
   profileImage,

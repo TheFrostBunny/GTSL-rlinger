@@ -1,0 +1,12 @@
+{
+  "app": {
+    "name": "Lærling Link"
+  },
+  "nav": {
+    "home": "Hjem",
+    "profile": "Min profil",
+    "findApprenticeship": "Finn lærlingplass",
+    "businessProfile": "Bedriftsprofil",
+    "createPosition": "Opprett stilling"
+  }
+}
