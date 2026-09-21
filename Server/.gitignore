@@ -1,0 +1,10 @@
+bin/*
+obj/*
+appsettings.*.json
+*.db
+
+*.db-wal
+*.db-shm
+
+*.pem
+*.p12
