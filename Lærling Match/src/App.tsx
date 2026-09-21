@@ -1,20 +1,25 @@
+import { Link, Route, Routes } from "react-router";
 
-import { useState } from 'react'
-
-function App() {
-
-
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
-    <div>
-      <h1>Hello, Vite + React!</h1>
-      <p>Count is {count}</p>
-      <button onClick={() => setCount(count + 1)}>Increment</button>
-    </div>
-    </>
-  )
+function Home() {
+  return <h1>Home</h1>;
 }
 
-export default App
+function About() {
+  return <h1>About</h1>;
+}
+
+export default function App() {
+  return (
+    <>
+      <nav>
+        <Link to="/">Home</Link>{" "}
+        <Link to="/about">About</Link>
+      </nav>
+
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+      </Routes>
+    </>
+  );
+}
