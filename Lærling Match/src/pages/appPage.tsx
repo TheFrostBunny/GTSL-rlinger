@@ -4,7 +4,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import BusinessIcon from "@mui/icons-material/Business";
 import AddBusinessIcon from "@mui/icons-material/AddBusiness";
 import { useTranslation } from "react-i18next";
-import NavbarAPP from "../components/layout/NavbarAPP";
+import NavbarAPP from "../components/layout/NavbarApp";
 
 const AppPage = () => {
   const { t } = useTranslation();
