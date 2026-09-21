@@ -1,25 +1,5 @@
-import { Link, Route, Routes } from "react-router";
-
-function Home() {
-  return <h1>Home</h1>;
-}
-
-function About() {
-  return <h1>About</h1>;
-}
+import AppRoutes from "./routes/AppRoutes";
 
 export default function App() {
-  return (
-    <>
-      <nav>
-        <Link to="/">Home</Link>{" "}
-        <Link to="/about">About</Link>
-      </nav>
-
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-      </Routes>
-    </>
-  );
+  return <AppRoutes />;
 }
