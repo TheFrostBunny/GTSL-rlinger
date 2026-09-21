@@ -8,3 +8,4 @@ appsettings.*.json
 
 *.pem
 *.p12
+appsettings.json
