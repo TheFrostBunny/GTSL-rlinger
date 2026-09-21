@@ -4,11 +4,8 @@ import AppBar from "@mui/material/AppBar";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
-import IconButton from "@mui/material/IconButton";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import Sidebar from "./Sidebar";
 
 type NavItem = {
@@ -19,7 +16,6 @@ type NavItem = {
 
 type NavbarAPPProps = {
   appName?: string;
-  logo?: string;
   userName: string;
   userRole: "Elev" | "Bedrift";
   profileImage?: string;
@@ -36,7 +32,7 @@ const roleColors = {
 } as const;
 
 export default function NavbarAPP({
-  appName = "Lærling Match",
+  appName = "Lærling Link",
   userName,
   userRole,
   profileImage,
@@ -62,48 +58,34 @@ export default function NavbarAPP({
         sx={{
           height: navbarHeight,
           flexShrink: 0,
-          backgroundColor: roleColor,
+          width: "100%",
+          backgroundColor: "#0f141b",
         }}
       >
         <Toolbar
           sx={{
             height: navbarHeight,
             minHeight: `${navbarHeight}px !important`,
-            justifyContent: "space-between",
+            justifyContent: "flex-end",
+            px: { xs: 2, md: 4 },
           }}
         >
-          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            <IconButton
-              onClick={() => setCollapsed((value) => !value)}
-              aria-label={collapsed ? "Vis sidebar" : "Skjul sidebar"}
-              sx={{ color: "#fff" }}
-            >
-              {collapsed ? <ChevronRightIcon /> : <ChevronLeftIcon />}
-            </IconButton>
-
-            <Typography
-              variant="h6"
-              sx={{ color: "#fff", fontWeight: 800 }}
-            >
-              {appName}
-            </Typography>
-          </Box>
-
-          <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+          <Box
+            sx={{ display: "flex", alignItems: "center", gap: 1.5, padding: 1 }}
+          >
             <Chip
               label={userRole}
-              variant="outlined"
               sx={{
-                color: "#fff",
-                borderColor: "#fff",
-                fontWeight: 600,
+                color: "#d9c5ff",
+                backgroundColor: `${roleColor}33`,
+                fontWeight: 700,
               }}
             />
 
             <Typography
               sx={{
                 display: { xs: "none", sm: "block" },
-                color: "#fff",
+                color: "#f5f7fa",
                 fontWeight: 600,
               }}
             >
@@ -116,7 +98,10 @@ export default function NavbarAPP({
               sx={{
                 width: 42,
                 height: 42,
-                border: "2px solid #fff",
+                color: "#dce5f2",
+                backgroundColor: "#202c3b",
+                border: "1px solid #334155",
+                fontWeight: 700,
               }}
             >
               {initials}
@@ -136,7 +121,10 @@ export default function NavbarAPP({
         <Sidebar
           collapsed={collapsed}
           navItems={navItems}
-          color={roleColor}
+          color="#161e28"
+          appName={appName}
+          logo="/TestLogo.svg"
+          onToggle={() => setCollapsed((value) => !value)}
         />
 
         <Box
@@ -145,8 +133,9 @@ export default function NavbarAPP({
             flex: 1,
             minWidth: 0,
             overflow: "auto",
-            p: 3,
-            backgroundColor: "#f8f9fa",
+            p: { xs: 2, md: 5 },
+            backgroundColor: "#0f141b",
+            color: "#f5f7fa",
           }}
         >
           {children}
