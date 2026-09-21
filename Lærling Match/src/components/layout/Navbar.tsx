@@ -13,9 +13,7 @@ import {
         position="absolute"
         elevation={0}
         sx={{
-          backgroundColor: "transparent",
-          color: "#ffffff",
-          zIndex: 10,
+          backgroundColor: "#ac85be",
         }}
       >
         <Container maxWidth="xl">
