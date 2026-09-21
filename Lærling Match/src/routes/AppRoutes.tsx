@@ -1,6 +1,6 @@
-import { Route, Routes } from "react-router-dom"
-import Home from "../pages/Home"
-import AppPage from "../pages/appPage"
+import { Route, Routes } from "react-router-dom";
+import Home from "../pages/Home";
+import AppPage from "../pages/appPage";
 
 export default function AppRoutes() {
   return (
@@ -8,5 +8,5 @@ export default function AppRoutes() {
       <Route path="/" element={<Home />} />
       <Route path="/app" element={<AppPage />} />
     </Routes>
-  )
+  );
 }

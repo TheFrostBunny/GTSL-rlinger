@@ -85,9 +85,9 @@ export default function AboutSection() {
               }}
             >
               LærlingMatch skal gjøre overgangen fra skole til arbeidsliv
-              enklere. Vi samler elever og lærebedrifter på én plattform,
-              slik at det blir lettere å finne relevante muligheter, vise
-              interesse og komme i kontakt med hverandre.
+              enklere. Vi samler elever og lærebedrifter på én plattform, slik
+              at det blir lettere å finne relevante muligheter, vise interesse
+              og komme i kontakt med hverandre.
             </Typography>
           </Box>
 
@@ -108,8 +108,7 @@ export default function AboutSection() {
 
               overflow: "hidden",
 
-              background:
-                "linear-gradient(135deg, #dff5ea 0%, #b9e8d2 100%)",
+              background: "linear-gradient(135deg, #dff5ea 0%, #b9e8d2 100%)",
             }}
           >
             <Box
