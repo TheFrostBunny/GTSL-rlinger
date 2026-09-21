@@ -2,7 +2,7 @@ import { createTheme } from "@mui/material/styles";
 
 export const theme = createTheme({
   palette: {
-    mode: "light",
+    mode: "dark",
 
     primary: {
       main: "#935CA6",
@@ -15,20 +15,20 @@ export const theme = createTheme({
       main: "#D9ACD8",
       light: "#E8CBE7",
       dark: "#935CA6",
-      contrastText: "#2E2E2E",
+      contrastText: "#FFFFFF",
     },
 
     background: {
-      default: "#ECEBEB",
-      paper: "#FFFFFF",
+      default: "#0f141b",
+      paper: "#18212d",
     },
 
     text: {
-      primary: "#2E2E2E",
-      secondary: "#935CA6",
+      primary: "#f5f7fa",
+      secondary: "#8fa1b8",
     },
 
-    divider: "#D9ACD8",
+    divider: "#273445",
   },
 
   typography: {
@@ -111,6 +111,23 @@ export const theme = createTheme({
       styleOverrides: {
         root: {
           backgroundColor: "#FFFFFF",
+        },
+      },
+    },
+
+    MuiCssBaseline: {
+      styleOverrides: {
+        html: {
+          backgroundColor: "#0f141b",
+        },
+        body: {
+          margin: 0,
+          minHeight: "100vh",
+          backgroundColor: "#0f141b",
+        },
+        "#root": {
+          minHeight: "100vh",
+          backgroundColor: "#0f141b",
         },
       },
     },
