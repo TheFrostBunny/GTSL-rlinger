@@ -1,11 +1,11 @@
 import Navbar from "../components/layout/Navbar";
-import Footer from "../components/layout/Footer";
+{/*import Footer from "../components/layout/Footer";*/}
 
-import HeroSection from "../components/home/"
-import AboutSection from "../components/home/"
-import GoalsSection from "../components/home/"
-import HowItWorksSection from "../components/home/"
-import CTASection from "../components/home/";
+import HeroSection from "../components/home/HeroSection";
+import AboutSection from "../components/home/AboutSection";
+import GoalsSection from "../components/home/GoalsSection"
+import HowItWorksSection from "../components/home/HowItWorksSection"
+import CTASection from "../components/home/CTASection";
 
 export default function Home() {
   return (
@@ -20,7 +20,7 @@ export default function Home() {
         <CTASection />
       </main>
 
-      <Footer />
+      {/*<Footer />*/}
     </>
   );
 }
