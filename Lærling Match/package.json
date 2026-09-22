@@ -8,7 +8,8 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "generate": "graphql-codegen && node ./tools/fix-graphql-generate.js"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -16,15 +17,31 @@
     "@mui/icons-material": "^9.4.0",
     "@mui/material": "^9.4.0",
     "@tailwindcss/vite": "^4.3.3",
+    "@urql/core": "~5.0.8",
+    "@urql/exchange-auth": "~2.2.0",
+    "@urql/exchange-graphcache": "~7.2.1",
+    "graphql": "^16.14.2",
+    "graphql-tag": "~2.12.6",
+    "graphql-ws": "~5.16.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-router": "^8.4.0",
     "react-router-dom": "^7.18.4",
-    "tailwindcss": "^4.3.3"
+    "tailwindcss": "^4.3.3",
+    "urql": "~4.2.1",
+    "vite": "^8.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.29.7",
     "@eslint/js": "^10.0.1",
+    "@graphql-codegen/cli": "^7.4.2",
+    "@graphql-codegen/introspection": "~4.0.3",
+    "@graphql-codegen/plugin-helpers": "~5.1.0",
+    "@graphql-codegen/typescript": "~4.1.2",
+    "@graphql-codegen/typescript-operations": "~4.4.0",
+    "@graphql-codegen/typescript-urql": "~4.0.0",
+    "@graphql-codegen/typescript-urql-graphcache": "~3.1.0",
+    "@graphql-codegen/urql-introspection": "~3.0.0",
     "@rolldown/plugin-babel": "^0.2.3",
     "@types/babel__core": "^7.20.5",
     "@types/node": "^24.13.3",
@@ -32,13 +49,13 @@
     "@types/react-dom": "^19.2.7",
     "@vitejs/plugin-react": "^6.1.1",
     "babel-plugin-react-compiler": "^1.0.0",
+    "dotenv": "~16.4.7",
     "eslint": "^10.10.0",
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.6",
     "globals": "^17.12.0",
     "prettier": "3.9.8",
     "typescript": "~6.0.2",
-    "typescript-eslint": "^8.69.0",
-    "vite": "^8.3.0"
+    "typescript-eslint": "^8.69.0"
   }
 }
