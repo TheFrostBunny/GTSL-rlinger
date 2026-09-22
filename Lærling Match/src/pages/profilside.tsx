@@ -15,6 +15,7 @@ import TextField from "@mui/material/TextField";
 import Tooltip from "@mui/material/Tooltip";
 import IconButton from "@mui/material/IconButton";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import { Chip, Stack } from "@mui/material";
 
 export default function Profile() {
   const { t } = useTranslation();
@@ -117,15 +118,45 @@ export default function Profile() {
                 .slice(0, 2)}
             </Avatar>
 
-            <Box>
-              <Typography
-                sx={{ color: "text.primary", fontWeight: 700, fontSize: 24 }}
-              >
-                {profile.name}
-              </Typography>
-              <Typography sx={{ color: "text.secondary" }}>
-                Elev
-              </Typography>
+            <Box
+              sx={{
+                width: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                gap: 2,
+              }}
+            >
+              <Box>
+                <Typography
+                  sx={{ color: "text.primary", fontWeight: 700, fontSize: 24 }}
+                >
+                  {profile.name}
+                </Typography>
+
+                <Typography sx={{ color: "text.secondary" }}>
+                  Elev
+                </Typography>
+              </Box>
+
+              {!editing && (
+                <Tooltip title="Endre profil">
+                  <IconButton
+                    aria-label="Endre profil"
+                    onClick={() => setEditing(true)}
+                    sx={{
+                      color: "primary.main",
+                      border: "1px solid",
+                      borderColor: "divider",
+                      "&:hover": {
+                        backgroundColor: "action.hover",
+                      },
+                    }}
+                  >
+                    <EditOutlinedIcon />
+                  </IconButton>
+                </Tooltip>
+              )}
             </Box>
 
             <Box sx={{ width: "100%" }}>
@@ -187,9 +218,10 @@ export default function Profile() {
             </Box>
 
             <Box sx={{ width: "100%" }}>
-              <Typography sx={{ color: "text.secondary", mb: 0.5 }}>
+              <Typography sx={{ color: "text.secondary", mb: 1 }}>
                 Interesser
               </Typography>
+
               {editing ? (
                 <TextField
                   fullWidth
@@ -198,11 +230,27 @@ export default function Profile() {
                   onChange={(event) =>
                     updateProfile("interests", event.target.value)
                   }
+                  helperText="Skill interessene med komma"
                 />
               ) : (
-                <Typography sx={{ color: "text.primary" }}>
-                  {profile.interests}
-                </Typography>
+                <Stack direction="row" spacing={1} useFlexGap sx={{ flexWrap: "wrap" }}>
+                  {profile.interests
+                    .split(",")
+                    .map((interest) => interest.trim())
+                    .filter(Boolean)
+                    .map((interest) => (
+                      <Chip
+                        key={interest}
+                        label={interest}
+                        sx={{
+                          color: "secondary.main",
+                          backgroundColor: "action.hover",
+                          border: "1px solid",
+                          borderColor: "divider",
+                        }}
+                      />
+                    ))}
+                </Stack>
               )}
             </Box>
 
@@ -242,22 +290,6 @@ export default function Profile() {
                   Avbryt
                 </Button>
               </Box>
-            )}
-
-            {!editing && (
-              <Tooltip title="Endre profil">
-                <IconButton
-                  aria-label="Endre profil"
-                  onClick={() => setEditing(true)}
-                  sx={{
-                    color: "primary.main",
-                    border: "1px solid",
-                    borderColor: "divider",
-                  }}
-                >
-                  <EditOutlinedIcon />
-                </IconButton>
-              </Tooltip>
             )}
           </Box>
         </Paper>
