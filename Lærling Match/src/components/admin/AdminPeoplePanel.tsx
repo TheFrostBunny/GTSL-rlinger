@@ -83,42 +83,21 @@ const AdminPeoplePanel = () => {
     >
       <Stack
         direction={{ xs: "column", sm: "row" }}
-        justifyContent="space-between"
-        alignItems={{ xs: "flex-start", sm: "center" }}
         spacing={2}
         mb={4}
+        sx={{
+          justifyContent: "space-between",
+          alignItems: { xs: "flex-start", sm: "center" },
+        }}
       >
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: { xs: "column", sm: "row" },
-            justifyContent: "space-between",
-            alignItems: { xs: "flex-start", sm: "center" },
-            gap: 2,
-            mb: 4,
-          }}
-        >
-          <Box>
-            <Typography
-              variant="h4"
-              sx={{ fontWeight: 800 }}
-            >
-              Personer
-            </Typography>
+        <Box>
+          <Typography variant="h4" sx={{ fontWeight: 800 }}>
+            Personer
+          </Typography>
 
-            <Typography sx={{ color: "#99a6c7", mt: 1 }}>
-              Legg til og administrer personer i bedriften.
-            </Typography>
-          </Box>
-
-          <Button
-            variant="contained"
-            startIcon={<AddIcon />}
-            onClick={() => setOpen(true)}
-            sx={{ borderRadius: 999, px: 3 }}
-          >
-            Legg til person
-          </Button>
+          <Typography sx={{ color: "#99a6c7", mt: 1 }}>
+            Legg til og administrer personer i bedriften.
+          </Typography>
         </Box>
 
         <Button

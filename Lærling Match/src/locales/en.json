@@ -10,7 +10,8 @@
     "history": "History",
     "businessProfile": "Business profile",
     "createPosition": "Create position",
-    "login": "Login"
+    "login": "Login",
+    "settings": "Settings"
   },
   "greeting": {
     "morning": "Good morning",
@@ -63,5 +64,20 @@
   "howItWorks": {
     "title": "How it works",
     "description": "Find out how our platform works."
+  },
+  "profile": {
+    "manageYourProfileInformation": "View and manage your profile information.",
+    "fieldOfStudy": "Field of study",
+    "aboutMe": "About me",
+    "interests": "Interests",
+    "addInterest": "Add interest",
+    "pressSpaceToAdd": "Press space to add",
+    "saveProfile": "Save profile",
+    "cancel": "Cancel",
+    "residence": "Residence",
+    "email": "Email",
+    "editProfile": "Edit profile",
+    "myProfile": "My profile",
+    "student": "Student"
   }
 }
