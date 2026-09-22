@@ -169,6 +169,24 @@ const history = [
 
 const PROFILE_STORAGE_KEY = "laerling-link-profile";
 const SETTINGS_STORAGE_KEY = "laerling-link-settings";
+const COMPANY_PROFILE_STORAGE_KEY = "laerling-link-company-profile";
+
+type PageName =
+  | "home"
+  | "browse"
+  | "applications"
+  | "history"
+  | "profile"
+  | "settings";
+
+type ProfileData = {
+  name: string;
+  email: string;
+  field: string;
+  interests: string;
+  city: string;
+  about: string;
+};
 
 function getInitials(name?: string) {
   const safeName = typeof name === "string" ? name.trim() : "";
@@ -352,7 +370,7 @@ export default function Page() {
 
   const [editingProfile, setEditingProfile] = useState(false);
 
-  const [profile, setProfile] = useState({
+  const [profile, setProfile] = useState<ProfileData>({
     name: "Ola Nordmann",
     email: "ola.nordmann@email.no",
     field: "IT-driftsfaget",
@@ -442,6 +460,56 @@ export default function Page() {
       JSON.stringify(settings)
     );
   }, [settings]);
+
+  const companyProfile = {
+    name: "GreenTech AS",
+    email: "kontakt@greentech.no",
+    field: "Teknologi og IT",
+    interests: "IT-drift, utvikling og digitale løsninger",
+    city: "Oslo",
+    about:
+      "GreenTech AS utvikler moderne teknologiløsninger og tilbyr læreplasser.",
+  };
+
+  const activeProfile = view === "company" ? companyProfile : profile;
+
+  const updateActiveProfile = (key: keyof ProfileData, value: string) => {
+    if (view === "company") {
+      setCompanyProfile((current) => ({
+        ...current,
+        [key]: value,
+      }));
+    } else {
+      setProfile((current) => ({
+        ...current,
+        [key]: value,
+      }));
+    }
+  };
+
+  useEffect(() => {
+    const savedCompanyProfile = localStorage.getItem(
+      COMPANY_PROFILE_STORAGE_KEY
+    );
+
+    if (savedCompanyProfile) {
+      try {
+        setCompanyProfile((current) => ({
+          ...current,
+          ...JSON.parse(savedCompanyProfile),
+        }));
+      } catch {
+        localStorage.removeItem(COMPANY_PROFILE_STORAGE_KEY);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem(
+      COMPANY_PROFILE_STORAGE_KEY,
+      JSON.stringify(companyProfile)
+    );
+  }, [companyProfile]);
 
   if (page === "applications") {
     const filteredApplications = applications.filter(
@@ -691,13 +759,21 @@ export default function Page() {
   }
 
   if (page === "profile") {
-    const profileFields = [
-      ["name", "Navn"],
-      ["email", "E-post"],
-      ["field", "Fagretning"],
-      ["interests", "Interesser"],
-      ["city", "Bosted"],
-    ] as const;
+    const profileFields = view === "company"
+      ? [
+          ["name", "Bedriftsnavn"],
+          ["email", "Kontakt-e-post"],
+          ["field", "Bransje"],
+          ["interests", "Tjenester"],
+          ["city", "Beliggenhet"],
+        ] as const
+      : [
+          ["name", "Navn"],
+          ["email", "E-post"],
+          ["field", "Fagretning"],
+          ["interests", "Interesser"],
+          ["city", "Bosted"],
+        ] as const;
 
     return (
       <main className="min-h-screen bg-[#0e131b] text-[#f2f3f6]">
@@ -714,7 +790,7 @@ export default function Page() {
           view={view}
           setView={setView}
           setMenuOpen={setMenuOpen}
-          profileName={profile.name || "Ola Nordmann"}
+          profileName={activeProfile.name}
         />
 
         <section className="mx-auto max-w-[1120px] px-6 pb-20 pt-16 lg:ml-[428px] lg:mr-12 lg:px-0">
@@ -736,7 +812,7 @@ export default function Page() {
             <div className="px-8 pb-8">
               <div className="-mt-14 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
                 <div className="flex size-28 items-center justify-center rounded-full border-8 border-[#182332] bg-[#a45bc0] text-4xl font-bold text-white">
-                  ON
+                  {getInitials(activeProfile.name)}
                 </div>
 
                 <button
@@ -766,10 +842,7 @@ export default function Page() {
                       <input
                         value={profile[key]}
                         onChange={(event) =>
-                          setProfile({
-                            ...profile,
-                            [key]: event.target.value,
-                          })
+                          updateActiveProfile(key, event.target.value)
                         }
                         className="w-full rounded-xl border border-[#39465a] bg-[#202c3b] px-4 py-3 text-white outline-none focus:border-[#a45bc0]"
                       />
@@ -789,9 +862,9 @@ export default function Page() {
 
                 {editingProfile ? (
                   <textarea
-                    value={profile.about}
+                    value={activeProfile.about}
                     onChange={(event) =>
-                      setProfile({ ...profile, about: event.target.value })
+                      updateActiveProfile("about", event.target.value)
                     }
                     rows={4}
                     className="w-full resize-none rounded-xl border border-[#39465a] bg-[#202c3b] px-4 py-3 text-white outline-none focus:border-[#a45bc0]"
@@ -1000,17 +1073,19 @@ export default function Page() {
             <article className="rounded-[22px] border border-[#303c4e] bg-[#222c3b] p-6 shadow-2xl">
               <div className="flex items-center gap-4">
                 <div
-                  className={`flex size-20 items-center justify-center rounded-2xl ${active.color} text-2xl font-bold text-[#18202b]`}
+                  className={`flex size-20 items-center justify-center rounded-2xl ${activeProfile.color} text-2xl font-bold text-[#18202b]`}
                 >
-                  {active.initials}
+                  {activeProfile.initials}
                 </div>
                 <div>
-                  <h3 className="text-[22px] font-bold">{active.name}</h3>
-                  <p className="mt-1 text-[#9aacc3]">{active.field}</p>
+                  <h3 className="text-[22px] font-bold">{activeProfile.name}</h3>
+                  <p className="mt-1 text-[#91a4bd]">
+                    {view === "learner" ? "Elev" : "Bedrift"} · {activeProfile.city}
+                  </p>
                 </div>
               </div>
               <div className="mt-6 flex items-center gap-2 text-[#9aacc3]">
-                <span>{active.city}</span>
+                <span>{activeProfile.city}</span>
               </div>
               <p className="mt-5 leading-6 text-[#b2bfd0]">{active.desc}</p>
               <div className="mt-7 flex items-center justify-between">
