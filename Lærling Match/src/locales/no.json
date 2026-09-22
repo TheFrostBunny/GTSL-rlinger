@@ -9,12 +9,21 @@
     "myApplications": "Mine søknader",
     "history": "Historikk",
     "businessProfile": "Bedriftsprofil",
-    "createPosition": "Opprett stilling"
+    "createPosition": "Opprett stilling",
+    "login": "Logg inn"
   },
   "greeting": {
     "morning": "God morgen",
     "day": "God ettermiddag",
     "evening": "God kveld"
+  },
+  "dashboard": {
+    "welcome": "Velkommen til dashbordet ditt",
+    "welcomeBack": "Velkommen tilbake, {{name}}",
+    "description": "Her kan du finne en oversikt over aktivitetene og statistikken din.",
+    "newSuggestions": "Nye forslag",
+    "liked": "Likt",
+    "waiting": "Venter på svar"
   },
   "settings": {
     "title": "Innstillinger",
@@ -28,5 +37,17 @@
     "dark": "Mørk",
     "light": "Lys",
     "save": "Lagre innstillinger"
+  },
+  "about": {
+    "title": "Om oss",
+    "description": "Lær mer om vårt oppdrag og team."
+  },
+  "goals": {
+    "title": "Våre mål",
+    "description": "Lær mer om hva vi ønsker å oppnå."
+  },
+  "howItWorks": {
+    "title": "Slik fungerer det",
+    "description": "Finn ut hvordan plattformen vår fungerer."
   }
 }

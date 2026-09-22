@@ -1,4 +1,5 @@
 import { Route, Routes } from "react-router-dom";
+import AdminPeoplePanel from "../components/admin/AdminPeoplePanel";
 import Home from "../pages/Home";
 import HomePage from "../pages/homePage";
 import FindApprenticeship from "../pages/findApprenticeship";
@@ -41,6 +42,14 @@ export default function AppRoutes() {
       <Route
         path="/settings"
         element={<SettingsPage />}
+      />
+      <Route
+        path="*"
+        element={<Home />}
+      />
+      <Route
+        path="/admin"
+        element={<AdminPeoplePanel />}
       />
     </Routes>
   );

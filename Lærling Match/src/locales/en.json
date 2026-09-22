@@ -9,12 +9,21 @@
     "myApplications": "My applications",
     "history": "History",
     "businessProfile": "Business profile",
-    "createPosition": "Create position"
+    "createPosition": "Create position",
+    "login": "Login"
   },
   "greeting": {
     "morning": "Good morning",
     "day": "Good afternoon",
     "evening": "Good evening"
+  },
+  "dashboard": {
+    "welcome": "Welcome to your dashboard",
+    "welcomeBack": "Welcome back, {{name}}",
+    "description": "Here you can find an overview of your activities and statistics.",
+    "newSuggestions": "New suggestions",
+    "liked": "Liked",
+    "waiting": "Waiting for response"
   },
   "settings": {
     "title": "Settings",
@@ -33,5 +42,17 @@
     "title": "My applications",
     "description": "View and manage your apprenticeship applications.",
     "noApplications": "You have not applied for any apprenticeships yet."
+  },
+  "about": {
+    "title": "About us",
+    "description": "Learn more about our mission and team."
+  },
+  "goals": {
+    "title": "Our goals",
+    "description": "Learn more about what we aim to achieve."
+  },
+  "howItWorks": {
+    "title": "How it works",
+    "description": "Find out how our platform works."
   }
 }

@@ -8,8 +8,10 @@ import {
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import { darkTheme } from "../../themes/darkTheme";
+import { useTranslation } from "react-i18next";
 
-export default function Navbar() {
+const Navbar = () => {
+  const { t } = useTranslation();
   return (
     <AppBar
       position="absolute"
@@ -67,7 +69,7 @@ export default function Navbar() {
                   whiteSpace: "nowrap",
                 }}
               >
-                Lærling Link
+                {t("app.name")}
               </Typography>
             </Box>
           </Box>
@@ -87,7 +89,7 @@ export default function Navbar() {
                 color: darkTheme.palette.primary.contrastText,
               }}
             >
-              Om oss
+              {t("about.title")}
             </Button>
 
             <Button
@@ -96,7 +98,7 @@ export default function Navbar() {
                 color: darkTheme.palette.primary.contrastText,
               }}
             >
-              Våre mål
+              {t("goals.title")}
             </Button>
 
             <Button
@@ -105,7 +107,7 @@ export default function Navbar() {
                 color: darkTheme.palette.primary.contrastText,
               }}
             >
-              Slik fungerer det
+              {t("howItWorks.title")}
             </Button>
 
             <Link
@@ -122,18 +124,15 @@ export default function Navbar() {
 
                 textTransform: "none",
                 fontWeight: 700,
-
-                ":hover": {
-                  backgroundColor: darkTheme.palette.secondary.light,
-                  color: darkTheme.palette.primary.dark,
-                },
               }}
             >
-              Logg inn
+              {t("nav.login")}
             </Link>
           </Box>
         </Toolbar>
       </Container>
     </AppBar>
   );
-}
+};
+
+export default Navbar;

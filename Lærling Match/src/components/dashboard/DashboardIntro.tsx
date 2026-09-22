@@ -2,7 +2,10 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import GrettingsText from "../GrettingsText";
 
+import { useTranslation } from "react-i18next";
 const DashboardIntro = () => {
+  
+  const { t } = useTranslation();
   return (
     <Box sx={{ mb: 4 }}>
       <GrettingsText />
@@ -12,13 +15,13 @@ const DashboardIntro = () => {
         sx={{
           width: "100%",
           maxWidth: { xs: 600, lg: 850 },
-          color: "text.primary",
+          color: "#f5f7fa",
           fontSize: "clamp(2.5rem, 6vw, 5rem)",
           lineHeight: 1.05,
           fontWeight: 800,
         }}
       >
-        Velkommen
+        {t("dashboard.welcome")}
         <br />
         tilbake, Ola
       </Typography>
@@ -28,7 +31,7 @@ const DashboardIntro = () => {
           mt: 3,
           width: "100%",
           maxWidth: { xs: 600, lg: 850 },
-          color: "text.secondary",
+          color: "#8fa1b8",
           fontSize: "clamp(1rem, 1.5vw, 1.35rem)",
           lineHeight: 1.5,
         }}
@@ -52,15 +55,11 @@ const DashboardIntro = () => {
         ].map(([value, label]) => (
           <Box key={label}>
             <Typography
-              sx={{
-                color: "text.primary",
-                fontSize: "1.8rem",
-                fontWeight: 700,
-              }}
+              sx={{ color: "#f5f7fa", fontSize: "1.8rem", fontWeight: 700 }}
             >
               {value}
             </Typography>
-            <Typography color="text.secondary">{label}</Typography>
+            <Typography sx={{ color: "#8fa1b8" }}>{label}</Typography>
           </Box>
         ))}
       </Box>
