@@ -90,14 +90,17 @@ export default function CompanyList() {
             </Avatar>
 
             <Box sx={{ flex: 1, minWidth: 0 }}>
-              <Typography variant="h6" sx={{ color: "#fff", fontWeight: 700 }}>
+              <Typography
+                variant="h6"
+                sx={{ color: "text.primary", fontWeight: 700 }}
+              >
                 {company.name}
               </Typography>
 
               <Typography
                 sx={{
                   mt: 0.5,
-                  color: "#8fa1b8",
+                  color: "text.secondary",
                   fontSize: 15,
                 }}
               >
@@ -109,8 +112,8 @@ export default function CompanyList() {
                   label={company.location}
                   size="small"
                   sx={{
-                    backgroundColor: "#202c3b",
-                    color: "#9eafc5",
+                    bgcolor: "action.hover",
+                    color: "text.secondary",
                   }}
                 />
 
@@ -118,8 +121,8 @@ export default function CompanyList() {
                   label={company.category}
                   size="small"
                   sx={{
-                    backgroundColor: "#202c3b",
-                    color: "#9eafc5",
+                    bgcolor: "action.hover",
+                    color: "text.secondary",
                   }}
                 />
               </Box>
@@ -132,11 +135,11 @@ export default function CompanyList() {
                 sx={{
                   width: 48,
                   height: 48,
-                  color: "#8fa1b8",
-                  backgroundColor: "#202c3b",
+                  color: "text.secondary",
+                  bgcolor: "action.hover",
                   "&:hover": {
-                    color: "#fff",
-                    backgroundColor: "#2d3b4d",
+                    color: "text.primary",
+                    bgcolor: "action.selected",
                   },
                 }}
               >
@@ -149,10 +152,11 @@ export default function CompanyList() {
                 sx={{
                   width: 48,
                   height: 48,
-                  color: "#ff7052",
-                  backgroundColor: "#593126",
+                  color: "error.main",
+                  bgcolor: "error.light",
                   "&:hover": {
-                    backgroundColor: "#743d2d",
+                    bgcolor: "error.main",
+                    color: "error.contrastText",
                   },
                 }}
               >
