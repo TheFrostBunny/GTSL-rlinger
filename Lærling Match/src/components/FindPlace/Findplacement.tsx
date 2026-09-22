@@ -96,20 +96,28 @@ export default function Findplacement() {
   const [favorites, setFavorites] = useState<number[]>([]);
 
   const filteredCompanies = useMemo(() => {
-    const query = search.toLowerCase();
+    const query = search.trim().toLocaleLowerCase("nb-NO");
 
     return companies.filter((company) => {
+      const searchableText = [
+        company.name,
+        company.description,
+        company.location,
+        company.category,
+      ]
+        .join(" ")
+        .toLocaleLowerCase("nb-NO");
+
       const matchesSearch =
-        company.name.toLowerCase().includes(query) ||
-        company.description.toLowerCase().includes(query) ||
-        company.location.toLowerCase().includes(query) ||
-        company.category.toLowerCase().includes(query);
+        query === "" || searchableText.includes(query);
 
       const matchesCategory =
         category === "Alle" || company.category === category;
 
       return (
-        !removed.includes(company.id) && matchesSearch && matchesCategory
+        !removed.includes(company.id) &&
+        matchesSearch &&
+        matchesCategory
       );
     });
   }, [search, category, removed]);
@@ -125,21 +133,41 @@ export default function Findplacement() {
   return (
     <Box
       sx={{
-        minHeight: "100vh",
-        backgroundColor: "#f1eff0",
-        px: { xs: 2, sm: 4 },
-        py: 4,
+        width: "100%",
+        minHeight: "100%",
+        boxSizing: "border-box",
+        backgroundColor: "background.default",
+        color: "text.primary",
+        px: { xs: 0, sm: 2, md: 3 },
+        py: { xs: 1, sm: 2, md: 3 },
       }}
     >
-      <Box sx={{ maxWidth: 640, mx: "auto" }}>
+      <Box
+        sx={{
+          width: "100%",
+          maxWidth: 1100,
+          mx: "auto",
+        }}
+      >
         <Typography
           variant="h4"
-          sx={{ color: "#342052", fontWeight: 800, mb: 0.5 }}
+          sx={{
+            color: "text.primary",
+            fontWeight: 800,
+            fontSize: { xs: "1.8rem", sm: "2.2rem" },
+            mb: 0.5,
+          }}
         >
           Finn læreplass
         </Typography>
 
-        <Typography sx={{ color: "#7d7185", mb: 2 }}>
+        <Typography
+          sx={{
+            color: "text.secondary",
+            fontSize: { xs: 13, sm: 15 },
+            mb: 2,
+          }}
+        >
           Bla gjennom lærebedrifter som matcher din fagretning.
         </Typography>
 
@@ -152,14 +180,28 @@ export default function Findplacement() {
             mb: 1.5,
             "& .MuiOutlinedInput-root": {
               borderRadius: 8,
-              backgroundColor: "#fff",
+              backgroundColor: "background.paper",
+              color: "text.primary",
+              "& fieldset": {
+                borderColor: "divider",
+              },
+              "&:hover fieldset": {
+                borderColor: "primary.main",
+              },
+              "&.Mui-focused fieldset": {
+                borderColor: "primary.main",
+              },
+            },
+            "& .MuiInputBase-input::placeholder": {
+              color: "text.secondary",
+              opacity: 1,
             },
           }}
           slotProps={{
             input: {
               startAdornment: (
                 <InputAdornment position="start">
-                  <SearchIcon sx={{ color: "#888" }} />
+                  <SearchIcon color="inherit" />
                 </InputAdornment>
               ),
             },
@@ -179,18 +221,22 @@ export default function Findplacement() {
               onClick={() => setCategory(item)}
               sx={{
                 px: 0.5,
-                color: category === item ? "#fff" : "#786b7d",
-                backgroundColor: category === item ? "#452461" : "#fff",
-                border: category === item ? "none" : "1px solid #ddd6df",
+                color: category === item ? "primary.contrastText" : "text.secondary",
+                backgroundColor:
+                  category === item ? "primary.main" : "background.paper",
+                border: "1px solid",
+                borderColor:
+                  category === item ? "primary.main" : "divider",
                 "&:hover": {
-                  backgroundColor: category === item ? "#452461" : "#eee9ef",
+                  backgroundColor:
+                    category === item ? "primary.dark" : "action.hover",
                 },
               }}
             />
           ))}
         </Stack>
 
-        <Typography sx={{ color: "#857889", fontSize: 13, mb: 1 }}>
+        <Typography sx={{ color: "text.secondary", fontSize: 13, mb: 1 }}>
           {filteredCompanies.length} lærebedrifter
         </Typography>
 
@@ -204,8 +250,10 @@ export default function Findplacement() {
                 sx={{
                   p: 2,
                   borderRadius: 2.5,
-                  backgroundColor: "#fff",
-                  border: "1px solid #ddd9dd",
+                  backgroundColor: "background.paper",
+                  color: "text.primary",
+                  border: "1px solid",
+                  borderColor: "divider",
                   boxShadow: "none",
                 }}
               >
@@ -225,14 +273,18 @@ export default function Findplacement() {
 
                   <Box sx={{ flex: 1, minWidth: 0 }}>
                     <Typography
-                      sx={{ color: "#111", fontWeight: 700, fontSize: 13 }}
+                      sx={{
+                        color: "text.primary",
+                        fontWeight: 700,
+                        fontSize: 13,
+                      }}
                     >
                       {company.name}
                     </Typography>
 
                     <Typography
                       sx={{
-                        color: "#887b8b",
+                        color: "text.secondary",
                         fontSize: 12,
                         whiteSpace: "nowrap",
                         overflow: "hidden",
@@ -253,9 +305,10 @@ export default function Findplacement() {
                         sx={{
                           height: 19,
                           fontSize: 10,
-                          color: "#a052ad",
-                          backgroundColor: "#f5edf6",
-                          border: "1px solid #e5d7e8",
+                          color: "secondary.main",
+                          backgroundColor: "action.hover",
+                          border: "1px solid",
+                          borderColor: "divider",
                         }}
                       />
                       <Chip
@@ -264,9 +317,10 @@ export default function Findplacement() {
                         sx={{
                           height: 19,
                           fontSize: 10,
-                          color: "#a052ad",
-                          backgroundColor: "#f5edf6",
-                          border: "1px solid #e5d7e8",
+                          color: "secondary.main",
+                          backgroundColor: "action.hover",
+                          border: "1px solid",
+                          borderColor: "divider",
                         }}
                       />
                     </Stack>
@@ -279,11 +333,12 @@ export default function Findplacement() {
                         setRemoved((current) => [...current, company.id])
                       }
                       sx={{
-                        width: 32,
-                        height: 32,
-                        color: "#999",
-                        backgroundColor: "#f1eff1",
-                        border: "1px solid #ddd9dd",
+                        width: { xs: 38, sm: 44 },
+                        height: { xs: 38, sm: 44 },
+                        color: "text.secondary",
+                        backgroundColor: "action.hover",
+                        border: "1px solid",
+                        borderColor: "divider",
                       }}
                     >
                       <CloseIcon sx={{ fontSize: 16 }} />
@@ -293,11 +348,13 @@ export default function Findplacement() {
                       aria-label={`Favoritt ${company.name}`}
                       onClick={() => toggleFavorite(company.id)}
                       sx={{
-                        width: 32,
-                        height: 32,
-                        color: "#fff",
-                        backgroundColor: "#452461",
-                        "&:hover": { backgroundColor: "#342052" },
+                        width: { xs: 38, sm: 44 },
+                        height: { xs: 38, sm: 44 },
+                        color: "primary.contrastText",
+                        backgroundColor: "primary.main",
+                        "&:hover": {
+                          backgroundColor: "primary.dark",
+                        },
                       }}
                     >
                       {isFavorite ? (

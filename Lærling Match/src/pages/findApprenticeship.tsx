@@ -37,7 +37,7 @@ const FindApprenticeship = () => {
   ];
 
   return (
-    <Box sx={{ minHeight: "100vh", backgroundColor: "#f1eff0" }}>
+    <>
       <NavbarAPP
         appName={t("app.name")}
         userName="Ola Nordmann"
@@ -45,22 +45,10 @@ const FindApprenticeship = () => {
         profileImage="/profile.jpg"
         initials="ON"
         navItems={navItems}
-      />
-
-      <Box
-        component="main"
-        sx={{
-          ml: { xs: 0, md: "287px" },
-          minHeight: "100vh",
-          px: { xs: 2, md: 5 },
-          py: 4,
-        }}
       >
-        <Box sx={{ maxWidth: 640, mx: "auto" }}>
-          <Findplacement/>
-        </Box>
-      </Box>
-    </Box>
+        <Findplacement />
+      </NavbarAPP>
+    </>
   );
 };
 

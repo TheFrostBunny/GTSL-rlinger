@@ -20,7 +20,7 @@ const HomePage = () => {
           { label: t("nav.home"), href: "/app", icon: <HomeIcon /> },
           {
             label: t("nav.findApprenticeship"),
-            href: "/application",
+            href: "/stillinger",
             icon: <SearchIcon />,
           },
           { label: t("nav.myApplications"), href: "/mine-soknader", icon: <AssignmentOutlinedIcon /> },
