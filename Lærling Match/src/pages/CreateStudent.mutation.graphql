@@ -1,7 +1,0 @@
-mutation CreateStudent($input: CreateStudentInput!) {
-  createStudent(input: $input) {
-    student {
-      ...Student
-    }
-  }
-}

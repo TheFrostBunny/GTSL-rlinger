@@ -1,5 +1,0 @@
-query GetStudent($studentId: ID!) {
-  student(studentId: $studentId) {
-    ...Student
-  }
-}

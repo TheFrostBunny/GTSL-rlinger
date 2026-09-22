@@ -1,0 +1,77 @@
+{
+  "placements": [
+    {
+      "name": "GreenTech AS",
+      "field": "IT",
+      "desc": "Søker lærling innen IT og teknologi.",
+      "city": "Oslo",
+      "initials": "GT",
+      "color": "bg-[#cbe4dc]"
+    },
+    {
+      "name": "Nordic Solutions",
+      "field": "Utvikling",
+      "desc": "Spennende læreplass innen utvikling.",
+      "city": "Bergen",
+      "initials": "NS",
+      "color": "bg-[#d8c8ed]"
+    }
+  ],
+  "candidates": [
+    {
+      "name": "Emma Hansen",
+      "field": "IT",
+      "desc": "Motivert kandidat med interesse for programmering.",
+      "city": "Oslo",
+      "initials": "EH",
+      "color": "bg-[#cbe4dc]"
+    },
+    {
+      "name": "Noah Berg",
+      "field": "Elektro",
+      "desc": "Nysgjerrig kandidat med relevant fagbakgrunn.",
+      "city": "Bergen",
+      "initials": "NB",
+      "color": "bg-[#d8c8ed]"
+    }
+  ],
+  "applications": [
+    {
+      "name": "GreenTech AS",
+      "field": "IT-driftsfaget",
+      "city": "Oslo",
+      "date": "12. sep 2026",
+      "status": "Matchet",
+      "initials": "GT",
+      "color": "bg-[#a45bc0]"
+    }
+  ],
+  "fields": [
+    "Alle",
+    "IT",
+    "Bygg og anlegg",
+    "Helse",
+    "Mekanikk",
+    "Mediaproduksjon"
+  ],
+  "history": [
+    {
+      "name": "GreenTech AS",
+      "field": "IT-driftsfaget",
+      "city": "Oslo",
+      "date": "12. sep 2026"
+    },
+    {
+      "name": "Nordic Solutions",
+      "field": "Utviklerfaget",
+      "city": "Bergen",
+      "date": "15. sep 2026"
+    },
+    {
+      "name": "Fjord Industri",
+      "field": "Mekanikerfaget",
+      "city": "Ålesund",
+      "date": "18. sep 2026"
+    }
+  ]
+}
