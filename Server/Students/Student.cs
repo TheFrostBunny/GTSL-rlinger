@@ -22,6 +22,7 @@ public class Student
     public string? AfterApprenticeShip { get; set; }
     public List<StudentCertificates>? Certificates { get; set; }
     public StudentCredential? Credential { get; set; }
+    public string? Location { get; set; }
 
     [NodeResolver]
     public static async Task<Student?> GetStudentByIdAsync(

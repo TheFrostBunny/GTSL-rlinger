@@ -23,6 +23,7 @@ public class StudentMutations
         string? password,
         Trades? trade,
         string? line,
+        string? location,
         string? profileImage,
         IReadOnlyList<string>? socialMedias,
         string? description,
@@ -38,6 +39,7 @@ public class StudentMutations
             Name = name,
             Email = email,
             Line = line,
+            Location = location,
             WantedTrade = trade,
             ProfileImage = profileImage,
             Description = description,
@@ -73,6 +75,7 @@ public class StudentMutations
         string? newPassword,
         Trades? trade,
         string? line,
+        string? location,
         string? profileImage,
         IReadOnlyList<string>? socialMedias,
         string? description,
@@ -97,6 +100,7 @@ public class StudentMutations
         student.Name = name;
         student.Email = email;
         student.Line = line;
+        student.Location = location;
         student.WantedTrade = trade;
         student.ProfileImage = profileImage;
         student.Description = description;

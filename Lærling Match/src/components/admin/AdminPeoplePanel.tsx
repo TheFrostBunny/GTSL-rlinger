@@ -84,8 +84,8 @@ const AdminPeoplePanel = () => {
       <Stack
         direction={{ xs: "column", sm: "row" }}
         spacing={2}
-        mb={4}
         sx={{
+          mb: 4,
           justifyContent: "space-between",
           alignItems: { xs: "flex-start", sm: "center" },
         }}

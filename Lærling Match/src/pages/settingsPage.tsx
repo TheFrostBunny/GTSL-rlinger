@@ -26,9 +26,6 @@ export default function SettingsPage() {
   const [language, setLanguage] = useState(
     localStorage.getItem("language") ?? i18n.language ?? "no",
   );
-  const [themeMode, setThemeMode] = useState(
-    localStorage.getItem("theme") ?? "dark",
-  );
 
   const saveSettings = () => {
     localStorage.setItem("notifications", String(notifications));
@@ -38,12 +35,6 @@ export default function SettingsPage() {
     setLanguage(value);
     localStorage.setItem("language", value);
     void i18n.changeLanguage(value);
-  };
-
-  const handleThemeChange = (value: string) => {
-    setThemeMode(value);
-    localStorage.setItem("theme", value);
-    window.dispatchEvent(new Event("theme-change"));
   };
 
   const navItems = [
@@ -125,15 +116,6 @@ export default function SettingsPage() {
           </Typography>
 
           <Stack spacing={3}>
-            <Box>
-              <Typography sx={{ color: "text.primary", fontWeight: 700 }}>
-                {t("settings.notifications")}
-              </Typography>
-
-              <Typography sx={{ color: "text.secondary", mt: 0.5 }}>
-                {t("settings.notificationsDescription")}
-              </Typography>
-            </Box>
 
             <FormControl
               fullWidth
@@ -159,32 +141,6 @@ export default function SettingsPage() {
                 <MenuItem value="en">{t("settings.english")}</MenuItem>
               </Select>
             </FormControl>
-
-            <FormControl
-              fullWidth
-              sx={{
-                "& .MuiInputLabel-root": {
-                  color: "text.secondary",
-                },
-                "& .MuiInputLabel-root.Mui-focused": {
-                  color: "primary.main",
-                },
-              }}
-            >
-              <InputLabel>{t("settings.theme")}</InputLabel>
-              <Select
-                value={themeMode}
-                label={t("settings.theme")}
-                sx={selectSx}
-                onChange={(event) =>
-                  handleThemeChange(event.target.value)
-                }
-              >
-                <MenuItem value="dark">{t("settings.dark")}</MenuItem>
-                <MenuItem value="light">{t("settings.light")}</MenuItem>
-              </Select>
-            </FormControl>
-
             <Button
               variant="contained"
               onClick={saveSettings}
