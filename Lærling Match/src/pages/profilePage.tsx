@@ -39,6 +39,33 @@ export default function Profile() {
 
   const displayedProfile = profile ?? me;
 
+  const inputSx = {
+    "& .MuiInputBase-input": {
+      color: "text.primary",
+    },
+    "& .MuiInputBase-input::placeholder": {
+      color: "text.secondary",
+      opacity: 1,
+    },
+    "& .MuiInputLabel-root": {
+      color: "text.secondary",
+    },
+    "& .MuiInputLabel-root.Mui-focused": {
+      color: "primary.main",
+    },
+    "& .MuiOutlinedInput-root": {
+      "& fieldset": {
+        borderColor: "divider",
+      },
+      "&:hover fieldset": {
+        borderColor: "primary.main",
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "primary.main",
+      },
+    },
+  };
+
   const interests = (displayedProfile?.description ?? "")
     .split(",")
     .map((interest) => interest.trim())
@@ -292,6 +319,7 @@ export default function Profile() {
               {editing ? (
                 <TextField
                   fullWidth
+                  sx={inputSx}
                   label={t("profile.email")}
                   type="email"
                   value={draftProfile?.email ?? ""}
@@ -326,6 +354,7 @@ export default function Profile() {
               {editing ? (
                 <TextField
                   fullWidth
+                  sx={inputSx}
                   label={t("profile.fieldOfStudy")}
                   value={draftProfile?.wantedTrade ?? ""}
                   onChange={(event) =>
@@ -361,6 +390,7 @@ export default function Profile() {
                   fullWidth
                   multiline
                   minRows={3}
+                  sx={inputSx}
                   label={t("profile.aboutMe")}
                   value={draftProfile?.description ?? ""}
                   onChange={(event) =>
@@ -434,13 +464,17 @@ export default function Profile() {
                   renderInput={(params) => (
                     <TextField
                       {...params}
+                      sx={{
+                        ...inputSx,
+                        "& .MuiFormHelperText-root": {
+                          color: "text.secondary",
+                        },
+                      }}
                       label={t("profile.interests")}
                       placeholder={t("profile.addInterest")}
                       helperText={t("profile.pressSpaceToAdd")}
                       onKeyDown={(event) => {
-                        if (
-                          event.key === " "
-                        ) {
+                        if (event.key === " ") {
                           event.preventDefault();
                           addInterest();
                         }
@@ -488,6 +522,7 @@ export default function Profile() {
               {editing ? (
                 <TextField
                   fullWidth
+                  sx={inputSx}
                   label={t("profile.residence")}
                   value={draftProfile?.location ?? ""}
                   onChange={(event) =>
