@@ -102,7 +102,7 @@ export default function HowItWorksSection() {
                 sx={{
                   mb: 3,
 
-                  color: darkTheme.palette.primary.main,
+                  color: darkTheme.palette.text.primary,
 
                   fontSize: {
                     xs: "3rem",
@@ -123,6 +123,7 @@ export default function HowItWorksSection() {
 
                   fontSize: "1.4rem",
                   fontWeight: 700,
+                  color: darkTheme.palette.text.primary,
                 }}
               >
                 {step.title}
@@ -132,7 +133,7 @@ export default function HowItWorksSection() {
                 sx={{
                   maxWidth: 340,
 
-                  color: darkTheme.palette.text.secondary,
+                  color: darkTheme.palette.text.primary,
 
                   lineHeight: 1.8,
                 }}
