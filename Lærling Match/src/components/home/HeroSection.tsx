@@ -1,9 +1,19 @@
-import { Box, Button, Container, Stack, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Container,
+  Stack,
+  Typography,
+} from "@mui/material";
+
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+
 import { darkTheme } from "../../themes/darkTheme";
 
 export default function HeroSection() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   return (
     <Box
@@ -11,17 +21,35 @@ export default function HeroSection() {
       component="section"
       sx={{
         position: "relative",
+
         minHeight: "100vh",
+
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
+
         overflow: "hidden",
+
         color: darkTheme.palette.primary.contrastText,
-        pt: { xs: 12, md: 14 },
-        pb: { xs: 10, md: 12 },
-        px: { xs: 2, md: 3 },
+
+        pt: {
+          xs: 12,
+          md: 14,
+        },
+
+        pb: {
+          xs: 10,
+          md: 12,
+        },
+
+        px: {
+          xs: 2,
+          md: 3,
+        },
       }}
     >
+      {/* Background video */}
+
       <Box
         component="video"
         autoPlay
@@ -40,8 +68,13 @@ export default function HeroSection() {
           zIndex: 0,
         }}
       >
-        <source src="/videos/hero.mp4" type="video/mp4" />
+        <source
+          src="/videos/hero.mp4"
+          type="video/mp4"
+        />
       </Box>
+
+      {/* Dark overlay */}
 
       <Box
         sx={{
@@ -54,6 +87,8 @@ export default function HeroSection() {
           zIndex: 1,
         }}
       />
+
+      {/* Content */}
 
       <Container
         maxWidth="lg"
@@ -70,6 +105,8 @@ export default function HeroSection() {
             mx: "auto",
           }}
         >
+          {/* Eyebrow */}
+
           <Typography
             sx={{
               mb: 2,
@@ -82,25 +119,36 @@ export default function HeroSection() {
               },
 
               fontWeight: 800,
-
               letterSpacing: "0.18em",
             }}
           >
-            FRA UTDANNING TIL MULIGHETER
+            {t("hero.eyebrow")}
           </Typography>
+
+          {/* Logo */}
+
           <Box
             component="img"
             src="/Logo_Tekst.png"
-            alt="Lærling Match"
+            alt="Lærling Link"
             sx={{
-              width: { xs: 260, sm: 420, md: 560 },
+              width: {
+                xs: 260,
+                sm: 420,
+                md: 560,
+              },
+
               maxWidth: "100%",
               height: "auto",
+
               display: "block",
+
               mx: "auto",
               mb: 3,
             }}
           />
+
+          {/* Main heading */}
 
           <Typography
             component="h1"
@@ -121,8 +169,10 @@ export default function HeroSection() {
               mb: 3,
             }}
           >
-            Veien fra skole til arbeidsliv starter her.
+            {t("hero.title")}
           </Typography>
+
+          {/* Description */}
 
           <Typography
             sx={{
@@ -141,9 +191,10 @@ export default function HeroSection() {
               lineHeight: 1.7,
             }}
           >
-            Vi kobler elever med godkjente lærebedrifter og gjør det enklere å
-            finne riktig lærlingplass, praksisplass og nye muligheter.
+            {t("hero.description")}
           </Typography>
+
+          {/* CTA buttons */}
 
           <Stack
             direction={{
@@ -167,7 +218,8 @@ export default function HeroSection() {
               sx={{
                 minWidth: 190,
 
-                backgroundColor: darkTheme.palette.primary.main,
+                backgroundColor:
+                  darkTheme.palette.primary.main,
 
                 borderRadius: "999px",
 
@@ -180,11 +232,12 @@ export default function HeroSection() {
                 fontWeight: 700,
 
                 "&:hover": {
-                  backgroundColor: darkTheme.palette.primary.light,
+                  backgroundColor:
+                    darkTheme.palette.primary.light,
                 },
               }}
             >
-              Finn lærebedrift
+              {t("hero.findApprenticeship")}
             </Button>
 
             <Button
@@ -198,8 +251,11 @@ export default function HeroSection() {
               sx={{
                 minWidth: 190,
 
-                color: darkTheme.palette.primary.contrastText,
-                borderColor: darkTheme.palette.primary.light,
+                color:
+                  darkTheme.palette.primary.contrastText,
+
+                borderColor:
+                  darkTheme.palette.primary.light,
 
                 borderRadius: "999px",
 
@@ -212,12 +268,15 @@ export default function HeroSection() {
                 fontWeight: 700,
 
                 "&:hover": {
-                  borderColor: darkTheme.palette.primary.contrastText,
-                  backgroundColor: darkTheme.palette.primary.light,
+                  borderColor:
+                    darkTheme.palette.primary.contrastText,
+
+                  backgroundColor:
+                    darkTheme.palette.primary.light,
                 },
               }}
             >
-              For bedrifter
+              {t("hero.forCompanies")}
             </Button>
           </Stack>
         </Box>

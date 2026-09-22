@@ -61,15 +61,50 @@
   },
   "about": {
     "title": "Om oss",
-    "description": "Lær mer om vårt oppdrag og team."
+    "description": "Lær mer om vårt oppdrag og team.",
+    "heading": "En enklere vei fra skole til arbeidsliv.",
+    "student": "Elev",
+    "company": "Bedrift"
   },
   "goals": {
     "title": "Våre mål",
-    "description": "Lær mer om hva vi ønsker å oppnå."
+    "heading": "Vi gjør veien til læreplass enklere.",
+    "items": {
+      "first": {
+        "title": "Enklere vei til læreplass",
+        "description": "Gjøre det lettere for elever å finne bedrifter som passer utdanningen, interessene og målene deres."
+      },
+      "second": {
+        "title": "Bedre matching",
+        "description": "Koble elever og bedrifter basert på fagområde, lokasjon og interesser."
+      },
+      "third": {
+        "title": "Tettere kontakt",
+        "description": "Gjøre kommunikasjonen mellom elever og bedrifter enklere, raskere og mer direkte."
+      },
+      "fourth": {
+        "title": "Flere muligheter",
+        "description": "Synliggjøre lærlingplasser, praksisplasser og andre relevante muligheter."
+      }
+    }
   },
   "howItWorks": {
     "title": "Slik fungerer det",
-    "description": "Finn ut hvordan plattformen vår fungerer."
+    "heading": "Tre steg til nye muligheter.",
+    "steps": {
+      "first": {
+        "title": "Opprett profil",
+        "description": "Fortell hvem du er, hva du går på skole og hvilke muligheter du ser etter."
+      },
+      "second": {
+        "title": "Finn relevante bedrifter",
+        "description": "Utforsk godkjente lærebedrifter og finn bedrifter som passer deg."
+      },
+      "third": {
+        "title": "Vis interesse",
+        "description": "Ta kontakt med bedriften og kom ett steg nærmere en lærlingplass."
+      }
+    }
   },
   "profile": {
     "manageYourProfileInformation": "Se og administrer profilinformasjonen din.",
@@ -108,5 +143,18 @@
   "companyProfile": {
     "title": "Bedriftsprofil",
     "description": "Administrer informasjonen om bedriften din."
+  },
+  "hero": {
+    "eyebrow": "FRA UTDANNING TIL MULIGHETER",
+    "title": "Veien fra skole til arbeidsliv starter her.",
+    "description": "Vi kobler elever med godkjente lærebedrifter og gjør det enklere å finne riktig lærlingplass, praksisplass og nye muligheter.",
+    "findApprenticeship": "Finn lærebedrift",
+    "forCompanies": "For bedrifter"
+  },
+  "cta": {
+    "title": "Klar for å finne din lærlingplass?",
+    "description": "Opprett en profil og finn lærebedrifter som passer utdanningen, interessene og målene dine.",
+    "start": "Kom i gang",
+    "company": "Registrer bedrift"
   }
 }

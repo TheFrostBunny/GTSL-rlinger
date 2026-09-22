@@ -1,15 +1,33 @@
-import { Box, Container, Typography } from "@mui/material";
+import {
+  Box,
+  Container,
+  Typography,
+} from "@mui/material";
+
+import { useTranslation } from "react-i18next";
+
 import { darkTheme } from "../../themes/darkTheme";
 
 export default function AboutSection() {
+  const { t } = useTranslation();
+
   return (
     <Box
       id="about"
       component="section"
       sx={{
-        backgroundColor: darkTheme.palette.background.default,
-        py: { xs: 10, md: 16 },
-        px: { xs: 2, md: 3 },
+        backgroundColor:
+          darkTheme.palette.background.default,
+
+        py: {
+          xs: 10,
+          md: 16,
+        },
+
+        px: {
+          xs: 2,
+          md: 3,
+        },
       }}
     >
       <Container maxWidth="lg">
@@ -30,20 +48,23 @@ export default function AboutSection() {
             alignItems: "center",
           }}
         >
+
           <Box>
             <Typography
               sx={{
                 mb: 2,
 
-                color: darkTheme.palette.primary.main,
+                color:
+                  darkTheme.palette.primary.main,
 
                 fontSize: "0.85rem",
                 fontWeight: 800,
 
                 letterSpacing: "0.15em",
+                textTransform: "uppercase",
               }}
             >
-              OM OSS
+              {t("about.title")}
             </Typography>
 
             <Typography
@@ -51,7 +72,9 @@ export default function AboutSection() {
               sx={{
                 mb: 3,
 
-                color: darkTheme.palette.primary.contrastText,
+                color:
+                  darkTheme.palette.primary
+                    .contrastText,
 
                 fontSize: {
                   xs: "2.4rem",
@@ -59,20 +82,19 @@ export default function AboutSection() {
                 },
 
                 fontWeight: 750,
-
                 lineHeight: 1.05,
-
                 letterSpacing: "-2px",
               }}
             >
-              En enklere vei fra skole til arbeidsliv.
+              {t("about.heading")}
             </Typography>
 
             <Typography
               sx={{
                 maxWidth: 590,
 
-                color: darkTheme.palette.text.secondary,
+                color:
+                  darkTheme.palette.text.secondary,
 
                 fontSize: {
                   xs: "1rem",
@@ -82,10 +104,7 @@ export default function AboutSection() {
                 lineHeight: 1.9,
               }}
             >
-              LærlingMatch skal gjøre overgangen fra skole til arbeidsliv
-              enklere. Vi samler elever og lærebedrifter på én plattform, slik
-              at det blir lettere å finne relevante muligheter, vise interesse
-              og komme i kontakt med hverandre.
+              {t("about.description")}
             </Typography>
           </Box>
 
@@ -103,10 +122,13 @@ export default function AboutSection() {
               justifyContent: "center",
 
               borderRadius: "32px",
-
               overflow: "hidden",
 
-              background: `linear-gradient(135deg, ${darkTheme.palette.primary.light} 0%, ${darkTheme.palette.primary.main} 100%)`,
+              background: `linear-gradient(
+                135deg,
+                ${darkTheme.palette.primary.light} 0%,
+                ${darkTheme.palette.primary.main} 100%
+              )`,
             }}
           >
             <Box
@@ -116,7 +138,9 @@ export default function AboutSection() {
             >
               <Typography
                 sx={{
-                  color: darkTheme.palette.primary.contrastText,
+                  color:
+                    darkTheme.palette.primary
+                      .contrastText,
 
                   fontSize: {
                     xs: "3rem",
@@ -124,18 +148,19 @@ export default function AboutSection() {
                   },
 
                   fontWeight: 800,
-
                   letterSpacing: "-3px",
                 }}
               >
-                Elev
+                {t("about.student")}
               </Typography>
 
               <Typography
                 sx={{
                   my: 2,
 
-                  color: darkTheme.palette.primary.contrastText,
+                  color:
+                    darkTheme.palette.primary
+                      .contrastText,
 
                   fontSize: "2rem",
                 }}
@@ -145,7 +170,9 @@ export default function AboutSection() {
 
               <Typography
                 sx={{
-                  color: darkTheme.palette.primary.contrastText,
+                  color:
+                    darkTheme.palette.primary
+                      .contrastText,
 
                   fontSize: {
                     xs: "3rem",
@@ -153,11 +180,10 @@ export default function AboutSection() {
                   },
 
                   fontWeight: 800,
-
                   letterSpacing: "-3px",
                 }}
               >
-                Bedrift
+                {t("about.company")}
               </Typography>
             </Box>
           </Box>

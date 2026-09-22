@@ -61,15 +61,49 @@
   },
   "about": {
     "title": "About us",
-    "description": "Learn more about our mission and team."
+    "description": "Learn more about our mission and team.",
+    "heading": "A simpler path from school to working life.",
+    "student": "Student",
+    "company": "Company"
   },
   "goals": {
     "title": "Our goals",
-    "description": "Learn more about what we aim to achieve."
+    "heading": "We make the path to an apprenticeship easier.",
+    "items": {
+      "first": {
+        "title": "An easier path to an apprenticeship",
+        "description": "Make it easier for students to find companies that match their education, interests and goals."
+      },
+      "second": {
+        "title": "Better matching",
+        "description": "Connect students and companies based on field of study, location and interests."
+      },
+      "third": {
+        "title": "Closer communication",
+        "description": "Make communication between students and companies easier, faster and more direct."
+      },
+      "fourth": {
+        "title": "More opportunities",
+        "description": "Highlight apprenticeships, work placements and other relevant opportunities."
+      }
+    }
   },
   "howItWorks": {
-    "title": "How it works",
-    "description": "Find out how our platform works."
+    "heading": "Three steps to new opportunities.",
+    "steps": {
+      "first": {
+        "title": "Create your profile",
+        "description": "Tell us who you are, what you study and what kind of opportunities you are looking for."
+      },
+      "second": {
+        "title": "Find relevant companies",
+        "description": "Explore approved apprenticeship companies and find companies that match your needs."
+      },
+      "third": {
+        "title": "Show your interest",
+        "description": "Contact the company and take one step closer to an apprenticeship."
+      }
+    }
   },
   "profile": {
     "manageYourProfileInformation": "View and manage your profile information.",
@@ -108,5 +142,18 @@
   "companyProfile": {
     "title": "Company profile",
     "description": "Manage your company's information."
+  },
+  "hero": {
+    "eyebrow": "FROM EDUCATION TO OPPORTUNITY",
+    "title": "Your path from school to working life starts here.",
+    "description": "We connect students with approved apprenticeship companies and make it easier to find the right apprenticeship, work placement and new opportunities.",
+    "findApprenticeship": "Find an apprenticeship",
+    "forCompanies": "For companies"
+  },
+  "cta": {
+    "title": "Ready to find your apprenticeship?",
+    "description": "Create a profile and find apprenticeship companies that match your education, interests and goals.",
+    "start": "Get started",
+    "company": "Register company"
   }
 }

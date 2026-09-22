@@ -1,37 +1,54 @@
-import { Box, Container, Typography } from "@mui/material";
+import {
+  Box,
+  Container,
+  Typography,
+} from "@mui/material";
+
+import { useTranslation } from "react-i18next";
+
 import { darkTheme } from "../../themes/darkTheme";
 
-const steps = [
-  {
-    number: "01",
-    title: "Opprett profil",
-    description:
-      "Fortell hvem du er, hva du går på skole og hvilke muligheter du ser etter.",
-  },
-  {
-    number: "02",
-    title: "Finn relevante bedrifter",
-    description:
-      "Utforsk godkjente lærebedrifter og finn bedrifter som passer deg.",
-  },
-  {
-    number: "03",
-    title: "Vis interesse",
-    description:
-      "Ta kontakt med bedriften og kom ett steg nærmere en lærlingplass.",
-  },
-];
-
 export default function HowItWorksSection() {
+  const { t } = useTranslation();
+
+  const steps = [
+    {
+      number: "01",
+      title: t("howItWorks.steps.first.title"),
+      description: t("howItWorks.steps.first.description"),
+    },
+    {
+      number: "02",
+      title: t("howItWorks.steps.second.title"),
+      description: t("howItWorks.steps.second.description"),
+    },
+    {
+      number: "03",
+      title: t("howItWorks.steps.third.title"),
+      description: t("howItWorks.steps.third.description"),
+    },
+  ];
+
   return (
     <Box
       id="how-it-works"
       component="section"
       sx={{
-        backgroundColor: darkTheme.palette.background.default,
-        color: darkTheme.palette.primary.contrastText,
-        py: { xs: 10, md: 16 },
-        px: { xs: 2, md: 3 },
+        backgroundColor:
+          darkTheme.palette.background.default,
+
+        color:
+          darkTheme.palette.primary.contrastText,
+
+        py: {
+          xs: 10,
+          md: 16,
+        },
+
+        px: {
+          xs: 2,
+          md: 3,
+        },
       }}
     >
       <Container maxWidth="lg">
@@ -49,21 +66,24 @@ export default function HowItWorksSection() {
             sx={{
               mb: 2,
 
-              color: darkTheme.palette.primary.main,
+              color:
+                darkTheme.palette.primary.main,
 
               fontSize: "0.85rem",
               fontWeight: 800,
 
               letterSpacing: "0.15em",
+              textTransform: "uppercase",
             }}
           >
-            SLIK FUNGERER DET
+            {t("howItWorks.title")}
           </Typography>
 
           <Typography
             component="h2"
             sx={{
-              color: darkTheme.palette.text.primary,
+              color:
+                darkTheme.palette.text.primary,
 
               fontSize: {
                 xs: "2.4rem",
@@ -71,13 +91,11 @@ export default function HowItWorksSection() {
               },
 
               fontWeight: 750,
-
               lineHeight: 1.05,
-
               letterSpacing: "-2px",
             }}
           >
-            Tre steg til nye muligheter.
+            {t("howItWorks.heading")}
           </Typography>
         </Box>
 
@@ -102,7 +120,8 @@ export default function HowItWorksSection() {
                 sx={{
                   mb: 3,
 
-                  color: darkTheme.palette.text.primary,
+                  color:
+                    darkTheme.palette.text.primary,
 
                   fontSize: {
                     xs: "3rem",
@@ -110,7 +129,6 @@ export default function HowItWorksSection() {
                   },
 
                   fontWeight: 300,
-
                   lineHeight: 1,
                 }}
               >
@@ -123,7 +141,9 @@ export default function HowItWorksSection() {
 
                   fontSize: "1.4rem",
                   fontWeight: 700,
-                  color: darkTheme.palette.text.primary,
+
+                  color:
+                    darkTheme.palette.text.primary,
                 }}
               >
                 {step.title}
@@ -133,7 +153,8 @@ export default function HowItWorksSection() {
                 sx={{
                   maxWidth: 340,
 
-                  color: darkTheme.palette.text.primary,
+                  color:
+                    darkTheme.palette.text.primary,
 
                   lineHeight: 1.8,
                 }}
