@@ -168,6 +168,7 @@ const history = [
 ];
 
 const PROFILE_STORAGE_KEY = "laerling-link-profile";
+const SETTINGS_STORAGE_KEY = "laerling-link-settings";
 
 function getInitials(name?: string) {
   const safeName = typeof name === "string" ? name.trim() : "";
@@ -194,10 +195,8 @@ function Sidebar({
   setView: (view: "learner" | "company") => void;
   menuOpen: boolean;
   setMenuOpen: (open: boolean) => void;
-  page: "home" | "browse" | "applications" | "history" | "profile";
-  setPage: (
-    page: "home" | "browse" | "applications" | "history" | "profile"
-  ) => void;
+  page: PageName;
+  setPage: (page: PageName) => void;
 }) {
   const items =
     view === "learner"
@@ -264,7 +263,8 @@ function Sidebar({
             (index === 1 && page === "browse") ||
             (index === 2 && page === "applications") ||
             (index === 3 && page === "history") ||
-            (index === 4 && page === "profile");
+            (index === 4 && page === "profile") ||
+            (index === 5 && page === "settings");
 
           return (
             <button
@@ -275,6 +275,7 @@ function Sidebar({
                 if (index === 2) setPage("applications");
                 if (index === 3) setPage("history");
                 if (index === 4) setPage("profile");
+                if (index === 5) setPage("settings");
                 setMenuOpen(false);
               }}
               className={`flex items-center gap-5 rounded-[22px] px-5 py-4 text-left text-[20px] font-medium transition ${
@@ -302,9 +303,14 @@ function Topbar({
   view: "learner" | "company";
   setView: (view: "learner" | "company") => void;
   setMenuOpen: (open: boolean) => void;
-  profileName: string;
+  profileName?: string;
 }) {
-  const initials = getInitials(profileName);
+  const safeProfileName =
+    typeof profileName === "string" && profileName.trim()
+      ? profileName
+      : "Ola Nordmann";
+
+  const initials = getInitials(safeProfileName);
 
   return (
     <header className="flex h-[102px] items-center justify-between border-b border-[#202a38] px-5 lg:ml-[372px] lg:px-12">
@@ -315,9 +321,11 @@ function Topbar({
       >
         <Menu />
       </button>
+
       <div className="hidden text-sm text-[#91a4bd] lg:block">
         {view === "learner" ? "Oversikt" : "Bedriftsoversikt"}
       </div>
+
       <div className="ml-auto flex items-center gap-4">
         <button
           onClick={() => setView(view === "learner" ? "company" : "learner")}
@@ -325,9 +333,11 @@ function Topbar({
         >
           {view === "learner" ? "Bedrift" : "Elev"}
         </button>
+
         <span className="text-lg font-semibold text-[#f2f3f6]">
-          {profileName}
+          {safeProfileName}
         </span>
+
         <div className="flex size-12 items-center justify-center rounded-full border border-[#344155] bg-[#202c3b] text-lg font-bold text-[#9aaec7]">
           {initials}
         </div>
@@ -338,9 +348,7 @@ function Topbar({
 
 export default function Page() {
   const [view, setView] = useState<"learner" | "company">("learner");
-  const [page, setPage] = useState<
-    "home" | "browse" | "applications" | "history" | "profile"
-  >("home");
+  const [page, setPage] = useState<PageName>("home");
 
   const [editingProfile, setEditingProfile] = useState(false);
 
@@ -405,6 +413,35 @@ export default function Page() {
         item.field.toLowerCase().includes(query.toLowerCase()) ||
         item.city.toLowerCase().includes(query.toLowerCase()))
   );
+
+  const [settings, setSettings] = useState({
+    language: "Norsk",
+    emailNotifications: true,
+    profileVisible: true,
+    darkMode: true,
+  });
+
+  useEffect(() => {
+    const savedSettings = localStorage.getItem(SETTINGS_STORAGE_KEY);
+
+    if (savedSettings) {
+      try {
+        setSettings((current) => ({
+          ...current,
+          ...JSON.parse(savedSettings),
+        }));
+      } catch {
+        localStorage.removeItem(SETTINGS_STORAGE_KEY);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem(
+      SETTINGS_STORAGE_KEY,
+      JSON.stringify(settings)
+    );
+  }, [settings]);
 
   if (page === "applications") {
     const filteredApplications = applications.filter(
@@ -677,7 +714,7 @@ export default function Page() {
           view={view}
           setView={setView}
           setMenuOpen={setMenuOpen}
-          profileName={profile.name}
+          profileName={profile.name || "Ola Nordmann"}
         />
 
         <section className="mx-auto max-w-[1120px] px-6 pb-20 pt-16 lg:ml-[428px] lg:mr-12 lg:px-0">
@@ -774,6 +811,115 @@ export default function Page() {
                   Lagre endringer
                 </button>
               )}
+            </div>
+          </div>
+        </section>
+      </main>
+    );
+  }
+
+  if (page === "settings") {
+    return (
+      <main className="min-h-screen bg-[#0e131b] text-[#f2f3f6]">
+        <Sidebar
+          view={view}
+          setView={setView}
+          menuOpen={menuOpen}
+          setMenuOpen={setMenuOpen}
+          page={page}
+          setPage={setPage}
+        />
+
+        <Topbar
+          view={view}
+          setView={setView}
+          setMenuOpen={setMenuOpen}
+          profileName={profile.name || "Ola Nordmann"}
+        />
+
+        <section className="mx-auto max-w-[1120px] px-6 pb-20 pt-16 lg:ml-[428px] lg:mr-12 lg:px-0">
+          <p className="text-lg text-[#91a4bd]">Personlige valg</p>
+          <h1 className="mt-3 text-5xl font-bold">Innstillinger</h1>
+          <p className="mt-3 text-lg text-[#91a4bd]">
+            Tilpass hvordan Lærling Link fungerer for deg.
+          </p>
+
+          <div className="mt-10 space-y-5">
+            <div className="rounded-3xl border border-[#29384a] bg-[#182332] p-7">
+              <h2 className="text-2xl font-bold">Språk</h2>
+              <p className="mt-2 text-[#91a4bd]">
+                Velg språket du ønsker å bruke.
+              </p>
+
+              <select
+                value={settings.language}
+                onChange={(event) =>
+                  setSettings({
+                    ...settings,
+                    language: event.target.value,
+                  })
+                }
+                className="mt-5 w-full rounded-xl border border-[#39465a] bg-[#202c3b] px-4 py-3 text-white outline-none focus:border-[#a45bc0]"
+              >
+                <option>Norsk</option>
+                <option>English</option>
+              </select>
+            </div>
+
+            <div className="rounded-3xl border border-[#29384a] bg-[#182332] p-7">
+              <h2 className="text-2xl font-bold">Varsler og personvern</h2>
+
+              <label className="mt-6 flex items-center justify-between gap-5 border-b border-[#29384a] pb-5">
+                <span>
+                  <span className="block font-semibold">E-postvarsler</span>
+                  <span className="text-sm text-[#91a4bd]">
+                    Motta oppdateringer om søknader og matcher.
+                  </span>
+                </span>
+                <input
+                  type="checkbox"
+                  checked={settings.emailNotifications}
+                  onChange={(event) =>
+                    setSettings({
+                      ...settings,
+                      emailNotifications: event.target.checked,
+                    })
+                  }
+                  className="size-5 accent-[#a45bc0]"
+                />
+              </label>
+
+              <label className="mt-5 flex items-center justify-between gap-5">
+                <span>
+                  <span className="block font-semibold">Synlig profil</span>
+                  <span className="text-sm text-[#91a4bd]">
+                    La relevante bedrifter finne profilen din.
+                  </span>
+                </span>
+                <input
+                  type="checkbox"
+                  checked={settings.profileVisible}
+                  onChange={(event) =>
+                    setSettings({
+                      ...settings,
+                      profileVisible: event.target.checked,
+                    })
+                  }
+                  className="size-5 accent-[#a45bc0]"
+                />
+              </label>
+            </div>
+
+            <div className="rounded-3xl border border-[#29384a] bg-[#182332] p-7">
+              <h2 className="text-2xl font-bold">Konto</h2>
+              <p className="mt-2 text-[#91a4bd]">{profile.email}</p>
+
+              <button
+                onClick={() => setPage("profile")}
+                className="mt-5 rounded-xl bg-[#a45bc0] px-5 py-3 font-bold text-white transition hover:bg-[#b86bc9]"
+              >
+                Rediger profil
+              </button>
             </div>
           </div>
         </section>
