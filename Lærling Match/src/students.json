@@ -1,0 +1,11 @@
+[
+  {
+    "id": "demo-1",
+    "name": "Kari Nordmann",
+    "email": "kari.nordmann@example.com",
+    "wantedTrade": "Elektrofag",
+    "location": "Bergen",
+    "description": "Gaming, Fotball, Koding, Musikk",
+    "profileImage": null
+  }
+]

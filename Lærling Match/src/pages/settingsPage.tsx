@@ -3,12 +3,6 @@ import { useTranslation } from "react-i18next";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-import HomeIcon from "@mui/icons-material/Home";
-import SearchIcon from "@mui/icons-material/Search";
-import AssignmentOutlinedIcon from "@mui/icons-material/AssignmentOutlined";
-import HistoryIcon from "@mui/icons-material/History";
-import PersonIcon from "@mui/icons-material/Person";
-import SettingsIcon from "@mui/icons-material/Settings";
 import NavbarAPP from "../components/layout/NavbarApp";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
@@ -37,35 +31,6 @@ export default function SettingsPage() {
     void i18n.changeLanguage(value);
   };
 
-  const navItems = [
-    { label: t("nav.home"), href: "/app", icon: <HomeIcon /> },
-    {
-      label: t("nav.findApprenticeship"),
-      href: "/stillinger",
-      icon: <SearchIcon />,
-    },
-    {
-      label: t("nav.myApplications"),
-      href: "/application",
-      icon: <AssignmentOutlinedIcon />,
-    },
-    {
-      label: t("nav.history"),
-      href: "/historikk",
-      icon: <HistoryIcon />,
-    },
-    {
-      label: t("nav.profile"),
-      href: "/profil",
-      icon: <PersonIcon />,
-    },
-    {
-      label: t("settings.title"),
-      href: "/settings",
-      icon: <SettingsIcon />,
-    },
-  ];
-
   const selectSx = {
     color: "text.primary",
     backgroundColor: "background.paper",
@@ -89,7 +54,6 @@ export default function SettingsPage() {
       userName="Ola Nordmann"
       userRole="Elev"
       initials="ON"
-      navItems={navItems}
     >
       <Box sx={{ width: "100%", maxWidth: 900, mx: "auto" }}>
         <Paper
