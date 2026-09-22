@@ -25,16 +25,6 @@ const CompanyProfilePage = () => {
     description: "Vi tilbyr læreplasser innen IT og teknologi.",
   });
 
-  const updateProfile = (
-    field: keyof typeof profile,
-    value: string,
-  ) => {
-    setProfile((current) => ({
-      ...current,
-      [field]: value,
-    }));
-  };
-
   const [editing, setEditing] = useState(false);
   const [draftProfile, setDraftProfile] = useState(profile);
 
