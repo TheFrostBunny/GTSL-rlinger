@@ -2,6 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import Home from "../pages/Home";
 import HomePage from "../pages/homePage";
 import FindApprenticeship from "../pages/findApprenticeship";
+import MyApplications from "../pages/MyApplications";
 
 export default function AppRoutes() {
   return (
@@ -10,7 +11,7 @@ export default function AppRoutes() {
       <Route path="/app" element={<HomePage />} />
       <Route
         path="/application"
-        element={<FindApprenticeship />}
+        element={<MyApplications />}
       />
       <Route
         path="/stillinger"

@@ -1,4 +1,3 @@
-import Box from "@mui/material/Box";
 import SearchIcon from "@mui/icons-material/Search";
 import HomeIcon from "@mui/icons-material/Home";
 import AssignmentOutlinedIcon from "@mui/icons-material/AssignmentOutlined";

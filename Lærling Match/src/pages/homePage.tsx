@@ -23,7 +23,7 @@ const HomePage = () => {
             href: "/stillinger",
             icon: <SearchIcon />,
           },
-          { label: t("nav.myApplications"), href: "/mine-soknader", icon: <AssignmentOutlinedIcon /> },
+          { label: t("nav.myApplications"), href: "/application", icon: <AssignmentOutlinedIcon /> },
           { label: t("nav.history"), href: "/historikk", icon: <HistoryIcon /> },
           { label: t("nav.profile"), href: "/profil", icon: <PersonIcon /> },
         ]

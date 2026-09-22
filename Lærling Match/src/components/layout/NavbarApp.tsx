@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import AppBar from "@mui/material/AppBar";
 import Avatar from "@mui/material/Avatar";
@@ -8,6 +8,12 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { alpha, useTheme } from "@mui/material/styles";
 import Sidebar from "./Sidebar";
+import { useNavigate } from "react-router-dom";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import Divider from "@mui/material/Divider";
+import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
+import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 
 type NavItem = {
   label: string;
@@ -26,6 +32,7 @@ type NavbarAPPProps = {
 };
 
 const navbarHeight = 72;
+const sidebarStorageKey = "sidebar-collapsed";
 
 export default function NavbarAPP({
   appName = "Lærling Link",
@@ -36,13 +43,29 @@ export default function NavbarAPP({
   navItems = [],
   children,
 }: NavbarAPPProps) {
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(() => {
+    return localStorage.getItem(sidebarStorageKey) === "true";
+  });
+
+  const [userMenuAnchor, setUserMenuAnchor] =
+    useState<null | HTMLElement>(null);
+
+  useEffect(() => {
+    localStorage.setItem(sidebarStorageKey, String(collapsed));
+  }, [collapsed]);
+
   const theme = useTheme();
+  const navigate = useNavigate();
 
   const roleColor =
     userRole === "Elev"
       ? theme.palette.secondary.main
       : theme.palette.primary.main;
+
+  const handleLogout = () => {
+    setUserMenuAnchor(null);
+    navigate("/login");
+  };
 
   return (
     <Box
@@ -70,15 +93,20 @@ export default function NavbarAPP({
             height: navbarHeight,
             minHeight: `${navbarHeight}px !important`,
             justifyContent: "flex-end",
-            px: { xs: 2, md: 4 },
           }}
         >
           <Box
+            onClick={(event) => setUserMenuAnchor(event.currentTarget)}
             sx={{
               display: "flex",
               alignItems: "center",
               gap: 1.5,
               p: 1,
+              borderRadius: 2,
+              cursor: "pointer",
+              "&:hover": {
+                bgcolor: "action.hover",
+              },
             }}
           >
             <Chip
@@ -119,14 +147,7 @@ export default function NavbarAPP({
         </Toolbar>
       </AppBar>
 
-      <Box
-        sx={{
-          display: "flex",
-          flex: 1,
-          minHeight: 0,
-          overflow: "hidden",
-        }}
-      >
+      <Box sx={{ display: "flex", flex: 1, minHeight: 0 }}>
         <Sidebar
           collapsed={collapsed}
           navItems={navItems}
@@ -141,8 +162,8 @@ export default function NavbarAPP({
           sx={{
             flex: 1,
             minWidth: 0,
-            overflow: "auto",
-            p: { xs: 2, md: 5 },
+            overflowY: "auto",
+            p: { xs: 2, sm: 4, md: 5 },
             bgcolor: "background.default",
             color: "text.primary",
           }}
@@ -150,6 +171,70 @@ export default function NavbarAPP({
           {children}
         </Box>
       </Box>
+
+      <Menu
+        anchorEl={userMenuAnchor}
+        open={Boolean(userMenuAnchor)}
+        onClose={() => setUserMenuAnchor(null)}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "right",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+        slotProps={{
+          paper: {
+            sx: {
+              mt: 1,
+              minWidth: 190,
+              backgroundColor: "background.paper",
+              color: "text.primary",
+              border: "1px solid",
+              borderColor: "divider",
+              boxShadow: 8,
+            },
+          },
+        }}
+      >
+        <MenuItem
+          sx={{
+            color: "text.primary",
+            "&:hover": {
+              backgroundColor: "action.hover",
+            },
+          }}
+          onClick={() => {
+            setUserMenuAnchor(null);
+            navigate("/settings");
+          }}
+        >
+          <SettingsOutlinedIcon
+            sx={{ mr: 1.5, color: "text.secondary" }}
+          />
+          Settings
+        </MenuItem>
+
+        <Divider sx={{ borderColor: "divider" }} />
+
+        <MenuItem
+          sx={{
+            color: "error.main",
+            "&:hover": {
+              backgroundColor: "error.main",
+              color: "error.contrastText",
+            },
+            "& .MuiSvgIcon-root": {
+              color: "inherit",
+            },
+          }}
+          onClick={handleLogout}
+        >
+          <LogoutOutlinedIcon sx={{ mr: 1.5 }} />
+          Logg ut
+        </MenuItem>
+      </Menu>
     </Box>
   );
 }
