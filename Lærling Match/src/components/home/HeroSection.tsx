@@ -161,7 +161,7 @@ export default function HeroSection() {
               size="large"
               onClick={() =>
                 navigate(
-                  "/registrer?type=apprentice",
+                  "/signup?type=apprentice",
                 )
               }
               sx={{
@@ -192,7 +192,7 @@ export default function HeroSection() {
               size="large"
               onClick={() =>
                 navigate(
-                  "/registrer?type=company",
+                  "/signup?type=company",
                 )
               }
               sx={{

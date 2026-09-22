@@ -115,35 +115,39 @@ export default function SignUp() {
   };
 
   const fieldSx = {
-    mb: 1,
-
+    mb: 2,
     "& .MuiInputLabel-root": {
-      color: "text.secondary",
+      color: "#b8c7dc",
     },
-
-    "& .MuiInputLabel-root.Mui-focused":
-      {
-        color: "primary.main",
-      },
-
+    "& .MuiInputLabel-root.Mui-focused": {
+      color: "#c084fc",
+    },
     "& .MuiOutlinedInput-root": {
-      color: "text.primary",
-
+      color: "#ffffff",
+      backgroundColor: "#202b3b",
+      borderRadius: 2,
       "& fieldset": {
-        borderColor: "divider",
+        borderColor: "#40506a",
       },
-
       "&:hover fieldset": {
-        borderColor: "primary.main",
+        borderColor: "#a05fc0",
       },
-
       "&.Mui-focused fieldset": {
-        borderColor: "primary.main",
+        borderColor: "#c084fc",
+        borderWidth: 2,
       },
     },
-
     "& .MuiInputBase-input": {
-      color: "text.primary",
+      color: "#ffffff",
+      WebkitTextFillColor: "#ffffff",
+    },
+    "& .MuiInputBase-input::placeholder": {
+      color: "#9fb0c7",
+      opacity: 1,
+    },
+    "& input:-webkit-autofill": {
+      WebkitTextFillColor: "#ffffff",
+      WebkitBoxShadow: "0 0 0 100px #202b3b inset",
     },
   };
 
