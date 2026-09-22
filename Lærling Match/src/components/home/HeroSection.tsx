@@ -159,8 +159,8 @@ export default function HeroSection() {
               xs: "column",
               sm: "row",
             }}
+            spacing={4}
             sx={{
-              spacing: 2,
               justifyContent: "center",
               alignItems: "center",
             }}
