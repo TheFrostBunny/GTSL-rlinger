@@ -127,7 +127,7 @@ export default function Login() {
           fullWidth
           variant="text"
           sx={{ mt: 1 }}
-          onClick={() => navigate("/registrer")}
+          onClick={() => navigate("/signup")}
         >
           Opprett konto
         </Button>
