@@ -76,6 +76,15 @@
       "status": "Matchet",
       "initials": "GT",
       "color": "bg-[#a45bc0]"
+    },
+    {
+      "name": "Fjord Industri",
+      "field": "Mekanikk",
+      "city": "Ålesund",
+      "date": "04. sep 2026",
+      "status": "Venter svar",
+      "initials": "FI",
+      "color": "bg-[#dfd4b8]"
     }
   ],
   "fields": [
