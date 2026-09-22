@@ -6,6 +6,7 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
+import { darkTheme } from "../../themes/darkTheme";
 
 export default function Navbar() {
   return (
@@ -13,7 +14,7 @@ export default function Navbar() {
       position="absolute"
       elevation={0}
       sx={{
-        backgroundColor: "#ac85be",
+        backgroundColor: darkTheme.palette.background.default,
       }}
     >
       <Container maxWidth="xl">
@@ -32,7 +33,7 @@ export default function Navbar() {
             component="a"
             href="#top"
             sx={{
-              color: "#ffffff",
+              color: darkTheme.palette.primary.contrastText,
               textDecoration: "none",
               fontSize: {
                 xs: "1.25rem",
@@ -46,7 +47,7 @@ export default function Navbar() {
             <Box
               component="span"
               sx={{
-                color: "#6fe0ad",
+                color: darkTheme.palette.primary.main,
               }}
             >
               Match
@@ -66,7 +67,7 @@ export default function Navbar() {
             <Button
               href="#about"
               sx={{
-                color: "#ffffff",
+                color: darkTheme.palette.primary.contrastText,
               }}
             >
               Om oss
@@ -75,7 +76,7 @@ export default function Navbar() {
             <Button
               href="#goals"
               sx={{
-                color: "#ffffff",
+                color: darkTheme.palette.primary.contrastText,
               }}
             >
               Våre mål
@@ -84,7 +85,7 @@ export default function Navbar() {
             <Button
               href="#how-it-works"
               sx={{
-                color: "#ffffff",
+                color: darkTheme.palette.primary.contrastText,
               }}
             >
               Slik fungerer det
@@ -92,11 +93,12 @@ export default function Navbar() {
 
             <Button
               variant="contained"
+              href="/app"
               sx={{
                 ml: 2,
 
-                backgroundColor: "#ffffff",
-                color: "#10251c",
+                backgroundColor: darkTheme.palette.primary.contrastText,
+                color: darkTheme.palette.primary.main,
 
                 borderRadius: "999px",
 
@@ -106,7 +108,8 @@ export default function Navbar() {
                 fontWeight: 700,
 
                 "&:hover": {
-                  backgroundColor: "#e9eeec",
+                  backgroundColor: darkTheme.palette.secondary.light,
+                  color: darkTheme.palette.primary.dark,
                 },
               }}
             >

@@ -1,4 +1,5 @@
 import { Box, Card, CardContent, Container, Typography } from "@mui/material";
+import { darkTheme } from "../../themes/darkTheme";
 
 const goals = [
   {
@@ -33,12 +34,9 @@ export default function GoalsSection() {
       id="goals"
       component="section"
       sx={{
-        backgroundColor: "#ffffff",
-
-        py: {
-          xs: 10,
-          md: 16,
-        },
+        backgroundColor: darkTheme.palette.background.default,
+        py: { xs: 10, md: 16 },
+        px: { xs: 2, md: 3 },
       }}
     >
       <Container maxWidth="lg">
@@ -59,7 +57,7 @@ export default function GoalsSection() {
             sx={{
               mb: 2,
 
-              color: "#14845c",
+              color: darkTheme.palette.primary.main,
 
               fontSize: "0.85rem",
               fontWeight: 800,
@@ -73,7 +71,7 @@ export default function GoalsSection() {
           <Typography
             component="h2"
             sx={{
-              color: "#14231d",
+              color: darkTheme.palette.primary.contrastText,
 
               fontSize: {
                 xs: "2.4rem",
@@ -108,7 +106,9 @@ export default function GoalsSection() {
               key={goal.number}
               elevation={0}
               sx={{
-                border: "1px solid #e3e9e6",
+                backgroundColor: darkTheme.palette.background.paper,
+
+                border: `1px solid ${darkTheme.palette.divider}`,
 
                 borderRadius: "24px",
 
@@ -140,7 +140,7 @@ export default function GoalsSection() {
                   sx={{
                     mb: 4,
 
-                    color: "#14845c",
+                    color: darkTheme.palette.primary.main,
 
                     fontSize: "0.9rem",
                     fontWeight: 800,
@@ -153,7 +153,7 @@ export default function GoalsSection() {
                   sx={{
                     mb: 2,
 
-                    color: "#17251f",
+                    color: darkTheme.palette.primary.contrastText,
 
                     fontSize: {
                       xs: "1.35rem",
@@ -168,7 +168,7 @@ export default function GoalsSection() {
 
                 <Typography
                   sx={{
-                    color: "#68746e",
+                    color: darkTheme.palette.text.secondary,
 
                     lineHeight: 1.75,
                   }}
