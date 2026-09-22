@@ -2,6 +2,7 @@ import { offlineExchange } from '@urql/exchange-graphcache';
 import { Resolver as GraphCacheResolver, UpdateResolver as GraphCacheUpdateResolver, OptimisticMutationResolver as GraphCacheOptimisticMutationResolver } from '@urql/exchange-graphcache';
 
 import gql from 'graphql-tag';
+import * as Urql from 'urql';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -9,6 +10,7 @@ export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: 
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
 export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: { input: string; output: string; }
@@ -31,7 +33,16 @@ export enum ApplyPolicy {
 }
 
 export type CreateStudentInput = {
+  readonly afterApprenticeShip?: InputMaybe<Scalars['String']['input']>;
+  readonly certificates?: InputMaybe<ReadonlyArray<Scalars['String']['input']>>;
+  readonly description?: InputMaybe<Scalars['String']['input']>;
+  readonly email: Scalars['String']['input'];
+  readonly line?: InputMaybe<Scalars['String']['input']>;
   readonly name: Scalars['String']['input'];
+  readonly password: Scalars['String']['input'];
+  readonly profileImage?: InputMaybe<Scalars['String']['input']>;
+  readonly socialMedias?: InputMaybe<ReadonlyArray<Scalars['String']['input']>>;
+  readonly trade: Trades;
 };
 
 export type CreateStudentPayload = {
@@ -43,11 +54,17 @@ export type CreateStudentPayload = {
 export type Mutation = {
   readonly __typename?: 'Mutation';
   readonly createStudent: CreateStudentPayload;
+  readonly updateStudent: UpdateStudentPayload;
 };
 
 
 export type MutationCreateStudentArgs = {
   input: CreateStudentInput;
+};
+
+
+export type MutationUpdateStudentArgs = {
+  input: UpdateStudentInput;
 };
 
 /** The node interface is implemented by entities that have a global unique identifier. */
@@ -83,7 +100,9 @@ export type Student = Node & {
   readonly __typename?: 'Student';
   readonly afterApprenticeShip?: Maybe<Scalars['String']['output']>;
   readonly certificates?: Maybe<ReadonlyArray<StudentCertificates>>;
+  readonly credential?: Maybe<StudentCredential>;
   readonly description?: Maybe<Scalars['String']['output']>;
+  readonly email?: Maybe<Scalars['String']['output']>;
   readonly id: Scalars['ID']['output'];
   readonly line?: Maybe<Scalars['String']['output']>;
   readonly mediaLinks?: Maybe<ReadonlyArray<StudentSocialMedia>>;
@@ -97,6 +116,13 @@ export type StudentCertificates = {
   readonly description?: Maybe<Scalars['String']['output']>;
   readonly id: Scalars['Int']['output'];
   readonly student?: Maybe<Student>;
+  readonly studentId: Scalars['Int']['output'];
+};
+
+export type StudentCredential = {
+  readonly __typename?: 'StudentCredential';
+  readonly passwordHash: Scalars['String']['output'];
+  readonly student: Student;
   readonly studentId: Scalars['Int']['output'];
 };
 
@@ -306,12 +332,47 @@ export enum Trades {
   WoolAndYarnCraftsperson = 'WOOL_AND_YARN_CRAFTSPERSON'
 }
 
-export type StudentFragment = { readonly __typename?: 'Student', readonly id: string, readonly name?: string | null, readonly wantedTrade?: Trades | null, readonly line?: string | null, readonly profileImage?: string | null, readonly mediaLinks?: ReadonlyArray<{ readonly __typename?: 'StudentSocialMedia', readonly mediaUrl?: string | null }> | null, readonly certificates?: ReadonlyArray<{ readonly __typename?: 'StudentCertificates', readonly description?: string | null }> | null };
+export type UpdateStudentInput = {
+  readonly afterApprenticeShip?: InputMaybe<Scalars['String']['input']>;
+  readonly certificates?: InputMaybe<ReadonlyArray<Scalars['String']['input']>>;
+  readonly description?: InputMaybe<Scalars['String']['input']>;
+  readonly email: Scalars['String']['input'];
+  readonly line?: InputMaybe<Scalars['String']['input']>;
+  readonly name: Scalars['String']['input'];
+  readonly newPassword?: InputMaybe<Scalars['String']['input']>;
+  readonly profileImage?: InputMaybe<Scalars['String']['input']>;
+  readonly socialMedias?: InputMaybe<ReadonlyArray<Scalars['String']['input']>>;
+  readonly studentId: Scalars['ID']['input'];
+  readonly trade: Trades;
+};
+
+export type UpdateStudentPayload = {
+  readonly __typename?: 'UpdateStudentPayload';
+  readonly query: Query;
+  readonly student?: Maybe<Student>;
+};
+
+export type CreateStudentMutationVariables = Exact<{
+  input: CreateStudentInput;
+}>;
+
+
+export type CreateStudentMutation = { readonly __typename?: 'Mutation', readonly createStudent: { readonly __typename?: 'CreateStudentPayload', readonly student?: { readonly __typename?: 'Student', readonly id: string, readonly name?: string | null, readonly email?: string | null, readonly wantedTrade?: Trades | null, readonly line?: string | null, readonly profileImage?: string | null, readonly mediaLinks?: ReadonlyArray<{ readonly __typename?: 'StudentSocialMedia', readonly mediaUrl?: string | null }> | null, readonly certificates?: ReadonlyArray<{ readonly __typename?: 'StudentCertificates', readonly description?: string | null }> | null } | null } };
+
+export type StudentFragment = { readonly __typename?: 'Student', readonly id: string, readonly name?: string | null, readonly email?: string | null, readonly wantedTrade?: Trades | null, readonly line?: string | null, readonly profileImage?: string | null, readonly mediaLinks?: ReadonlyArray<{ readonly __typename?: 'StudentSocialMedia', readonly mediaUrl?: string | null }> | null, readonly certificates?: ReadonlyArray<{ readonly __typename?: 'StudentCertificates', readonly description?: string | null }> | null };
+
+export type UpdateStudentMutationVariables = Exact<{
+  input: UpdateStudentInput;
+}>;
+
+
+export type UpdateStudentMutation = { readonly __typename?: 'Mutation', readonly updateStudent: { readonly __typename?: 'UpdateStudentPayload', readonly student?: { readonly __typename?: 'Student', readonly id: string, readonly name?: string | null, readonly email?: string | null, readonly wantedTrade?: Trades | null, readonly line?: string | null, readonly profileImage?: string | null, readonly mediaLinks?: ReadonlyArray<{ readonly __typename?: 'StudentSocialMedia', readonly mediaUrl?: string | null }> | null, readonly certificates?: ReadonlyArray<{ readonly __typename?: 'StudentCertificates', readonly description?: string | null }> | null } | null } };
 
 export const StudentFragmentDoc = gql`
     fragment Student on Student {
   id
   name
+  email
   wantedTrade
   line
   profileImage
@@ -323,13 +384,41 @@ export const StudentFragmentDoc = gql`
   }
 }
     `;
+export const CreateStudentDocument = gql`
+    mutation CreateStudent($input: CreateStudentInput!) {
+  createStudent(input: $input) {
+    student {
+      ...Student
+    }
+  }
+}
+    ${StudentFragmentDoc}`;
+
+export function useCreateStudentMutation() {
+  return Urql.useMutation<CreateStudentMutation, CreateStudentMutationVariables>(CreateStudentDocument);
+};
+export const UpdateStudentDocument = gql`
+    mutation UpdateStudent($input: UpdateStudentInput!) {
+  updateStudent(input: $input) {
+    student {
+      ...Student
+    }
+  }
+}
+    ${StudentFragmentDoc}`;
+
+export function useUpdateStudentMutation() {
+  return Urql.useMutation<UpdateStudentMutation, UpdateStudentMutationVariables>(UpdateStudentDocument);
+};
 export type WithTypename<T extends { __typename?: any }> = Partial<T> & { __typename: NonNullable<T['__typename']> };
 
 export type GraphCacheKeysConfig = {
   CreateStudentPayload?: (data: WithTypename<CreateStudentPayload>) => null | string,
   Student?: (data: WithTypename<Student>) => null | string,
   StudentCertificates?: (data: WithTypename<StudentCertificates>) => null | string,
-  StudentSocialMedia?: (data: WithTypename<StudentSocialMedia>) => null | string
+  StudentCredential?: (data: WithTypename<StudentCredential>) => null | string,
+  StudentSocialMedia?: (data: WithTypename<StudentSocialMedia>) => null | string,
+  UpdateStudentPayload?: (data: WithTypename<UpdateStudentPayload>) => null | string
 }
 
 export type GraphCacheResolvers = {
@@ -345,7 +434,9 @@ export type GraphCacheResolvers = {
   Student?: {
     afterApprenticeShip?: GraphCacheResolver<WithTypename<Student>, Record<string, never>, Scalars['String'] | string>,
     certificates?: GraphCacheResolver<WithTypename<Student>, Record<string, never>, Array<WithTypename<StudentCertificates> | string>>,
+    credential?: GraphCacheResolver<WithTypename<Student>, Record<string, never>, WithTypename<StudentCredential> | string>,
     description?: GraphCacheResolver<WithTypename<Student>, Record<string, never>, Scalars['String'] | string>,
+    email?: GraphCacheResolver<WithTypename<Student>, Record<string, never>, Scalars['String'] | string>,
     id?: GraphCacheResolver<WithTypename<Student>, Record<string, never>, Scalars['ID'] | string>,
     line?: GraphCacheResolver<WithTypename<Student>, Record<string, never>, Scalars['String'] | string>,
     mediaLinks?: GraphCacheResolver<WithTypename<Student>, Record<string, never>, Array<WithTypename<StudentSocialMedia> | string>>,
@@ -359,16 +450,26 @@ export type GraphCacheResolvers = {
     student?: GraphCacheResolver<WithTypename<StudentCertificates>, Record<string, never>, WithTypename<Student> | string>,
     studentId?: GraphCacheResolver<WithTypename<StudentCertificates>, Record<string, never>, Scalars['Int'] | string>
   },
+  StudentCredential?: {
+    passwordHash?: GraphCacheResolver<WithTypename<StudentCredential>, Record<string, never>, Scalars['String'] | string>,
+    student?: GraphCacheResolver<WithTypename<StudentCredential>, Record<string, never>, WithTypename<Student> | string>,
+    studentId?: GraphCacheResolver<WithTypename<StudentCredential>, Record<string, never>, Scalars['Int'] | string>
+  },
   StudentSocialMedia?: {
     id?: GraphCacheResolver<WithTypename<StudentSocialMedia>, Record<string, never>, Scalars['Int'] | string>,
     mediaUrl?: GraphCacheResolver<WithTypename<StudentSocialMedia>, Record<string, never>, Scalars['String'] | string>,
     student?: GraphCacheResolver<WithTypename<StudentSocialMedia>, Record<string, never>, WithTypename<Student> | string>,
     studentId?: GraphCacheResolver<WithTypename<StudentSocialMedia>, Record<string, never>, Scalars['Int'] | string>
+  },
+  UpdateStudentPayload?: {
+    query?: GraphCacheResolver<WithTypename<UpdateStudentPayload>, Record<string, never>, WithTypename<Query> | string>,
+    student?: GraphCacheResolver<WithTypename<UpdateStudentPayload>, Record<string, never>, WithTypename<Student> | string>
   }
 };
 
 export type GraphCacheOptimisticUpdaters = {
-  createStudent?: GraphCacheOptimisticMutationResolver<MutationCreateStudentArgs, WithTypename<CreateStudentPayload>>
+  createStudent?: GraphCacheOptimisticMutationResolver<MutationCreateStudentArgs, WithTypename<CreateStudentPayload>>,
+  updateStudent?: GraphCacheOptimisticMutationResolver<MutationUpdateStudentArgs, WithTypename<UpdateStudentPayload>>
 };
 
 export type GraphCacheUpdaters = {
@@ -378,7 +479,8 @@ export type GraphCacheUpdaters = {
     student?: GraphCacheUpdateResolver<{ student: Maybe<WithTypename<Student>> }, QueryStudentArgs>
   },
   Mutation?: {
-    createStudent?: GraphCacheUpdateResolver<{ createStudent: WithTypename<CreateStudentPayload> }, MutationCreateStudentArgs>
+    createStudent?: GraphCacheUpdateResolver<{ createStudent: WithTypename<CreateStudentPayload> }, MutationCreateStudentArgs>,
+    updateStudent?: GraphCacheUpdateResolver<{ updateStudent: WithTypename<UpdateStudentPayload> }, MutationUpdateStudentArgs>
   },
   Subscription?: {
     onStudentCreated?: GraphCacheUpdateResolver<{ onStudentCreated: WithTypename<Student> }, Record<string, never>>
@@ -390,7 +492,9 @@ export type GraphCacheUpdaters = {
   Student?: {
     afterApprenticeShip?: GraphCacheUpdateResolver<Maybe<WithTypename<Student>>, Record<string, never>>,
     certificates?: GraphCacheUpdateResolver<Maybe<WithTypename<Student>>, Record<string, never>>,
+    credential?: GraphCacheUpdateResolver<Maybe<WithTypename<Student>>, Record<string, never>>,
     description?: GraphCacheUpdateResolver<Maybe<WithTypename<Student>>, Record<string, never>>,
+    email?: GraphCacheUpdateResolver<Maybe<WithTypename<Student>>, Record<string, never>>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<Student>>, Record<string, never>>,
     line?: GraphCacheUpdateResolver<Maybe<WithTypename<Student>>, Record<string, never>>,
     mediaLinks?: GraphCacheUpdateResolver<Maybe<WithTypename<Student>>, Record<string, never>>,
@@ -404,11 +508,20 @@ export type GraphCacheUpdaters = {
     student?: GraphCacheUpdateResolver<Maybe<WithTypename<StudentCertificates>>, Record<string, never>>,
     studentId?: GraphCacheUpdateResolver<Maybe<WithTypename<StudentCertificates>>, Record<string, never>>
   },
+  StudentCredential?: {
+    passwordHash?: GraphCacheUpdateResolver<Maybe<WithTypename<StudentCredential>>, Record<string, never>>,
+    student?: GraphCacheUpdateResolver<Maybe<WithTypename<StudentCredential>>, Record<string, never>>,
+    studentId?: GraphCacheUpdateResolver<Maybe<WithTypename<StudentCredential>>, Record<string, never>>
+  },
   StudentSocialMedia?: {
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<StudentSocialMedia>>, Record<string, never>>,
     mediaUrl?: GraphCacheUpdateResolver<Maybe<WithTypename<StudentSocialMedia>>, Record<string, never>>,
     student?: GraphCacheUpdateResolver<Maybe<WithTypename<StudentSocialMedia>>, Record<string, never>>,
     studentId?: GraphCacheUpdateResolver<Maybe<WithTypename<StudentSocialMedia>>, Record<string, never>>
+  },
+  UpdateStudentPayload?: {
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateStudentPayload>>, Record<string, never>>,
+    student?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateStudentPayload>>, Record<string, never>>
   },
 };
 

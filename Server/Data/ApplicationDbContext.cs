@@ -24,9 +24,17 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
         modelBuilder.Entity<StudentSocialMedia>().HasKey(t => new { t.StudentId, t.Id });
         modelBuilder.Entity<StudentCertificates>().HasKey(t => new { t.StudentId, t.Id });
+        modelBuilder.Entity<StudentCredential>().HasKey(c => c.StudentId);
+
+        modelBuilder.Entity<Student>()
+            .HasOne(s => s.Credential)
+            .WithOne(c => c.Student)
+            .HasForeignKey<StudentCredential>(c => c.StudentId)
+            .OnDelete(DeleteBehavior.Cascade);
 
     }
     public DbSet<Student> Students { get; set; } = default!;
     public DbSet<StudentSocialMedia> StudentSocialMedias { get; set; } = default!;
     public DbSet<StudentCertificates> StudentCertificates { get; set; } = default!;
+    public DbSet<StudentCredential> StudentCredentials { get; set; } = default!;
 }

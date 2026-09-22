@@ -1,6 +1,7 @@
 fragment Student on Student {
   id
   name
+  email
   wantedTrade
   line
   profileImage
