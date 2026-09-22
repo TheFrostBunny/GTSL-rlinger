@@ -1,11 +1,19 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import GrettingsText from "../GrettingsText";
-
 import { useTranslation } from "react-i18next";
+import { useDashboardStats } from "../../hooks/useDashboardStats";
+
 const DashboardIntro = () => {
-  
   const { t } = useTranslation();
+  const { stats, loading } = useDashboardStats();
+
+  const dashboardStats = [
+    [stats.newSuggestions, t("dashboard.stats.newSuggestions")],
+    [stats.liked, t("dashboard.stats.liked")],
+    [stats.awaitingResponse, t("dashboard.stats.awaitingResponse")],
+  ];
+
   return (
     <Box sx={{ mb: 4 }}>
       <GrettingsText />
@@ -23,7 +31,7 @@ const DashboardIntro = () => {
       >
         {t("dashboard.welcome")}
         <br />
-        tilbake, Ola
+        {t("dashboard.backToName", { name: "Ola" })}
       </Typography>
 
       <Typography
@@ -36,8 +44,11 @@ const DashboardIntro = () => {
           lineHeight: 1.5,
         }}
       >
-        To nye bedrifter matcher profilen din denne uken. Bla gjennom og finn
-        din neste læreplass.
+        {loading
+          ? t("dashboard.loadingSuggestions")
+          : t("dashboard.matchingSuggestions", {
+              count: stats.newSuggestions,
+            })}
       </Typography>
 
       <Box
@@ -48,16 +59,12 @@ const DashboardIntro = () => {
           mt: 5,
         }}
       >
-        {[
-          ["12", "nye forslag"],
-          ["3", "du har likt"],
-          ["2", "venter svar"],
-        ].map(([value, label]) => (
+        {dashboardStats.map(([value, label]) => (
           <Box key={label}>
             <Typography
               sx={{ color: "#f5f7fa", fontSize: "1.8rem", fontWeight: 700 }}
             >
-              {value}
+              {loading ? "—" : value}
             </Typography>
             <Typography sx={{ color: "#8fa1b8" }}>{label}</Typography>
           </Box>

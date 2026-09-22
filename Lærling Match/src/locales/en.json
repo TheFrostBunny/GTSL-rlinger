@@ -18,12 +18,21 @@
     "evening": "Good evening"
   },
   "dashboard": {
-    "welcome": "Welcome to your dashboard",
-    "welcomeBack": "Welcome back, {{name}}",
-    "description": "Here you can find an overview of your activities and statistics.",
-    "newSuggestions": "New suggestions",
-    "liked": "Liked",
-    "waiting": "Waiting for response"
+    "welcome": "Welcome",
+    "backToName": "back, {{name}}",
+    "loadingSuggestions": "Loading your suggestions...",
+    "matchingSuggestions": "{{count}} new companies match your profile this week.",
+    "stats": {
+      "newSuggestions": "new suggestions",
+      "liked": "liked",
+      "awaitingResponse": "awaiting response"
+    }
+  },
+  "findplacement": {
+    "title": "Find apprenticeship",
+    "description": "Browse companies that match your field of study.",
+    "companies": "companies",
+    "searchPlaceholder": "Search for company, field of study, or location..."
   },
   "settings": {
     "title": "Settings",

@@ -151,10 +151,6 @@ export default function SettingsPage() {
             {t("settings.title")}
           </Typography>
 
-          <Typography sx={{ color: "text.secondary", mb: 4 }}>
-            {t("settings.description")}
-          </Typography>
-
           <Stack spacing={3}>
             <Box>
               <Typography sx={{ color: "text.primary", fontWeight: 700 }}>

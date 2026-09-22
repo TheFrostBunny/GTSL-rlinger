@@ -12,6 +12,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import SearchIcon from "@mui/icons-material/Search";
+import { useTranslation } from "react-i18next";
 
 type Company = {
   id: number;
@@ -91,6 +92,7 @@ const categories = [
 
 export default function Findplacement() {
   const [search, setSearch] = useState("");
+  const { t } = useTranslation();
   const [category, setCategory] = useState("Alle");
   const [removed, setRemoved] = useState<number[]>([]);
   const [favorites, setFavorites] = useState<number[]>([]);
@@ -158,7 +160,7 @@ export default function Findplacement() {
             mb: 0.5,
           }}
         >
-          Finn læreplass
+          {t("findplacement.title")}
         </Typography>
 
         <Typography
@@ -168,14 +170,14 @@ export default function Findplacement() {
             mb: 2,
           }}
         >
-          Bla gjennom lærebedrifter som matcher din fagretning.
+          {t("findplacement.description")}
         </Typography>
 
         <TextField
           fullWidth
           value={search}
           onChange={(event) => setSearch(event.target.value)}
-          placeholder="Søk etter bedrift, fagretning eller sted..."
+          placeholder={t("findplacement.searchPlaceholder")}
           sx={{
             mb: 1.5,
             "& .MuiOutlinedInput-root": {
@@ -237,7 +239,7 @@ export default function Findplacement() {
         </Stack>
 
         <Typography sx={{ color: "text.secondary", fontSize: 13, mb: 1 }}>
-          {filteredCompanies.length} lærebedrifter
+          {filteredCompanies.length} {t("findplacement.companies")}
         </Typography>
 
         <Stack spacing={1.25}>
