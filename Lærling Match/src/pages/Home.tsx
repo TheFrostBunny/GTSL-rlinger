@@ -10,7 +10,6 @@ const Home = () => {
   return (
     <>
       <Navbar />
-
       <main>
         <HeroSection />
         <AboutSection />
@@ -18,7 +17,6 @@ const Home = () => {
         <HowItWorksSection />
         <CTASection />
       </main>
-
       <Footer />
     </>
   );
