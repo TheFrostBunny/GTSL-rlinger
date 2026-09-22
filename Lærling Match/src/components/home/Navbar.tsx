@@ -6,6 +6,7 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
+import { Link } from "react-router-dom";
 import { darkTheme } from "../../themes/darkTheme";
 
 export default function Navbar() {
@@ -91,30 +92,29 @@ export default function Navbar() {
               Slik fungerer det
             </Button>
 
-            <Button
-              variant="contained"
-              href="/app"
-              sx={{
-                ml: 2,
+            <Link
+              to="/login"
+              style={{
+                marginLeft: "8px",
 
                 backgroundColor: darkTheme.palette.primary.contrastText,
                 color: darkTheme.palette.primary.main,
 
                 borderRadius: "999px",
 
-                px: 3,
+                padding: "8px 24px",
 
                 textTransform: "none",
                 fontWeight: 700,
 
-                "&:hover": {
+                ":hover": {
                   backgroundColor: darkTheme.palette.secondary.light,
                   color: darkTheme.palette.primary.dark,
                 },
               }}
             >
               Logg inn
-            </Button>
+            </Link>
           </Box>
         </Toolbar>
       </Container>

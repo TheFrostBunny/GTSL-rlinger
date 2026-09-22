@@ -20,7 +20,7 @@ const FindApprenticeship = () => {
     },
     {
       label: t("nav.myApplications"),
-      href: "/mine-soknader",
+      href: "/application",
       icon: <AssignmentOutlinedIcon />,
     },
     {
