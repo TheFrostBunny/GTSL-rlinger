@@ -1,0 +1,19 @@
+{
+  "app": {
+    "name": "Lærling Link"
+  },
+  "nav": {
+    "home": "Hjem",
+    "profile": "Min profil",
+    "findApprenticeship": "Finn lærlingplass",
+    "myApplications": "Mine søknader",
+    "history": "Historikk",
+    "businessProfile": "Bedriftsprofil",
+    "createPosition": "Opprett stilling"
+  },
+  "greeting": {
+    "morning": "God morgen",
+    "day": "God ettermiddag",
+    "evening": "God kveld"
+  }
+}
