@@ -13,6 +13,7 @@ public class Student
 {
     public int Id { get; set; }
     public string? Name { get; set; }
+    public string? Email { get; set; }
     public Trades? WantedTrade { get; set; }
     public string? Line { get; set; }
     public string? ProfileImage { get; set; }
@@ -20,6 +21,8 @@ public class Student
     public string? Description { get; set; }
     public string? AfterApprenticeShip { get; set; }
     public List<StudentCertificates>? Certificates { get; set; }
+    public StudentCredential? Credential { get; set; }
+
     [NodeResolver]
     public static async Task<Student?> GetStudentByIdAsync(
         int id,

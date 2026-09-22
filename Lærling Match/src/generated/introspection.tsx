@@ -68,6 +68,29 @@ export default {
                 }
               }
             ]
+          },
+          {
+            "name": "updateStudent",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "UpdateStudentPayload",
+                "kind": "OBJECT",
+                "ofType": null
+              }
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
           }
         ],
         "interfaces": []
@@ -203,7 +226,24 @@ export default {
             "args": []
           },
           {
+            "name": "credential",
+            "type": {
+              "kind": "OBJECT",
+              "name": "StudentCredential",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
             "name": "description",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "email",
             "type": {
               "kind": "SCALAR",
               "name": "Any"
@@ -324,6 +364,47 @@ export default {
       },
       {
         "kind": "OBJECT",
+        "name": "StudentCredential",
+        "fields": [
+          {
+            "name": "passwordHash",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "student",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "Student",
+                "kind": "OBJECT",
+                "ofType": null
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "studentId",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
         "name": "StudentSocialMedia",
         "fields": [
           {
@@ -384,6 +465,34 @@ export default {
                 "kind": "OBJECT",
                 "ofType": null
               }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "UpdateStudentPayload",
+        "fields": [
+          {
+            "name": "query",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "Query",
+                "kind": "OBJECT",
+                "ofType": null
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "student",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Student",
+              "ofType": null
             },
             "args": []
           }
