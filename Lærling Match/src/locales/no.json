@@ -15,5 +15,18 @@
     "morning": "God morgen",
     "day": "God ettermiddag",
     "evening": "God kveld"
+  },
+  "settings": {
+    "title": "Innstillinger",
+    "description": "Administrer innstillingene for kontoen din.",
+    "notifications": "Varsler",
+    "notificationsDescription": "Motta varsler om søknader og meldinger.",
+    "language": "Språk",
+    "theme": "Tema",
+    "norwegian": "Norsk",
+    "english": "Engelsk",
+    "dark": "Mørk",
+    "light": "Lys",
+    "save": "Lagre innstillinger"
   }
 }
