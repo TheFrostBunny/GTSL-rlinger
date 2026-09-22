@@ -1,5 +1,6 @@
 using System.Linq;
 using GreenTechSee.Students;
+using GreenTechSee.Companies;
 using Microsoft.EntityFrameworkCore;
 
 namespace GreenTechSee.Data;
@@ -32,9 +33,23 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             .HasForeignKey<StudentCredential>(c => c.StudentId)
             .OnDelete(DeleteBehavior.Cascade);
 
+
+        modelBuilder.Entity<CompanySocialMedia>().HasKey(t => new { t.CompanyId, t.Id });
+        modelBuilder.Entity<CompanyCredential>().HasKey(c => c.CompanyId);
+
+        modelBuilder.Entity<Company>()
+            .HasOne(s => s.CompanyCredential)
+            .WithOne(c => c.Company)
+            .HasForeignKey<CompanyCredential>(c => c.CompanyId)
+            .OnDelete(DeleteBehavior.Cascade);
+
     }
     public DbSet<Student> Students { get; set; } = default!;
     public DbSet<StudentSocialMedia> StudentSocialMedias { get; set; } = default!;
     public DbSet<StudentCertificates> StudentCertificates { get; set; } = default!;
     public DbSet<StudentCredential> StudentCredentials { get; set; } = default!;
+
+    public DbSet<Company> Companys { get; set; } = default!;
+    public DbSet<CompanySocialMedia> CompanySocialMedias { get; set; } = default!;
+    public DbSet<CompanyCredential> CompanyCredentials { get; set; } = default!;
 }
