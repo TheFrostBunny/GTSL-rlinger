@@ -4,27 +4,28 @@ using GreenTechSee.Data;
 using HotChocolate.Types;
 using HotChocolate.Subscriptions;
 using HotChocolate.Types.Relay;
+using GreenTechSee.Students;
 
-namespace GreenTechSee.Users;
+namespace GreenTechSee.Students;
 
 [ExtendObjectType(GraphQLObjectType.Mutation)]
-public class UserMutations
+public class StudentMutations
 {
-    public async Task<User> CreateUserAsync(
+    public async Task<Student> CreateStudentAsync(
         string name,
         ApplicationDbContext context,
         ITopicEventSender eventSender,
         CancellationToken cancellationToken)
     {
-        var user = new User
+        var student = new Student
         {
             Name = name,
         };
 
-        context.Users.Add(user);
+        context.Students.Add(student);
         await context.SaveChangesAsync(cancellationToken);
-        await eventSender.SendAsync(nameof(UserSubscriptions.OnUserCreated), user, cancellationToken);
+        await eventSender.SendAsync(nameof(StudentSubscriptions.OnStudentCreated), student, cancellationToken);
 
-        return user;
+        return student;
     }
 }
