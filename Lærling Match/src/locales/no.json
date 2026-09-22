@@ -32,7 +32,12 @@
   "findplacement": {
     "title": "Finn lærlingplass",
     "description": "Bla gjennom lærebedrifter som matcher din fagretning.",
+    "findCompanies": "Finn læreplasser",
+    "findApprentices": "Finn lærlinger",
+    "companyDescription": "Bla gjennom bedrifter som søker lærlinger.",
+    "apprenticeDescription": "Bla gjennom elever som søker læreplass.",
     "companies": "bedrifter",
+    "apprentices": "elever",
     "searchPlaceholder": "Søk etter bedrift, fagretning eller sted...",
     "filter": {
       "all": "Alle ({{count}})",
@@ -94,5 +99,14 @@
   },
   "history": {
     "description": "Se dine tidligere søknader og aktiviteter."
+  },
+  "common": {
+    "edit": "Rediger profil",
+    "save": "Lagre endringer",
+    "cancel": "Avbryt"
+  },
+  "companyProfile": {
+    "title": "Bedriftsprofil",
+    "description": "Administrer informasjonen om bedriften din."
   }
 }

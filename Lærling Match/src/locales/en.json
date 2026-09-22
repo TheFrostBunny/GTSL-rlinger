@@ -99,5 +99,14 @@
   },
   "history": {
     "description": "View your past applications and activities."
+  },
+  "common": {
+    "edit": "Edit profile",
+    "save": "Save changes",
+    "cancel": "Cancel"
+  },
+  "companyProfile": {
+    "title": "Company profile",
+    "description": "Manage your company's information."
   }
 }

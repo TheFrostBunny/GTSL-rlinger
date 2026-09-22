@@ -9,6 +9,7 @@ import Profile from "../pages/profilePage";
 import Login from "../pages/loginPage";
 import SignUp from "../pages/signupPage";
 import SettingsPage from "../pages/settingsPage";
+import CompanyProfilePage from "../pages/CompanyProfilePage";
 
 export default function AppRoutes() {
   return (
@@ -50,6 +51,10 @@ export default function AppRoutes() {
       <Route
         path="/admin"
         element={<AdminPeoplePanel />}
+      />
+      <Route
+        path="/bedrift"
+        element={<CompanyProfilePage   />}
       />
     </Routes>
   );
