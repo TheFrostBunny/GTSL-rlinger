@@ -1,4 +1,5 @@
 import { Box, Container, Typography } from "@mui/material";
+import { theme } from "../../themes/darkTheme";
 
 const steps = [
   {
@@ -27,13 +28,10 @@ export default function HowItWorksSection() {
       id="how-it-works"
       component="section"
       sx={{
-        backgroundColor: "#10281f",
-        color: "#ffffff",
-
-        py: {
-          xs: 10,
-          md: 16,
-        },
+        backgroundColor: theme.palette.background.default,
+        color: theme.palette.primary.contrastText,
+        py: { xs: 10, md: 16 },
+        px: { xs: 2, md: 3 },
       }}
     >
       <Container maxWidth="lg">
@@ -51,7 +49,7 @@ export default function HowItWorksSection() {
             sx={{
               mb: 2,
 
-              color: "#72dda9",
+              color: theme.palette.primary.main,
 
               fontSize: "0.85rem",
               fontWeight: 800,
@@ -65,6 +63,8 @@ export default function HowItWorksSection() {
           <Typography
             component="h2"
             sx={{
+              color: theme.palette.text.primary,
+
               fontSize: {
                 xs: "2.4rem",
                 md: "3.7rem",
@@ -102,7 +102,7 @@ export default function HowItWorksSection() {
                 sx={{
                   mb: 3,
 
-                  color: "#72dda9",
+                  color: theme.palette.primary.main,
 
                   fontSize: {
                     xs: "3rem",
@@ -132,7 +132,7 @@ export default function HowItWorksSection() {
                 sx={{
                   maxWidth: 340,
 
-                  color: "rgba(255,255,255,0.65)",
+                  color: theme.palette.text.secondary,
 
                   lineHeight: 1.8,
                 }}
