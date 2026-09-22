@@ -11,33 +11,23 @@ import IconButton from "@mui/material/IconButton";
 import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
 import Autocomplete from "@mui/material/Autocomplete";
-import HomeIcon from "@mui/icons-material/Home";
-import SearchIcon from "@mui/icons-material/Search";
-import AssignmentOutlinedIcon from "@mui/icons-material/AssignmentOutlined";
-import HistoryIcon from "@mui/icons-material/History";
-import PersonIcon from "@mui/icons-material/Person";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import SettingsIcon from "@mui/icons-material/Settings";
 import NavbarAPP from "../components/layout/NavbarApp";
-import { StudentFragment, useGetMeQuery } from "../generated/graphql";
-
+import { useDemoStudent } from "../data/useDemoStudent";
+import type { DemoStudent } from "../data/types";
 
 export default function Profile() {
   const { t } = useTranslation();
 
-  const [{ data }] = useGetMeQuery();
-  const me: StudentFragment | undefined = data?.me ?? undefined;
+  const { student, saveStudent } = useDemoStudent();
 
-  const [profile, setProfile] =
-    useState<StudentFragment | undefined>(undefined);
-
-  const [draftProfile, setDraftProfile] =
-    useState<StudentFragment | undefined>(undefined);
+  const [draftProfile, setDraftProfile] = useState<DemoStudent | undefined>(
+    student,
+  );
 
   const [editing, setEditing] = useState(false);
   const [interestInput, setInterestInput] = useState("");
-
-  const displayedProfile = profile ?? me;
+  const [userRole, setUserRole] = useState<"Elev" | "Bedrift">("Elev");
 
   const inputSx = {
     "& .MuiInputBase-input": {
@@ -66,117 +56,83 @@ export default function Profile() {
     },
   };
 
-  const interests = (displayedProfile?.description ?? "")
+  if (!student) {
+    return (
+      <NavbarAPP
+        appName={t("app.name")}
+        userRole={userRole}
+        onRoleChange={setUserRole}
+      >
+        <Typography sx={{ color: "text.primary" }}>
+          Fant ingen bruker.
+        </Typography>
+      </NavbarAPP>
+    );
+  }
+
+  const currentDraft = draftProfile ?? student;
+
+  const interests = student.description
     .split(",")
     .map((interest) => interest.trim())
     .filter(Boolean);
 
-  const draftInterests = (draftProfile?.description ?? "")
+  const draftInterests = currentDraft.description
     .split(",")
     .map((interest) => interest.trim())
     .filter(Boolean);
 
   const updateDraftProfile = (
-    field: keyof StudentFragment,
+    field: keyof DemoStudent,
     value: string,
   ) => {
-    setDraftProfile((current) =>
-      current
-        ? {
-            ...current,
-            [field]: value,
-          }
-        : current,
-    );
+    setDraftProfile((current) => ({
+      ...(current ?? student),
+      [field]: value,
+    }));
   };
 
   const addInterest = () => {
     const interest = interestInput.trim();
 
-    if (!interest || !draftProfile) return;
+    if (!interest) return;
 
-    const interests = [
-      ...draftInterests,
-      interest,
-    ];
+    const newInterests = [...draftInterests, interest];
 
-    updateDraftProfile(
-      "description",
-      interests.join(", "),
-    );
-
+    updateDraftProfile("description", newInterests.join(", "));
     setInterestInput("");
   };
 
   const startEditing = () => {
-    setDraftProfile(displayedProfile);
+    setDraftProfile(student);
     setInterestInput("");
     setEditing(true);
   };
 
   const cancelEditing = () => {
-    setDraftProfile(displayedProfile);
+    setDraftProfile(student);
     setInterestInput("");
     setEditing(false);
   };
 
   const saveProfile = () => {
-    if (!draftProfile) return;
-
-    setProfile(draftProfile);
+    saveStudent(currentDraft);
     setInterestInput("");
     setEditing(false);
   };
 
-  const navItems = [
-    {
-      label: t("nav.home"),
-      href: "/app",
-      icon: <HomeIcon />,
-    },
-
-    {
-      label: t("nav.findApprenticeship"),
-      href: "/stillinger",
-      icon: <SearchIcon />,
-    },
-
-    {
-      label: t("nav.myApplications"),
-      href: "/application",
-      icon: <AssignmentOutlinedIcon />,
-    },
-
-    {
-      label: t("nav.history"),
-      href: "/historikk",
-      icon: <HistoryIcon />,
-    },
-
-    {
-      label: t("nav.profile"),
-      href: "/profil",
-      icon: <PersonIcon />,
-    },
-    {
-      label: t("nav.settings"),
-      href: "/settings",
-      icon: <SettingsIcon />,
-    }
-  ];
-
   return (
     <NavbarAPP
       appName={t("app.name")}
-      userName={displayedProfile?.name}
-      userRole="Elev"
-      profileImage={displayedProfile?.profileImage}
-      initials={profile?.name && profile.name
+      userName={student.name}
+      userRole={userRole}
+      onRoleChange={setUserRole}
+      profileImage={student.profileImage}
+      initials={student.name
         .split(" ")
         .map((name) => name[0])
         .join("")
         .slice(0, 2)}
-      navItems={navItems}
     >
       <Box
         sx={{
@@ -234,16 +190,14 @@ export default function Profile() {
             }}
           >
             <Avatar
-              src={
-                profile?.profileImage ?? ""
-              }
+              src={student.profileImage ?? ""}
               sx={{
                 width: 100,
                 height: 100,
                 bgcolor: "primary.main",
               }}
             >
-              {profile?.name && profile?.name
+              {student.name
                 .split(" ")
                 .map((name) => name[0])
                 .join("")
@@ -269,7 +223,7 @@ export default function Profile() {
                     fontSize: 24,
                   }}
                 >
-                  {editing ? draftProfile?.name : profile?.name}
+                  {editing ? currentDraft.name : student.name}
                 </Typography>
 
                 <Typography
@@ -304,6 +258,40 @@ export default function Profile() {
               )}
             </Box>
 
+            {/* Navn */}
+
+            <Box sx={{ width: "100%" }}>
+              <Typography
+                sx={{
+                  color: "text.secondary",
+                  mb: 0.5,
+                }}
+              >
+                {t("profile.name")}
+              </Typography>
+
+              {editing ? (
+                <TextField
+                  fullWidth
+                  sx={inputSx}
+                  label={t("profile.name")}
+                  value={currentDraft.name}
+                  onChange={(event) =>
+                    updateDraftProfile("name", event.target.value)
+                  }
+                />
+              ) : (
+                <Typography
+                  sx={{
+                    color: "text.primary",
+                    fontWeight: 600,
+                  }}
+                >
+                  {student.name}
+                </Typography>
+              )}
+            </Box>
+
             {/* E-post */}
 
             <Box sx={{ width: "100%" }}>
@@ -322,7 +310,7 @@ export default function Profile() {
                   sx={inputSx}
                   label={t("profile.email")}
                   type="email"
-                  value={draftProfile?.email ?? ""}
+                  value={currentDraft.email}
                   onChange={(event) =>
                     updateDraftProfile("email", event.target.value)
                   }
@@ -334,7 +322,7 @@ export default function Profile() {
                     fontWeight: 600,
                   }}
                 >
-                  {profile?.email}
+                  {student.email}
                 </Typography>
               )}
             </Box>
@@ -356,7 +344,7 @@ export default function Profile() {
                   fullWidth
                   sx={inputSx}
                   label={t("profile.fieldOfStudy")}
-                  value={draftProfile?.wantedTrade ?? ""}
+                  value={currentDraft.wantedTrade}
                   onChange={(event) =>
                     updateDraftProfile("wantedTrade", event.target.value)
                   }
@@ -368,7 +356,7 @@ export default function Profile() {
                     fontWeight: 600,
                   }}
                 >
-                  {profile?.wantedTrade}
+                  {student.wantedTrade}
                 </Typography>
               )}
             </Box>
@@ -392,7 +380,7 @@ export default function Profile() {
                   minRows={3}
                   sx={inputSx}
                   label={t("profile.aboutMe")}
-                  value={draftProfile?.description ?? ""}
+                  value={currentDraft.description}
                   onChange={(event) =>
                     updateDraftProfile("description", event.target.value)
                   }
@@ -403,10 +391,11 @@ export default function Profile() {
                     color: "text.primary",
                   }}
                 >
-                  {profile?.description}
+                  {student.description}
                 </Typography>
               )}
             </Box>
+
             <Box sx={{ width: "100%" }}>
               <Typography
                 sx={{
@@ -429,13 +418,8 @@ export default function Profile() {
                   options={[]}
                   value={draftInterests}
                   inputValue={interestInput}
-                  onInputChange={(
-                    _,
-                    newInputValue,
-                  ) => {
-                    setInterestInput(
-                      newInputValue,
-                    );
+                  onInputChange={(_, newInputValue) => {
+                    setInterestInput(newInputValue);
                   }}
                   onChange={(_, newValue) => {
                     updateDraftProfile(
@@ -449,15 +433,10 @@ export default function Profile() {
                   slotProps={{
                     chip: {
                       sx: {
-                        color:
-                          "secondary.main",
-
-                        backgroundColor:
-                          "action.hover",
-
+                        color: "secondary.main",
+                        backgroundColor: "action.hover",
                         border: "1px solid",
-                        borderColor:
-                          "divider",
+                        borderColor: "divider",
                       },
                     },
                   }}
@@ -491,20 +470,18 @@ export default function Profile() {
                     flexWrap: "wrap",
                   }}
                 >
-                  {interests.map(
-                    (interest: string) => (
-                      <Chip
-                        key={interest}
-                        label={interest}
-                        sx={{
-                          color: "secondary.main",
-                          backgroundColor: "action.hover",
-                          border: "1px solid",
-                          borderColor: "divider",
-                        }}
-                      />
-                    ),
-                  )}
+                  {interests.map((interest: string) => (
+                    <Chip
+                      key={interest}
+                      label={interest}
+                      sx={{
+                        color: "secondary.main",
+                        backgroundColor: "action.hover",
+                        border: "1px solid",
+                        borderColor: "divider",
+                      }}
+                    />
+                  ))}
                 </Stack>
               )}
             </Box>
@@ -524,7 +501,7 @@ export default function Profile() {
                   fullWidth
                   sx={inputSx}
                   label={t("profile.residence")}
-                  value={draftProfile?.location ?? ""}
+                  value={currentDraft.location}
                   onChange={(event) =>
                     updateDraftProfile("location", event.target.value)
                   }
@@ -535,12 +512,10 @@ export default function Profile() {
                     color: "text.primary",
                   }}
                 >
-                  {profile?.location ?? ""}
+                  {student.location}
                 </Typography>
               )}
             </Box>
-
-            {/* Buttons */}
 
             {editing && (
               <Box
