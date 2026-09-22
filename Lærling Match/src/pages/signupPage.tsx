@@ -1,10 +1,10 @@
 import { useState } from "react";
 import type { FormEvent, SyntheticEvent } from "react";
+import { useTranslation } from "react-i18next"; 
 import {
   useNavigate,
   useSearchParams,
 } from "react-router-dom";
-
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
@@ -17,6 +17,7 @@ type AccountType = "apprentice" | "company";
 
 export default function SignUp() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const [searchParams, setSearchParams] =
     useSearchParams();
@@ -196,7 +197,7 @@ export default function SignUp() {
             mb: 1,
           }}
         >
-          Opprett konto
+          {isCompany ? t("Opprett konto for bedrifter") : t("Opprett konto")}
         </Typography>
 
         <Typography
@@ -206,8 +207,8 @@ export default function SignUp() {
           }}
         >
           {isCompany
-            ? "Registrer bedriften din på LærlingMatch"
-            : "Opprett en lærlingprofil på LærlingMatch"}
+            ? t("Registrer bedriften din på LærlingMatch")
+            : t("Opprett en lærlingprofil på LærlingMatch")}
         </Typography>
 
         <Tabs
@@ -235,12 +236,12 @@ export default function SignUp() {
         >
           <Tab
             value="apprentice"
-            label="For lærlinger"
+            label={t("For lærlinger")}
           />
 
           <Tab
             value="company"
-            label="For bedrifter"
+            label={t("For bedrifter")}
           />
         </Tabs>
 
@@ -248,7 +249,7 @@ export default function SignUp() {
           <TextField
             fullWidth
             required
-            label="Bedriftsnavn"
+            label={t("Bedriftsnavn")}
             value={companyName}
             onChange={(event) =>
               setCompanyName(
@@ -264,8 +265,8 @@ export default function SignUp() {
           required
           label={
             isCompany
-              ? "Navn på kontaktperson"
-              : "Navn"
+              ? t("signup.NavnOn")
+              : t("Navn")
           }
           value={name}
           onChange={(event) =>
@@ -280,7 +281,7 @@ export default function SignUp() {
           fullWidth
           required
           type="email"
-          label="E-post"
+          label={t("signup.epost")}
           value={email}
           onChange={(event) =>
             setEmail(
@@ -294,7 +295,7 @@ export default function SignUp() {
           fullWidth
           required
           type="password"
-          label="Passord"
+          label={t("signup.passord")}
           value={password}
           onChange={(event) =>
             setPassword(
@@ -308,7 +309,7 @@ export default function SignUp() {
           fullWidth
           required
           type="password"
-          label="Bekreft passord"
+          label={t("signup.bekreftPassord")}
           value={confirmPassword}
           onChange={(event) =>
             setConfirmPassword(
@@ -333,8 +334,8 @@ export default function SignUp() {
           }}
         >
           {isCompany
-            ? "Opprett bedriftskonto"
-            : "Opprett lærlingkonto"}
+            ? t("signup.opprettBedriftskonto")
+            : t("signup.opprettLærlingkonto")}
         </Button>
 
         <Button
@@ -349,8 +350,8 @@ export default function SignUp() {
             navigate("/login")
           }
         >
-          Har du allerede konto?
-          Logg inn
+          {t("signup.harDuAlleredeKonto")}
+          {t("signup.loggInn")}
         </Button>
       </Paper>
     </Box>

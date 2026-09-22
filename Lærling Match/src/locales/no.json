@@ -33,7 +33,13 @@
     "title": "Finn lærlingplass",
     "description": "Bla gjennom lærebedrifter som matcher din fagretning.",
     "companies": "bedrifter",
-    "searchPlaceholder": "Søk etter bedrift, fagretning eller sted..."
+    "searchPlaceholder": "Søk etter bedrift, fagretning eller sted...",
+    "filter": {
+      "all": "Alle ({{count}})",
+      "pending": "Venter ({{count}})",
+      "matched": "Matchet ({{count}})",
+      "rejected": "Avslått ({{count}})"
+    }
   },
   "settings": {
     "title": "Innstillinger",
@@ -74,5 +80,19 @@
     "editProfile": "Endre profil",
     "myProfile": "Min profil",
     "student": "Student"
+  },
+  "signup": {
+    "NavnOn": "Navn på kontaktperson",
+    "Navn": "Navn",
+    "epost": "E-post",
+    "passord": "Passord",
+    "bekreftPassord": "Bekreft passord",
+    "opprettBedriftskonto": "Opprett bedriftskonto",
+    "opprettLærlingkonto": "Opprett lærlingkonto",
+    "harDuAlleredeKonto": "Har du allerede konto?",
+    "loggInn": "Logg inn"
+  },
+  "history": {
+    "description": "Se dine tidligere søknader og aktiviteter."
   }
 }

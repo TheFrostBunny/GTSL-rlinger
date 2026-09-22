@@ -143,12 +143,12 @@ export default function MyApplications() {
               key={item}
               label={
                 item === "Alle"
-                  ? "Alle (4)"
+                  ? t("myApplications.filters.all", { count: 4 })
                   : item === "Venter"
-                    ? "Venter (2)"
+                    ? t("myApplications.filters.pending", { count: 2 })
                     : item === "Matchet"
-                      ? "Matchet (1)"
-                      : "Avslått (1)"
+                      ? t("myApplications.filters.matched", { count: 1 })
+                      : t("myApplications.filters.rejected", { count: 1 })
               }
               onClick={() => setFilter(item)}
               sx={{

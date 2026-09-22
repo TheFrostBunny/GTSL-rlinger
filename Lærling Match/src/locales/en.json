@@ -51,7 +51,13 @@
   "myApplications": {
     "title": "My applications",
     "description": "View and manage your apprenticeship applications.",
-    "noApplications": "You have not applied for any apprenticeships yet."
+    "noApplications": "You have not applied for any apprenticeships yet.",
+    "filters": {
+      "all": "All ({{count}})",
+      "pending": "Pending ({{count}})",
+      "matched": "Matched ({{count}})",
+      "rejected": "Rejected ({{count}})"
+    }
   },
   "about": {
     "title": "About us",
@@ -79,5 +85,19 @@
     "editProfile": "Edit profile",
     "myProfile": "My profile",
     "student": "Student"
+  },
+  "signup": {
+    "NavnOn": "Name of contact person",
+    "Navn": "Name",
+    "epost": "Email",
+    "passord": "Password",
+    "bekreftPassord": "Confirm password",
+    "opprettBedriftskonto": "Create business account",
+    "opprettLærlingkonto": "Create apprentice account",
+    "harDuAlleredeKonto": "Already have an account?",
+    "loggInn": "Log in"
+  },
+  "history": {
+    "description": "View your past applications and activities."
   }
 }

@@ -81,11 +81,11 @@ export default function History() {
           variant="h3"
           sx={{ color: "text.primary", fontWeight: 800, mb: 1 }}
         >
-          Historikk
+          {t("nav.history")}
         </Typography>
 
         <Typography sx={{ color: "text.secondary", mb: 4 }}>
-          Se tidligere søknader og aktiviteter.
+          {t("history.description")}
         </Typography>
 
         <Stack spacing={2}>
