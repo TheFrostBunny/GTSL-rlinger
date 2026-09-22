@@ -107,6 +107,7 @@
     }
   },
   "profile": {
+    "name": "Navn",
     "manageYourProfileInformation": "Se og administrer profilinformasjonen din.",
     "fieldOfStudy": "Fagretning",
     "aboutMe": "Om meg",
