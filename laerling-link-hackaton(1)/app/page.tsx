@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   ArrowRight,
   BarChart3,
@@ -13,6 +13,7 @@ import {
   Heart,
   Home,
   Menu,
+  Pencil,
   Search,
   Settings,
   Users,
@@ -166,6 +167,21 @@ const history = [
   },
 ];
 
+const PROFILE_STORAGE_KEY = "laerling-link-profile";
+
+function getInitials(name?: string) {
+  const safeName = typeof name === "string" ? name.trim() : "";
+
+  if (!safeName) return "ON";
+
+  return safeName
+    .split(/\s+/)
+    .map((part) => part[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+}
+
 function Sidebar({
   view,
   setView,
@@ -178,8 +194,10 @@ function Sidebar({
   setView: (view: "learner" | "company") => void;
   menuOpen: boolean;
   setMenuOpen: (open: boolean) => void;
-  page: "home" | "browse" | "applications" | "history";
-  setPage: (page: "home" | "browse" | "applications" | "history") => void;
+  page: "home" | "browse" | "applications" | "history" | "profile";
+  setPage: (
+    page: "home" | "browse" | "applications" | "history" | "profile"
+  ) => void;
 }) {
   const items =
     view === "learner"
@@ -206,9 +224,11 @@ function Sidebar({
       } lg:block`}
     >
       <div className="flex items-center gap-4 border-b border-[#2a3545] pb-8">
-        <div className="flex size-14 items-center justify-center rounded-full border-2 border-[#d62b9d] text-3xl font-semibold text-[#d62b9d]">
-          Ll
-        </div>
+        <img
+  src="/Logo.png"
+  alt="Lærling Link logo"
+  className="h-14 w-14 object-contain"
+/>
         <span className="text-[27px] font-bold tracking-tight text-[#f2f3f6]">
           Lærling Link
         </span>
@@ -243,7 +263,8 @@ function Sidebar({
             (index === 0 && page === "home") ||
             (index === 1 && page === "browse") ||
             (index === 2 && page === "applications") ||
-            (index === 3 && page === "history");
+            (index === 3 && page === "history") ||
+            (index === 4 && page === "profile");
 
           return (
             <button
@@ -253,6 +274,7 @@ function Sidebar({
                 if (index === 1) setPage("browse");
                 if (index === 2) setPage("applications");
                 if (index === 3) setPage("history");
+                if (index === 4) setPage("profile");
                 setMenuOpen(false);
               }}
               className={`flex items-center gap-5 rounded-[22px] px-5 py-4 text-left text-[20px] font-medium transition ${
@@ -275,11 +297,15 @@ function Topbar({
   view,
   setView,
   setMenuOpen,
+  profileName,
 }: {
   view: "learner" | "company";
   setView: (view: "learner" | "company") => void;
   setMenuOpen: (open: boolean) => void;
+  profileName: string;
 }) {
+  const initials = getInitials(profileName);
+
   return (
     <header className="flex h-[102px] items-center justify-between border-b border-[#202a38] px-5 lg:ml-[372px] lg:px-12">
       <button
@@ -300,10 +326,10 @@ function Topbar({
           {view === "learner" ? "Bedrift" : "Elev"}
         </button>
         <span className="text-lg font-semibold text-[#f2f3f6]">
-          Ola Nordmann
+          {profileName}
         </span>
         <div className="flex size-12 items-center justify-center rounded-full border border-[#344155] bg-[#202c3b] text-lg font-bold text-[#9aaec7]">
-          ON
+          {initials}
         </div>
       </div>
     </header>
@@ -313,8 +339,53 @@ function Topbar({
 export default function Page() {
   const [view, setView] = useState<"learner" | "company">("learner");
   const [page, setPage] = useState<
-    "home" | "browse" | "applications" | "history"
+    "home" | "browse" | "applications" | "history" | "profile"
   >("home");
+
+  const [editingProfile, setEditingProfile] = useState(false);
+
+  const [profile, setProfile] = useState({
+    name: "Ola Nordmann",
+    email: "ola.nordmann@email.no",
+    field: "IT-driftsfaget",
+    interests: "Programmering, gaming og teknologi",
+    city: "Oslo",
+    about:
+      "Jeg er en motivert elev med interesse for teknologi og problemløsning.",
+  });
+
+  const [profileLoaded, setProfileLoaded] = useState(false);
+
+  useEffect(() => {
+    const savedProfile = localStorage.getItem(PROFILE_STORAGE_KEY);
+
+    if (savedProfile) {
+      try {
+        const parsedProfile = JSON.parse(savedProfile);
+
+        setProfile((currentProfile) => ({
+          ...currentProfile,
+          ...parsedProfile,
+          name:
+            typeof parsedProfile.name === "string" &&
+            parsedProfile.name.trim()
+              ? parsedProfile.name
+              : currentProfile.name,
+        }));
+      } catch {
+        localStorage.removeItem(PROFILE_STORAGE_KEY);
+      }
+    }
+
+    setProfileLoaded(true);
+  }, []);
+
+  useEffect(() => {
+    if (profileLoaded) {
+      localStorage.setItem(PROFILE_STORAGE_KEY, JSON.stringify(profile));
+    }
+  }, [profile, profileLoaded]);
+
   const [applicationFilter, setApplicationFilter] = useState("Alle");
   const [index, setIndex] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -576,6 +647,134 @@ export default function Page() {
                 </p>
               </article>
             ))}
+          </div>
+        </section>
+      </main>
+    );
+  }
+
+  if (page === "profile") {
+    const profileFields = [
+      ["name", "Navn"],
+      ["email", "E-post"],
+      ["field", "Fagretning"],
+      ["interests", "Interesser"],
+      ["city", "Bosted"],
+    ] as const;
+
+    return (
+      <main className="min-h-screen bg-[#0e131b] text-[#f2f3f6]">
+        <Sidebar
+          view={view}
+          setView={setView}
+          menuOpen={menuOpen}
+          setMenuOpen={setMenuOpen}
+          page={page}
+          setPage={setPage}
+        />
+
+        <Topbar
+          view={view}
+          setView={setView}
+          setMenuOpen={setMenuOpen}
+          profileName={profile.name}
+        />
+
+        <section className="mx-auto max-w-[1120px] px-6 pb-20 pt-16 lg:ml-[428px] lg:mr-12 lg:px-0">
+          <p className="text-lg text-[#91a4bd]">Konto og informasjon</p>
+
+          <h1 className="mt-3 text-5xl font-bold tracking-[-0.03em]">
+            {view === "learner" ? "Min profil" : "Bedriftsprofil"}
+          </h1>
+
+          <p className="mt-3 text-lg text-[#91a4bd]">
+            {view === "learner"
+              ? "Se og administrer profilinformasjonen din."
+              : "Hold bedriftsinformasjonen oppdatert."}
+          </p>
+
+          <div className="mt-10 overflow-hidden rounded-[28px] border border-[#29384a] bg-[#182332]">
+            <div className="h-32 bg-gradient-to-r from-[#39254f] via-[#54336a] to-[#202c3b]" />
+
+            <div className="px-8 pb-8">
+              <div className="-mt-14 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+                <div className="flex size-28 items-center justify-center rounded-full border-8 border-[#182332] bg-[#a45bc0] text-4xl font-bold text-white">
+                  ON
+                </div>
+
+                <button
+                  onClick={() => setEditingProfile(!editingProfile)}
+                  className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#a45bc0] px-5 py-3 font-semibold text-[#d8b3e4] transition hover:bg-[#a45bc0] hover:text-white"
+                >
+                  <Pencil size={17} />
+                  {editingProfile ? "Avbryt" : "Rediger profil"}
+                </button>
+              </div>
+
+              <div className="mt-6">
+                <h2 className="text-3xl font-bold">{profile.name}</h2>
+                <p className="mt-1 text-[#91a4bd]">
+                  {view === "learner" ? "Elev" : "Bedrift"} · {profile.city}
+                </p>
+              </div>
+
+              <div className="mt-8 grid gap-5 md:grid-cols-2">
+                {profileFields.map(([key, label]) => (
+                  <label key={key} className="block">
+                    <span className="mb-2 block text-sm font-semibold text-[#91a4bd]">
+                      {label}
+                    </span>
+
+                    {editingProfile ? (
+                      <input
+                        value={profile[key]}
+                        onChange={(event) =>
+                          setProfile({
+                            ...profile,
+                            [key]: event.target.value,
+                          })
+                        }
+                        className="w-full rounded-xl border border-[#39465a] bg-[#202c3b] px-4 py-3 text-white outline-none focus:border-[#a45bc0]"
+                      />
+                    ) : (
+                      <div className="rounded-xl border border-[#29384a] bg-[#202c3b] px-4 py-3 text-[#dce2ea]">
+                        {profile[key]}
+                      </div>
+                    )}
+                  </label>
+                ))}
+              </div>
+
+              <label className="mt-5 block">
+                <span className="mb-2 block text-sm font-semibold text-[#91a4bd]">
+                  Om meg
+                </span>
+
+                {editingProfile ? (
+                  <textarea
+                    value={profile.about}
+                    onChange={(event) =>
+                      setProfile({ ...profile, about: event.target.value })
+                    }
+                    rows={4}
+                    className="w-full resize-none rounded-xl border border-[#39465a] bg-[#202c3b] px-4 py-3 text-white outline-none focus:border-[#a45bc0]"
+                  />
+                ) : (
+                  <div className="rounded-xl border border-[#29384a] bg-[#202c3b] px-4 py-3 leading-7 text-[#dce2ea]">
+                    {profile.about}
+                  </div>
+                )}
+              </label>
+
+              {editingProfile && (
+                <button
+                  onClick={() => setEditingProfile(false)}
+                  className="mt-6 rounded-xl bg-[#a45bc0] px-6 py-3 font-bold text-white transition hover:bg-[#b86bc9]"
+                >
+                  Lagre endringer
+                </button>
+              )}
+            </div>
           </div>
         </section>
       </main>
