@@ -279,6 +279,14 @@ export default {
             "args": []
           },
           {
+            "name": "location",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
             "name": "mediaLinks",
             "type": {
               "kind": "LIST",

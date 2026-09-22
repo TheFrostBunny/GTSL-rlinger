@@ -131,8 +131,8 @@ export default function NavbarAPP({
             </Typography>
 
             <Avatar
-              src={profileImage}
-              alt={userName}
+              src={profileImage ?? undefined}
+              alt={userName ?? undefined}
               sx={{
                 width: 42,
                 height: 42,
@@ -143,7 +143,7 @@ export default function NavbarAPP({
                 fontWeight: 700,
               }}
             >
-              {initials}
+              {initials ?? ""}
             </Avatar>
           </Box>
         </Toolbar>

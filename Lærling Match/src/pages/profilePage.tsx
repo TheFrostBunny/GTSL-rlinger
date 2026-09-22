@@ -25,32 +25,78 @@ import { StudentFragment, useGetMeQuery } from "../generated/graphql";
 export default function Profile() {
   const { t } = useTranslation();
 
-  const [{data}] = useGetMeQuery();
-  const me = data?.me
+  const [{ data }] = useGetMeQuery();
+  const me: StudentFragment | undefined = data?.me ?? undefined;
 
   const [profile, setProfile] =
-    useState<StudentFragment | undefined>(me ?? undefined);
+    useState<StudentFragment | undefined>(undefined);
+
+  const [draftProfile, setDraftProfile] =
+    useState<StudentFragment | undefined>(undefined);
 
   const [editing, setEditing] = useState(false);
-
   const [interestInput, setInterestInput] = useState("");
 
-  const interests = profile?.description
+  const displayedProfile = profile ?? me;
+
+  const interests = (displayedProfile?.description ?? "")
+    .split(",")
+    .map((interest) => interest.trim())
+    .filter(Boolean);
+
+  const draftInterests = (draftProfile?.description ?? "")
+    .split(",")
+    .map((interest) => interest.trim())
+    .filter(Boolean);
+
+  const updateDraftProfile = (
+    field: keyof StudentFragment,
+    value: string,
+  ) => {
+    setDraftProfile((current) =>
+      current
+        ? {
+            ...current,
+            [field]: value,
+          }
+        : current,
+    );
+  };
+
+  const addInterest = () => {
+    const interest = interestInput.trim();
+
+    if (!interest || !draftProfile) return;
+
+    const interests = [
+      ...draftInterests,
+      interest,
+    ];
+
+    updateDraftProfile(
+      "description",
+      interests.join(", "),
+    );
+
+    setInterestInput("");
+  };
 
   const startEditing = () => {
+    setDraftProfile(displayedProfile);
     setInterestInput("");
     setEditing(true);
   };
 
   const cancelEditing = () => {
+    setDraftProfile(displayedProfile);
     setInterestInput("");
     setEditing(false);
   };
 
   const saveProfile = () => {
-    const profileToSave = { ...profile };
+    if (!draftProfile) return;
 
-    setProfile(profileToSave);
+    setProfile(draftProfile);
     setInterestInput("");
     setEditing(false);
   };
@@ -95,9 +141,9 @@ export default function Profile() {
   return (
     <NavbarAPP
       appName={t("app.name")}
-      userName={profile?.name}
+      userName={displayedProfile?.name}
       userRole="Elev"
-      profileImage={profile?.profileImage}
+      profileImage={displayedProfile?.profileImage}
       initials={profile?.name && profile.name
         .split(" ")
         .map((name) => name[0])
@@ -196,7 +242,7 @@ export default function Profile() {
                     fontSize: 24,
                   }}
                 >
-                  {editing ? draftProfile.name : profile?.name}
+                  {editing ? draftProfile?.name : profile?.name}
                 </Typography>
 
                 <Typography
@@ -248,7 +294,10 @@ export default function Profile() {
                   fullWidth
                   label={t("profile.email")}
                   type="email"
-                  value={profile?.email}
+                  value={draftProfile?.email ?? ""}
+                  onChange={(event) =>
+                    updateDraftProfile("email", event.target.value)
+                  }
                 />
               ) : (
                 <Typography
@@ -278,7 +327,10 @@ export default function Profile() {
                 <TextField
                   fullWidth
                   label={t("profile.fieldOfStudy")}
-                  value={profile?.wantedTrade}
+                  value={draftProfile?.wantedTrade ?? ""}
+                  onChange={(event) =>
+                    updateDraftProfile("wantedTrade", event.target.value)
+                  }
                 />
               ) : (
                 <Typography
@@ -310,7 +362,10 @@ export default function Profile() {
                   multiline
                   minRows={3}
                   label={t("profile.aboutMe")}
-                  value={profile?.description}
+                  value={draftProfile?.description ?? ""}
+                  onChange={(event) =>
+                    updateDraftProfile("description", event.target.value)
+                  }
                 />
               ) : (
                 <Typography
@@ -354,11 +409,9 @@ export default function Profile() {
                   }}
                   onChange={(_, newValue) => {
                     updateDraftProfile(
-                      "interests",
+                      "description",
                       newValue
-                        .map((interest) =>
-                          interest.trim(),
-                        )
+                        .map((interest) => interest.trim())
                         .filter(Boolean)
                         .join(", "),
                     );
@@ -405,22 +458,15 @@ export default function Profile() {
                   }}
                 >
                   {interests.map(
-                    (interest) => (
+                    (interest: string) => (
                       <Chip
                         key={interest}
                         label={interest}
                         sx={{
-                          color:
-                            "secondary.main",
-
-                          backgroundColor:
-                            "action.hover",
-
-                          border:
-                            "1px solid",
-
-                          borderColor:
-                            "divider",
+                          color: "secondary.main",
+                          backgroundColor: "action.hover",
+                          border: "1px solid",
+                          borderColor: "divider",
                         }}
                       />
                     ),
@@ -443,12 +489,9 @@ export default function Profile() {
                 <TextField
                   fullWidth
                   label={t("profile.residence")}
-                  value={draftProfile.location}
+                  value={draftProfile?.location ?? ""}
                   onChange={(event) =>
-                    updateDraftProfile(
-                      "location",
-                      event.target.value,
-                    )
+                    updateDraftProfile("location", event.target.value)
                   }
                 />
               ) : (
@@ -457,7 +500,7 @@ export default function Profile() {
                     color: "text.primary",
                   }}
                 >
-                  {profile.location}
+                  {profile?.location ?? ""}
                 </Typography>
               )}
             </Box>

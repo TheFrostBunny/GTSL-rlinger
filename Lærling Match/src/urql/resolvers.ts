@@ -1,7 +1,8 @@
-import { ResolveInfo } from "@urql/exchange-graphcache";
-import { serializeId } from "utils/ids";
-import { Locale, getWebBrowserLocale } from "utils/locale";
-import { roundTo } from "utils/number";
+import type { ResolveInfo } from "@urql/exchange-graphcache";
+import { serializeId } from "../utils/ids";
+import { getWebBrowserLocale } from "../utils/locale";
+import type { Locale } from "../utils/locale";
+import { roundTo } from "../utils/number";
 
 // This is needed as a workaround for the introspection thinking that the
 // resolver is a function that returns input and output, but it should

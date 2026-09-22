@@ -5,6 +5,7 @@ fragment Student on Student {
   description
   wantedTrade
   line
+  location
   profileImage
   mediaLinks {
     mediaUrl
