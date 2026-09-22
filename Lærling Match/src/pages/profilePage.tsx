@@ -19,157 +19,39 @@ import AssignmentOutlinedIcon from "@mui/icons-material/AssignmentOutlined";
 import HistoryIcon from "@mui/icons-material/History";
 import PersonIcon from "@mui/icons-material/Person";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-
 import NavbarAPP from "../components/layout/NavbarApp";
+import { StudentFragment, useGetMeQuery } from "../generated/graphql";
 
-type ProfileData = {
-  name: string;
-  email: string;
-  field: string;
-  image: string;
-  interests: string;
-  description: string;
-  location: string;
-};
-
-const createInitialProfile = (): ProfileData => ({
-  name: localStorage.getItem("profile-name") ?? "Ola Nordmann",
-
-  email:
-    localStorage.getItem("profile-email") ??
-    "ola.nordmann@example.com",
-
-  field:
-    localStorage.getItem("profile-field") ??
-    "IT-driftsfaget",
-
-  image:
-    localStorage.getItem("profile-image") ?? "",
-
-  interests:
-    localStorage.getItem("profile-interests") ??
-    "Teknologi, programmering, problemløsning",
-
-  description:
-    localStorage.getItem("profile-description") ??
-    "Jeg er en motivert lærling som liker å lære nye ting og samarbeide med andre.",
-
-  location:
-    localStorage.getItem("profile-location") ??
-    "Oslo",
-});
 
 export default function Profile() {
   const { t } = useTranslation();
 
-  const [profile, setProfile] =
-    useState<ProfileData>(createInitialProfile);
+  const [{data}] = useGetMeQuery();
+  const me = data?.me
 
-  const [draftProfile, setDraftProfile] =
-    useState<ProfileData>(profile);
+  const [profile, setProfile] =
+    useState<StudentFragment | undefined>(me ?? undefined);
 
   const [editing, setEditing] = useState(false);
 
   const [interestInput, setInterestInput] = useState("");
 
-  const updateDraftProfile = (
-    key: keyof ProfileData,
-    value: string,
-  ) => {
-    setDraftProfile((current) => ({
-      ...current,
-      [key]: value,
-    }));
-  };
-
-  const interests = profile.interests
-    .split(",")
-    .map((interest) => interest.trim())
-    .filter(Boolean);
-
-  const draftInterests = draftProfile.interests
-    .split(",")
-    .map((interest) => interest.trim())
-    .filter(Boolean);
-
-  const addInterest = () => {
-    const newInterest = interestInput.trim();
-
-    if (!newInterest) {
-      return;
-    }
-
-    const alreadyExists = draftInterests.some(
-      (interest) =>
-        interest.toLowerCase() === newInterest.toLowerCase(),
-    );
-
-    if (!alreadyExists) {
-      updateDraftProfile(
-        "interests",
-        [...draftInterests, newInterest].join(", "),
-      );
-    }
-
-    setInterestInput("");
-  };
+  const interests = profile?.description
 
   const startEditing = () => {
-    setDraftProfile(profile);
     setInterestInput("");
     setEditing(true);
   };
 
   const cancelEditing = () => {
-    setDraftProfile(profile);
     setInterestInput("");
     setEditing(false);
   };
 
   const saveProfile = () => {
-    let profileToSave = { ...draftProfile };
-
-    const pendingInterest = interestInput.trim();
-
-    /*
-     * Если пользователь что-то написал в поле интересов,
-     * но ещё не нажал пробел, сохраняем это тоже.
-     */
-    if (pendingInterest) {
-      const currentInterests = draftProfile.interests
-        .split(",")
-        .map((interest) => interest.trim())
-        .filter(Boolean);
-
-      const alreadyExists = currentInterests.some(
-        (interest) =>
-          interest.toLowerCase() ===
-          pendingInterest.toLowerCase(),
-      );
-
-      if (!alreadyExists) {
-        profileToSave = {
-          ...profileToSave,
-          interests: [
-            ...currentInterests,
-            pendingInterest,
-          ].join(", "),
-        };
-      }
-    }
-
-    Object.entries(profileToSave).forEach(
-      ([key, value]) => {
-        localStorage.setItem(
-          `profile-${key}`,
-          value,
-        );
-      },
-    );
+    const profileToSave = { ...profile };
 
     setProfile(profileToSave);
-    setDraftProfile(profileToSave);
-
     setInterestInput("");
     setEditing(false);
   };
@@ -209,10 +91,10 @@ export default function Profile() {
   return (
     <NavbarAPP
       appName={t("app.name")}
-      userName={profile.name}
+      userName={profile?.name}
       userRole="Elev"
-      profileImage={profile.image}
-      initials={profile.name
+      profileImage={profile?.profileImage}
+      initials={profile?.name && profile.name
         .split(" ")
         .map((name) => name[0])
         .join("")
@@ -276,9 +158,7 @@ export default function Profile() {
           >
             <Avatar
               src={
-                editing
-                  ? draftProfile.image
-                  : profile.image
+                profile?.profileImage ?? ""
               }
               sx={{
                 width: 100,
@@ -286,10 +166,7 @@ export default function Profile() {
                 bgcolor: "primary.main",
               }}
             >
-              {(editing
-                ? draftProfile.name
-                : profile.name
-              )
+              {profile?.name && profile?.name
                 .split(" ")
                 .map((name) => name[0])
                 .join("")
@@ -315,7 +192,7 @@ export default function Profile() {
                     fontSize: 24,
                   }}
                 >
-                  {profile.name}
+                  {profile?.name}
                 </Typography>
 
                 <Typography
@@ -367,13 +244,7 @@ export default function Profile() {
                   fullWidth
                   label="E-post"
                   type="email"
-                  value={draftProfile.email}
-                  onChange={(event) =>
-                    updateDraftProfile(
-                      "email",
-                      event.target.value,
-                    )
-                  }
+                  value={profile?.email}
                 />
               ) : (
                 <Typography
@@ -382,7 +253,7 @@ export default function Profile() {
                     fontWeight: 600,
                   }}
                 >
-                  {profile.email}
+                  {profile?.email}
                 </Typography>
               )}
             </Box>
@@ -403,13 +274,7 @@ export default function Profile() {
                 <TextField
                   fullWidth
                   label="Fagretning"
-                  value={draftProfile.field}
-                  onChange={(event) =>
-                    updateDraftProfile(
-                      "field",
-                      event.target.value,
-                    )
-                  }
+                  value={profile?.wantedTrade}
                 />
               ) : (
                 <Typography
@@ -418,7 +283,7 @@ export default function Profile() {
                     fontWeight: 600,
                   }}
                 >
-                  {profile.field}
+                  {profile?.wantedTrade}
                 </Typography>
               )}
             </Box>
@@ -441,13 +306,7 @@ export default function Profile() {
                   multiline
                   minRows={3}
                   label="Om meg"
-                  value={draftProfile.description}
-                  onChange={(event) =>
-                    updateDraftProfile(
-                      "description",
-                      event.target.value,
-                    )
-                  }
+                  value={profile?.description}
                 />
               ) : (
                 <Typography
@@ -455,7 +314,7 @@ export default function Profile() {
                     color: "text.primary",
                   }}
                 >
-                  {profile.description}
+                  {profile?.description}
                 </Typography>
               )}
             </Box>

@@ -124,6 +124,15 @@ export default {
         "name": "Query",
         "fields": [
           {
+            "name": "me",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Student",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
             "name": "node",
             "type": {
               "kind": "INTERFACE",

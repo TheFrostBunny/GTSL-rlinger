@@ -38,11 +38,11 @@ export type CreateStudentInput = {
   readonly description?: InputMaybe<Scalars['String']['input']>;
   readonly email: Scalars['String']['input'];
   readonly line?: InputMaybe<Scalars['String']['input']>;
-  readonly name: Scalars['String']['input'];
-  readonly password: Scalars['String']['input'];
+  readonly name?: InputMaybe<Scalars['String']['input']>;
+  readonly password?: InputMaybe<Scalars['String']['input']>;
   readonly profileImage?: InputMaybe<Scalars['String']['input']>;
   readonly socialMedias?: InputMaybe<ReadonlyArray<Scalars['String']['input']>>;
-  readonly trade: Trades;
+  readonly trade?: InputMaybe<Trades>;
 };
 
 export type CreateStudentPayload = {
@@ -74,6 +74,7 @@ export type Node = {
 
 export type Query = {
   readonly __typename?: 'Query';
+  readonly me?: Maybe<Student>;
   /** Fetches an object given its ID. */
   readonly node?: Maybe<Node>;
   /** Lookup nodes by a list of IDs. */
@@ -338,12 +339,12 @@ export type UpdateStudentInput = {
   readonly description?: InputMaybe<Scalars['String']['input']>;
   readonly email: Scalars['String']['input'];
   readonly line?: InputMaybe<Scalars['String']['input']>;
-  readonly name: Scalars['String']['input'];
+  readonly name?: InputMaybe<Scalars['String']['input']>;
   readonly newPassword?: InputMaybe<Scalars['String']['input']>;
   readonly profileImage?: InputMaybe<Scalars['String']['input']>;
   readonly socialMedias?: InputMaybe<ReadonlyArray<Scalars['String']['input']>>;
   readonly studentId: Scalars['ID']['input'];
-  readonly trade: Trades;
+  readonly trade?: InputMaybe<Trades>;
 };
 
 export type UpdateStudentPayload = {
@@ -357,22 +358,53 @@ export type CreateStudentMutationVariables = Exact<{
 }>;
 
 
-export type CreateStudentMutation = { readonly __typename?: 'Mutation', readonly createStudent: { readonly __typename?: 'CreateStudentPayload', readonly student?: { readonly __typename?: 'Student', readonly id: string, readonly name?: string | null, readonly email?: string | null, readonly wantedTrade?: Trades | null, readonly line?: string | null, readonly profileImage?: string | null, readonly mediaLinks?: ReadonlyArray<{ readonly __typename?: 'StudentSocialMedia', readonly mediaUrl?: string | null }> | null, readonly certificates?: ReadonlyArray<{ readonly __typename?: 'StudentCertificates', readonly description?: string | null }> | null } | null } };
+export type CreateStudentMutation = { readonly __typename?: 'Mutation', readonly createStudent: { readonly __typename?: 'CreateStudentPayload', readonly student?: { readonly __typename?: 'Student', readonly id: string, readonly name?: string | null, readonly email?: string | null, readonly description?: string | null, readonly wantedTrade?: Trades | null, readonly line?: string | null, readonly profileImage?: string | null, readonly mediaLinks?: ReadonlyArray<{ readonly __typename?: 'StudentSocialMedia', readonly mediaUrl?: string | null }> | null, readonly certificates?: ReadonlyArray<{ readonly __typename?: 'StudentCertificates', readonly description?: string | null }> | null } | null } };
 
-export type StudentFragment = { readonly __typename?: 'Student', readonly id: string, readonly name?: string | null, readonly email?: string | null, readonly wantedTrade?: Trades | null, readonly line?: string | null, readonly profileImage?: string | null, readonly mediaLinks?: ReadonlyArray<{ readonly __typename?: 'StudentSocialMedia', readonly mediaUrl?: string | null }> | null, readonly certificates?: ReadonlyArray<{ readonly __typename?: 'StudentCertificates', readonly description?: string | null }> | null };
+export type GetMeQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetMeQuery = { readonly __typename?: 'Query', readonly me?: { readonly __typename?: 'Student', readonly id: string, readonly name?: string | null, readonly email?: string | null, readonly wantedTrade?: Trades | null, readonly line?: string | null, readonly profileImage?: string | null, readonly mediaLinks?: ReadonlyArray<{ readonly __typename?: 'StudentSocialMedia', readonly mediaUrl?: string | null }> | null, readonly certificates?: ReadonlyArray<{ readonly __typename?: 'StudentCertificates', readonly description?: string | null }> | null } | null };
+
+export type GetStudentQueryVariables = Exact<{
+  studentId: Scalars['ID']['input'];
+}>;
+
+
+export type GetStudentQuery = { readonly __typename?: 'Query', readonly student?: { readonly __typename?: 'Student', readonly id: string, readonly name?: string | null, readonly email?: string | null, readonly description?: string | null, readonly wantedTrade?: Trades | null, readonly line?: string | null, readonly profileImage?: string | null, readonly mediaLinks?: ReadonlyArray<{ readonly __typename?: 'StudentSocialMedia', readonly mediaUrl?: string | null }> | null, readonly certificates?: ReadonlyArray<{ readonly __typename?: 'StudentCertificates', readonly description?: string | null }> | null } | null };
+
+export type MeFragment = { readonly __typename?: 'Student', readonly id: string, readonly name?: string | null, readonly email?: string | null, readonly wantedTrade?: Trades | null, readonly line?: string | null, readonly profileImage?: string | null, readonly mediaLinks?: ReadonlyArray<{ readonly __typename?: 'StudentSocialMedia', readonly mediaUrl?: string | null }> | null, readonly certificates?: ReadonlyArray<{ readonly __typename?: 'StudentCertificates', readonly description?: string | null }> | null };
+
+export type StudentFragment = { readonly __typename?: 'Student', readonly id: string, readonly name?: string | null, readonly email?: string | null, readonly description?: string | null, readonly wantedTrade?: Trades | null, readonly line?: string | null, readonly profileImage?: string | null, readonly mediaLinks?: ReadonlyArray<{ readonly __typename?: 'StudentSocialMedia', readonly mediaUrl?: string | null }> | null, readonly certificates?: ReadonlyArray<{ readonly __typename?: 'StudentCertificates', readonly description?: string | null }> | null };
 
 export type UpdateStudentMutationVariables = Exact<{
   input: UpdateStudentInput;
 }>;
 
 
-export type UpdateStudentMutation = { readonly __typename?: 'Mutation', readonly updateStudent: { readonly __typename?: 'UpdateStudentPayload', readonly student?: { readonly __typename?: 'Student', readonly id: string, readonly name?: string | null, readonly email?: string | null, readonly wantedTrade?: Trades | null, readonly line?: string | null, readonly profileImage?: string | null, readonly mediaLinks?: ReadonlyArray<{ readonly __typename?: 'StudentSocialMedia', readonly mediaUrl?: string | null }> | null, readonly certificates?: ReadonlyArray<{ readonly __typename?: 'StudentCertificates', readonly description?: string | null }> | null } | null } };
+export type UpdateStudentMutation = { readonly __typename?: 'Mutation', readonly updateStudent: { readonly __typename?: 'UpdateStudentPayload', readonly student?: { readonly __typename?: 'Student', readonly id: string, readonly name?: string | null, readonly email?: string | null, readonly description?: string | null, readonly wantedTrade?: Trades | null, readonly line?: string | null, readonly profileImage?: string | null, readonly mediaLinks?: ReadonlyArray<{ readonly __typename?: 'StudentSocialMedia', readonly mediaUrl?: string | null }> | null, readonly certificates?: ReadonlyArray<{ readonly __typename?: 'StudentCertificates', readonly description?: string | null }> | null } | null } };
 
+export const MeFragmentDoc = gql`
+    fragment Me on Student {
+  id
+  name
+  email
+  wantedTrade
+  line
+  profileImage
+  mediaLinks {
+    mediaUrl
+  }
+  certificates {
+    description
+  }
+}
+    `;
 export const StudentFragmentDoc = gql`
     fragment Student on Student {
   id
   name
   email
+  description
   wantedTrade
   line
   profileImage
@@ -396,6 +428,28 @@ export const CreateStudentDocument = gql`
 
 export function useCreateStudentMutation() {
   return Urql.useMutation<CreateStudentMutation, CreateStudentMutationVariables>(CreateStudentDocument);
+};
+export const GetMeDocument = gql`
+    query GetMe {
+  me {
+    ...Me
+  }
+}
+    ${MeFragmentDoc}`;
+
+export function useGetMeQuery(options?: Omit<Urql.UseQueryArgs<GetMeQueryVariables>, 'query'>) {
+  return Urql.useQuery<GetMeQuery, GetMeQueryVariables>({ query: GetMeDocument, ...options });
+};
+export const GetStudentDocument = gql`
+    query GetStudent($studentId: ID!) {
+  student(studentId: $studentId) {
+    ...Student
+  }
+}
+    ${StudentFragmentDoc}`;
+
+export function useGetStudentQuery(options: Omit<Urql.UseQueryArgs<GetStudentQueryVariables>, 'query'>) {
+  return Urql.useQuery<GetStudentQuery, GetStudentQueryVariables>({ query: GetStudentDocument, ...options });
 };
 export const UpdateStudentDocument = gql`
     mutation UpdateStudent($input: UpdateStudentInput!) {
@@ -423,6 +477,7 @@ export type GraphCacheKeysConfig = {
 
 export type GraphCacheResolvers = {
   Query?: {
+    me?: GraphCacheResolver<WithTypename<Query>, Record<string, never>, WithTypename<Student> | string>,
     node?: GraphCacheResolver<WithTypename<Query>, QueryNodeArgs, WithTypename<Student> | string>,
     nodes?: GraphCacheResolver<WithTypename<Query>, QueryNodesArgs, Array<WithTypename<Student> | string>>,
     student?: GraphCacheResolver<WithTypename<Query>, QueryStudentArgs, WithTypename<Student> | string>
@@ -474,6 +529,7 @@ export type GraphCacheOptimisticUpdaters = {
 
 export type GraphCacheUpdaters = {
   Query?: {
+    me?: GraphCacheUpdateResolver<{ me: Maybe<WithTypename<Student>> }, Record<string, never>>,
     node?: GraphCacheUpdateResolver<{ node: Maybe<WithTypename<Student>> }, QueryNodeArgs>,
     nodes?: GraphCacheUpdateResolver<{ nodes: Array<WithTypename<Student>> }, QueryNodesArgs>,
     student?: GraphCacheUpdateResolver<{ student: Maybe<WithTypename<Student>> }, QueryStudentArgs>

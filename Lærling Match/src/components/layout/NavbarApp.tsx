@@ -23,10 +23,10 @@ type NavItem = {
 
 type NavbarAPPProps = {
   appName?: string;
-  userName: string;
+  userName?: string | null;
   userRole: "Elev" | "Bedrift";
-  profileImage?: string;
-  initials?: string;
+  profileImage?: string | null;
+  initials?: string | null;
   navItems?: NavItem[];
   children?: ReactNode;
 };

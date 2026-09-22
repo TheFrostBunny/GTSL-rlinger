@@ -8,6 +8,7 @@ import Profile from "../pages/profilePage";
 import Login from "../pages/loginPage";
 import SignUp from "../pages/signupPage";
 import SettingsPage from "../pages/settingsPage";
+import { NotFoundPage } from "../pages/NotFoundPage";
 
 export default function AppRoutes() {
   return (
@@ -41,6 +42,10 @@ export default function AppRoutes() {
       <Route
         path="/settings"
         element={<SettingsPage />}
+      />
+      <Route
+        path="*"
+        element={<NotFoundPage />}
       />
     </Routes>
   );

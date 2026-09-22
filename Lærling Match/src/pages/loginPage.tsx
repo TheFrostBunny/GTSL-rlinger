@@ -1,19 +1,24 @@
 import { useState } from "react";
-import type { FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
+import { useCreateStudentMutation } from "../generated/graphql";
 
 export default function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const [{ fetching }, createStudent] = useCreateStudentMutation();
+  const handleSubmit =  async () => {
+    await createStudent({
+        input: {
+          email: email,
+          password: password,
+        },
+    })
 
     localStorage.setItem("isAuthenticated", "true");
     localStorage.setItem("userEmail", email);
@@ -128,6 +133,7 @@ export default function Login() {
           variant="text"
           sx={{ mt: 1 }}
           onClick={() => navigate("/registrer")}
+          loading={fetching}
         >
           Opprett konto
         </Button>

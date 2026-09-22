@@ -1,8 +1,7 @@
-fragment Student on Student {
+fragment Me on Student {
   id
   name
   email
-  description
   wantedTrade
   line
   profileImage

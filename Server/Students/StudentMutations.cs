@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace GreenTechSee.Students;
 
@@ -17,10 +18,10 @@ namespace GreenTechSee.Students;
 public class StudentMutations
 {
     public async Task<Student> CreateStudentAsync(
-        string name,
+        string? name,
         string email,
-        string password,
-        Trades trade,
+        string? password,
+        Trades? trade,
         string? line,
         string? profileImage,
         IReadOnlyList<string>? socialMedias,
@@ -50,10 +51,13 @@ public class StudentMutations
                 Description = c
             }).ToList(),
         };
-        student.Credential = new StudentCredential
+        if (!string.IsNullOrWhiteSpace(password))
         {
-            PasswordHash = passwordHasher.HashPassword(student, password),
-        };
+            student.Credential = new StudentCredential
+            {
+                PasswordHash = passwordHasher.HashPassword(student, password),
+            };
+        }
 
         context.Students.Add(student);
         await context.SaveChangesAsync(cancellationToken);
@@ -64,10 +68,10 @@ public class StudentMutations
 
     public async Task<Student> UpdateStudentAsync(
         [ID(nameof(Student))] int studentId,
-        string name,
+        string? name,
         string email,
         string? newPassword,
-        Trades trade,
+        Trades? trade,
         string? line,
         string? profileImage,
         IReadOnlyList<string>? socialMedias,
