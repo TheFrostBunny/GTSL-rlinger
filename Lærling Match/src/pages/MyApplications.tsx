@@ -117,7 +117,7 @@ export default function MyApplications() {
             mb: 0.5,
           }}
         >
-          Mine søknader
+          {t("myApplications.title")}
         </Typography>
 
         <Typography
@@ -127,7 +127,7 @@ export default function MyApplications() {
             mb: 4,
           }}
         >
-          Oversikt over bedriftene du har vist interesse for.
+          {t("myApplications.description")}
         </Typography>
 
         <Stack

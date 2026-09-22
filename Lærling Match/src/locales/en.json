@@ -28,5 +28,10 @@
     "dark": "Dark",
     "light": "Light",
     "save": "Save settings"
+  },
+  "myApplications": {
+    "title": "My applications",
+    "description": "View and manage your apprenticeship applications.",
+    "noApplications": "You have not applied for any apprenticeships yet."
   }
 }
