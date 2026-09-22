@@ -6,6 +6,7 @@ import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
+import { alpha, useTheme } from "@mui/material/styles";
 import Sidebar from "./Sidebar";
 
 type NavItem = {
@@ -26,11 +27,6 @@ type NavbarAPPProps = {
 
 const navbarHeight = 72;
 
-const roleColors = {
-  Elev: "#935CA6",
-  Bedrift: "#422859",
-} as const;
-
 export default function NavbarAPP({
   appName = "Lærling Link",
   userName,
@@ -41,7 +37,12 @@ export default function NavbarAPP({
   children,
 }: NavbarAPPProps) {
   const [collapsed, setCollapsed] = useState(false);
-  const roleColor = roleColors[userRole];
+  const theme = useTheme();
+
+  const roleColor =
+    userRole === "Elev"
+      ? theme.palette.secondary.main
+      : theme.palette.primary.main;
 
   return (
     <Box
@@ -50,6 +51,7 @@ export default function NavbarAPP({
         display: "flex",
         flexDirection: "column",
         overflow: "hidden",
+        bgcolor: "background.default",
       }}
     >
       <AppBar
@@ -59,7 +61,8 @@ export default function NavbarAPP({
           height: navbarHeight,
           flexShrink: 0,
           width: "100%",
-          backgroundColor: "#0f141b",
+          bgcolor: "background.default",
+          color: "text.primary",
         }}
       >
         <Toolbar
@@ -71,13 +74,18 @@ export default function NavbarAPP({
           }}
         >
           <Box
-            sx={{ display: "flex", alignItems: "center", gap: 1.5, padding: 1 }}
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: 1.5,
+              p: 1,
+            }}
           >
             <Chip
               label={userRole}
               sx={{
-                color: "#d9c5ff",
-                backgroundColor: `${roleColor}33`,
+                color: roleColor,
+                bgcolor: alpha(roleColor, 0.16),
                 fontWeight: 700,
               }}
             />
@@ -85,7 +93,7 @@ export default function NavbarAPP({
             <Typography
               sx={{
                 display: { xs: "none", sm: "block" },
-                color: "#f5f7fa",
+                color: "text.primary",
                 fontWeight: 600,
               }}
             >
@@ -98,9 +106,10 @@ export default function NavbarAPP({
               sx={{
                 width: 42,
                 height: 42,
-                color: "#dce5f2",
-                backgroundColor: "#202c3b",
-                border: "1px solid #334155",
+                color: "text.secondary",
+                bgcolor: "action.hover",
+                border: 1,
+                borderColor: "divider",
                 fontWeight: 700,
               }}
             >
@@ -121,7 +130,7 @@ export default function NavbarAPP({
         <Sidebar
           collapsed={collapsed}
           navItems={navItems}
-          color="#161e28"
+          color={theme.palette.background.paper}
           appName={appName}
           logo="/TestLogo.svg"
           onToggle={() => setCollapsed((value) => !value)}
@@ -134,8 +143,8 @@ export default function NavbarAPP({
             minWidth: 0,
             overflow: "auto",
             p: { xs: 2, md: 5 },
-            backgroundColor: "#0f141b",
-            color: "#f5f7fa",
+            bgcolor: "background.default",
+            color: "text.primary",
           }}
         >
           {children}

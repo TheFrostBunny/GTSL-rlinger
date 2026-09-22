@@ -12,7 +12,7 @@ const DashboardIntro = () => {
         sx={{
           width: "100%",
           maxWidth: { xs: 600, lg: 850 },
-          color: "#f5f7fa",
+          color: "text.primary",
           fontSize: "clamp(2.5rem, 6vw, 5rem)",
           lineHeight: 1.05,
           fontWeight: 800,
@@ -28,7 +28,7 @@ const DashboardIntro = () => {
           mt: 3,
           width: "100%",
           maxWidth: { xs: 600, lg: 850 },
-          color: "#8fa1b8",
+          color: "text.secondary",
           fontSize: "clamp(1rem, 1.5vw, 1.35rem)",
           lineHeight: 1.5,
         }}
@@ -52,11 +52,15 @@ const DashboardIntro = () => {
         ].map(([value, label]) => (
           <Box key={label}>
             <Typography
-              sx={{ color: "#f5f7fa", fontSize: "1.8rem", fontWeight: 700 }}
+              sx={{
+                color: "text.primary",
+                fontSize: "1.8rem",
+                fontWeight: 700,
+              }}
             >
               {value}
             </Typography>
-            <Typography sx={{ color: "#8fa1b8" }}>{label}</Typography>
+            <Typography color="text.secondary">{label}</Typography>
           </Box>
         ))}
       </Box>

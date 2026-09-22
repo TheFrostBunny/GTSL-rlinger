@@ -6,9 +6,10 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { Link, useLocation } from "react-router-dom";
 import IconButton from "@mui/material/IconButton";
-import MenuIcon from '@mui/icons-material/Menu';
+import MenuIcon from "@mui/icons-material/Menu";
+import { Link, useLocation } from "react-router-dom";
+import { alpha, useTheme } from "@mui/material/styles";
 
 type NavItem = {
   label: string;
@@ -25,17 +26,18 @@ type SidebarProps = {
   onToggle: () => void;
 };
 
-
 export default function Sidebar({
   collapsed,
   navItems,
-  color = "#161e28",
+  color,
   appName = "Lærling Link",
   logo = "/logo.png",
   onToggle,
 }: SidebarProps) {
   const location = useLocation();
+  const theme = useTheme();
   const width = collapsed ? 76 : 310;
+  const sidebarColor = color ?? theme.palette.background.paper;
 
   return (
     <Drawer
@@ -43,11 +45,11 @@ export default function Sidebar({
       sx={{
         width,
         flexShrink: 0,
-        backgroundColor: color,
+        bgcolor: sidebarColor,
         transition: "width 0.25s ease",
 
         "&.MuiDrawer-docked": {
-          backgroundColor: color,
+          bgcolor: sidebarColor,
         },
 
         "& .MuiDrawer-paper": {
@@ -57,8 +59,9 @@ export default function Sidebar({
           width,
           height: "100vh",
           boxSizing: "border-box",
-          backgroundColor: color,
-          borderRight: "1px solid #27313e",
+          bgcolor: sidebarColor,
+          borderRight: 1,
+          borderColor: "divider",
           overflowX: "hidden",
           transition: "width 0.25s ease",
         },
@@ -88,7 +91,7 @@ export default function Sidebar({
 
             <Typography
               sx={{
-                color: "#f5f7fa",
+                color: "text.primary",
                 fontSize: "1.45rem",
                 fontWeight: 800,
                 whiteSpace: "nowrap",
@@ -103,10 +106,10 @@ export default function Sidebar({
           onClick={onToggle}
           aria-label={collapsed ? "Åpne sidebar" : "Lukk sidebar"}
           sx={{
-            color: "#fff",
-            marginLeft: collapsed ? 0 : 1,
+            color: "text.primary",
+            ml: collapsed ? 0 : 1,
             "&:hover": {
-              backgroundColor: "#202b39",
+              bgcolor: "action.hover",
             },
           }}
         >
@@ -133,28 +136,29 @@ export default function Sidebar({
                 px: 2,
                 justifyContent: collapsed ? "center" : "initial",
                 borderRadius: 3,
-                backgroundColor: isActive ? "#202b39" : "transparent",
+                bgcolor: isActive
+                  ? alpha(theme.palette.primary.main, 0.14)
+                  : "transparent",
 
                 "& .MuiListItemIcon-root": {
                   minWidth: 0,
                   mr: collapsed ? 0 : 2,
                   justifyContent: "center",
-                  color: isActive ? "#ff7052" : "#91a0b5",
+                  color: isActive ? "primary.main" : "text.secondary",
                 },
 
                 "& .MuiListItemText-primary": {
-                  color: isActive ? "#ffffff" : "#aebbd0",
+                  color: isActive ? "text.primary" : "text.secondary",
                   fontSize: "1.1rem",
                   fontWeight: isActive ? 600 : 500,
                 },
 
                 "&:hover": {
-                  backgroundColor: "#202b39",
+                  bgcolor: "action.hover",
                 },
               }}
             >
               {item.icon && <ListItemIcon>{item.icon}</ListItemIcon>}
-
               {!collapsed && <ListItemText primary={item.label} />}
             </ListItemButton>
           );
