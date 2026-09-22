@@ -10,7 +10,8 @@
     "history": "Historikk",
     "businessProfile": "Bedriftsprofil",
     "createPosition": "Opprett stilling",
-    "login": "Logg inn"
+    "login": "Logg inn",
+    "settings": "Innstillinger"
   },
   "greeting": {
     "morning": "God morgen",
@@ -58,5 +59,20 @@
   "howItWorks": {
     "title": "Slik fungerer det",
     "description": "Finn ut hvordan plattformen vår fungerer."
+  },
+  "profile": {
+    "manageYourProfileInformation": "Se og administrer profilinformasjonen din.",
+    "fieldOfStudy": "Fagretning",
+    "aboutMe": "Om meg",
+    "interests": "Interesser",
+    "addInterest": "Legg til interesse",
+    "pressSpaceToAdd": "Trykk mellomrom for å legge til",
+    "saveProfile": "Lagre profil",
+    "cancel": "Avbryt",
+    "residence": "Bosted",
+    "email": "E-post",
+    "editProfile": "Endre profil",
+    "myProfile": "Min profil",
+    "student": "Student"
   }
 }
