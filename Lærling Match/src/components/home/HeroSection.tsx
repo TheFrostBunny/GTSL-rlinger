@@ -1,5 +1,5 @@
 import { Box, Button, Container, Stack, Typography } from "@mui/material";
-import { theme } from "../../themes/darkTheme";
+import { darkTheme } from "../../themes/darkTheme";
 
 export default function HeroSection() {
   return (
@@ -13,7 +13,7 @@ export default function HeroSection() {
         alignItems: "center",
         justifyContent: "center",
         overflow: "hidden",
-        color: theme.palette.primary.contrastText,
+        color: darkTheme.palette.primary.contrastText,
         pt: { xs: 12, md: 14 },
         pb: { xs: 10, md: 12 },
         px: { xs: 2, md: 3 },
@@ -71,7 +71,7 @@ export default function HeroSection() {
             sx={{
               mb: 2,
 
-              color: theme.palette.secondary.main,
+              color: darkTheme.palette.secondary.main,
 
               fontSize: {
                 xs: "0.8rem",
@@ -90,7 +90,7 @@ export default function HeroSection() {
             sx={{
               mb: 3,
 
-              color: theme.palette.text.primary,
+              color: darkTheme.palette.text.primary,
 
               fontSize: {
                 xs: "3rem",
@@ -112,7 +112,7 @@ export default function HeroSection() {
             <Box
               component="span"
               sx={{
-                color: theme.palette.secondary.main,
+                color: darkTheme.palette.secondary.main,
               }}
             >
               Match
@@ -125,7 +125,7 @@ export default function HeroSection() {
               maxWidth: 760,
               mx: "auto",
 
-              color: theme.palette.text.primary,
+              color: darkTheme.palette.text.primary,
 
               fontSize: {
                 xs: "1.8rem",
@@ -148,7 +148,7 @@ export default function HeroSection() {
 
               mb: 5,
 
-              color: theme.palette.text.secondary,
+              color: darkTheme.palette.text.secondary,
 
               fontSize: {
                 xs: "1rem",
@@ -179,7 +179,7 @@ export default function HeroSection() {
               sx={{
                 minWidth: 190,
 
-                backgroundColor: theme.palette.primary.main,
+                backgroundColor: darkTheme.palette.primary.main,
 
                 borderRadius: "999px",
 
@@ -192,7 +192,7 @@ export default function HeroSection() {
                 fontWeight: 700,
 
                 "&:hover": {
-                  backgroundColor: theme.palette.primary.light,
+                  backgroundColor: darkTheme.palette.primary.light,
                 },
               }}
             >
@@ -205,8 +205,8 @@ export default function HeroSection() {
               sx={{
                 minWidth: 190,
 
-                color: theme.palette.primary.contrastText,
-                borderColor: theme.palette.primary.light,
+                color: darkTheme.palette.primary.contrastText,
+                borderColor: darkTheme.palette.primary.light,
 
                 borderRadius: "999px",
 
@@ -219,8 +219,8 @@ export default function HeroSection() {
                 fontWeight: 700,
 
                 "&:hover": {
-                  borderColor: theme.palette.primary.contrastText,
-                  backgroundColor: theme.palette.primary.light,
+                  borderColor: darkTheme.palette.primary.contrastText,
+                  backgroundColor: darkTheme.palette.primary.light,
                 },
               }}
             >

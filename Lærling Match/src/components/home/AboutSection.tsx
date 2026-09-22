@@ -1,5 +1,5 @@
 import { Box, Container, Typography } from "@mui/material";
-import { theme } from "../../themes/darkTheme";
+import { darkTheme } from "../../themes/darkTheme";
 
 export default function AboutSection() {
   return (
@@ -7,7 +7,7 @@ export default function AboutSection() {
       id="about"
       component="section"
       sx={{
-        backgroundColor: theme.palette.background.default,
+        backgroundColor: darkTheme.palette.background.default,
         py: { xs: 10, md: 16 },
         px: { xs: 2, md: 3 },
       }}
@@ -35,7 +35,7 @@ export default function AboutSection() {
               sx={{
                 mb: 2,
 
-                color: theme.palette.primary.main,
+                color: darkTheme.palette.primary.main,
 
                 fontSize: "0.85rem",
                 fontWeight: 800,
@@ -51,7 +51,7 @@ export default function AboutSection() {
               sx={{
                 mb: 3,
 
-                color: theme.palette.primary.contrastText,
+                color: darkTheme.palette.primary.contrastText,
 
                 fontSize: {
                   xs: "2.4rem",
@@ -72,7 +72,7 @@ export default function AboutSection() {
               sx={{
                 maxWidth: 590,
 
-                color: theme.palette.text.secondary,
+                color: darkTheme.palette.text.secondary,
 
                 fontSize: {
                   xs: "1rem",
@@ -106,7 +106,7 @@ export default function AboutSection() {
 
               overflow: "hidden",
 
-              background: `linear-gradient(135deg, ${theme.palette.primary.light} 0%, ${theme.palette.primary.main} 100%)`,
+              background: `linear-gradient(135deg, ${darkTheme.palette.primary.light} 0%, ${darkTheme.palette.primary.main} 100%)`,
             }}
           >
             <Box
@@ -116,7 +116,7 @@ export default function AboutSection() {
             >
               <Typography
                 sx={{
-                  color: theme.palette.primary.contrastText,
+                  color: darkTheme.palette.primary.contrastText,
 
                   fontSize: {
                     xs: "3rem",
@@ -135,7 +135,7 @@ export default function AboutSection() {
                 sx={{
                   my: 2,
 
-                  color: theme.palette.primary.contrastText,
+                  color: darkTheme.palette.primary.contrastText,
 
                   fontSize: "2rem",
                 }}
@@ -145,7 +145,7 @@ export default function AboutSection() {
 
               <Typography
                 sx={{
-                  color: theme.palette.primary.contrastText,
+                  color: darkTheme.palette.primary.contrastText,
 
                   fontSize: {
                     xs: "3rem",

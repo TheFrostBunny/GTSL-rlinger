@@ -1,12 +1,12 @@
 import { Box, Button, Container, Stack, Typography } from "@mui/material";
-import { theme } from "../../themes/darkTheme";
+import { darkTheme } from "../../themes/darkTheme";
 
 export default function CTASection() {
   return (
     <Box
       component="section"
       sx={{
-        backgroundColor: theme.palette.background.default,
+        backgroundColor: darkTheme.palette.background.default,
         py: { xs: 10, md: 16 },
         px: { xs: 2, md: 3 },
       }}
@@ -18,8 +18,8 @@ export default function CTASection() {
 
             overflow: "hidden",
 
-            backgroundColor: theme.palette.primary.main,
-            color: theme.palette.primary.contrastText,
+            backgroundColor: darkTheme.palette.primary.main,
+            color: darkTheme.palette.primary.contrastText,
 
             borderRadius: "36px",
 
@@ -41,7 +41,7 @@ export default function CTASection() {
 
               mb: 3,
 
-              color: theme.palette.primary.contrastText,
+              color: darkTheme.palette.primary.contrastText,
 
               fontSize: {
                 xs: "2.3rem",
@@ -64,7 +64,7 @@ export default function CTASection() {
 
               mb: 5,
 
-              color: theme.palette.secondary.light,
+              color: darkTheme.palette.secondary.light,
 
               fontSize: "1.08rem",
 
@@ -91,8 +91,8 @@ export default function CTASection() {
             <Button
               variant="contained"
               sx={{
-                backgroundColor: theme.palette.primary.contrastText,
-                color: theme.palette.primary.main,
+                backgroundColor: darkTheme.palette.primary.contrastText,
+                color: darkTheme.palette.primary.main,
 
                 borderRadius: "999px",
 
@@ -103,8 +103,8 @@ export default function CTASection() {
                 fontWeight: 700,
 
                 "&:hover": {
-                  backgroundColor: theme.palette.secondary.light,
-                  color: theme.palette.primary.dark,
+                  backgroundColor: darkTheme.palette.secondary.light,
+                  color: darkTheme.palette.primary.dark,
                 },
               }}
             >
@@ -114,8 +114,8 @@ export default function CTASection() {
             <Button
               variant="outlined"
               sx={{
-                color: theme.palette.primary.contrastText,
-                borderColor: theme.palette.primary.light,
+                color: darkTheme.palette.primary.contrastText,
+                borderColor: darkTheme.palette.primary.light,
 
                 borderRadius: "999px",
 
@@ -126,8 +126,8 @@ export default function CTASection() {
                 fontWeight: 700,
 
                 "&:hover": {
-                  borderColor: theme.palette.primary.contrastText,
-                  backgroundColor: theme.palette.primary.light,
+                  borderColor: darkTheme.palette.primary.contrastText,
+                  backgroundColor: darkTheme.palette.primary.light,
                 },
               }}
             >

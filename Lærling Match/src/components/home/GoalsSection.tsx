@@ -1,5 +1,5 @@
 import { Box, Card, CardContent, Container, Typography } from "@mui/material";
-import { theme } from "../../themes/darkTheme";
+import { darkTheme } from "../../themes/darkTheme";
 
 const goals = [
   {
@@ -34,7 +34,7 @@ export default function GoalsSection() {
       id="goals"
       component="section"
       sx={{
-        backgroundColor: theme.palette.background.default,
+        backgroundColor: darkTheme.palette.background.default,
         py: { xs: 10, md: 16 },
         px: { xs: 2, md: 3 },
       }}
@@ -57,7 +57,7 @@ export default function GoalsSection() {
             sx={{
               mb: 2,
 
-              color: theme.palette.primary.main,
+              color: darkTheme.palette.primary.main,
 
               fontSize: "0.85rem",
               fontWeight: 800,
@@ -71,7 +71,7 @@ export default function GoalsSection() {
           <Typography
             component="h2"
             sx={{
-              color: theme.palette.primary.contrastText,
+              color: darkTheme.palette.primary.contrastText,
 
               fontSize: {
                 xs: "2.4rem",
@@ -106,9 +106,9 @@ export default function GoalsSection() {
               key={goal.number}
               elevation={0}
               sx={{
-                backgroundColor: theme.palette.background.paper,
+                backgroundColor: darkTheme.palette.background.paper,
 
-                border: `1px solid ${theme.palette.divider}`,
+                border: `1px solid ${darkTheme.palette.divider}`,
 
                 borderRadius: "24px",
 
@@ -140,7 +140,7 @@ export default function GoalsSection() {
                   sx={{
                     mb: 4,
 
-                    color: theme.palette.primary.main,
+                    color: darkTheme.palette.primary.main,
 
                     fontSize: "0.9rem",
                     fontWeight: 800,
@@ -153,7 +153,7 @@ export default function GoalsSection() {
                   sx={{
                     mb: 2,
 
-                    color: theme.palette.primary.contrastText,
+                    color: darkTheme.palette.primary.contrastText,
 
                     fontSize: {
                       xs: "1.35rem",
@@ -168,7 +168,7 @@ export default function GoalsSection() {
 
                 <Typography
                   sx={{
-                    color: theme.palette.text.secondary,
+                    color: darkTheme.palette.text.secondary,
 
                     lineHeight: 1.75,
                   }}

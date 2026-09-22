@@ -3,15 +3,15 @@ import {
     Container,
     Typography,
   } from "@mui/material";
-  import { theme } from "../../themes/darkTheme";
+  import { darkTheme } from "../../themes/darkTheme";
   
   export default function Footer() {
     return (
       <Box
         component="footer"
         sx={{
-          backgroundColor: theme.palette.background.default,
-          borderTop: `1px solid ${theme.palette.primary.light}`,
+          backgroundColor: darkTheme.palette.background.default,
+          borderTop: `1px solid ${darkTheme.palette.primary.light}`,
           py: 5,
           px: { xs: 2, md: 3 },
         }}
@@ -37,7 +37,7 @@ import {
         >
           <Typography
             sx={{
-              color: theme.palette.primary.contrastText,
+              color: darkTheme.palette.primary.contrastText,
               fontWeight: 800,
             }}
           >
@@ -45,7 +45,7 @@ import {
             <Box
               component="span"
               sx={{
-                color: theme.palette.primary.main,
+                color: darkTheme.palette.primary.main,
               }}
             >
               Match
@@ -54,7 +54,7 @@ import {
   
           <Typography
             sx={{
-              color: theme.palette.text.secondary,
+              color: darkTheme.palette.text.secondary,
               fontSize: "0.85rem",
             }}
           >
