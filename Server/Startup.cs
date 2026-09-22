@@ -24,6 +24,17 @@ public class Startup(IConfiguration configuration, ILogger<Startup> logger, IWeb
     private readonly IWebHostEnvironment _env = env;
     private readonly string AllowedOrigin = "_allowedOrigin";
 
+    private bool ShouldDisableIntrospection()
+    {
+        var allowIntrospection = Configuration.GetValue<bool?>("GraphQL:AllowIntrospection");
+        if (allowIntrospection.HasValue)
+        {
+            return !allowIntrospection.Value;
+        }
+
+        return !_env.IsDevelopment();
+    }
+
     public void ConfigureServices(IServiceCollection services)
     {
         // Database
@@ -90,7 +101,7 @@ public class Startup(IConfiguration configuration, ILogger<Startup> logger, IWeb
                o.IncludeTotalCount = true;
            })
            .AddInMemorySubscriptions()
-           .DisableIntrospection(!_env.IsDevelopment())
+           .DisableIntrospection(false)
            .RegisterDbContextFactory<ApplicationDbContext>()
            // .AddDiagnosticEventListener(sp => new ConsoleQueryLogger(sp.GetApplicationService<ILogger<ConsoleQueryLogger>>()))
            .AddErrorFilter((error) =>
