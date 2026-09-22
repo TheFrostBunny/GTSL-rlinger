@@ -6,6 +6,7 @@ import { Provider } from "urql";
 import { createClient } from "./urql/urqlConfig";
 import AppRoutes from "./routes/AppRoutes";
 import ThemeModeProvider from "./themes/ThemeModeProvider";
+import "./i18n";
 
 export function Root() {
   const [client, setClient] = useState<any>(null);
