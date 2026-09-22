@@ -92,6 +92,7 @@ export default function Navbar() {
 
             <Button
               variant="contained"
+              href="/app"
               sx={{
                 ml: 2,
 
