@@ -1,4 +1,13 @@
-fragment User on User {
+fragment Student on Student {
   id
   name
+  wantedTrade
+  line
+  profileImage
+  mediaLinks {
+    mediaUrl
+  }
+  certificates {
+    description
+  }
 }

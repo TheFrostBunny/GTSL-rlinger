@@ -5,15 +5,15 @@ using HotChocolate.Types;
 using HotChocolate.Types.Relay;
 using Microsoft.EntityFrameworkCore;
 
-namespace GreenTechSee.Users;
+namespace GreenTechSee.Students;
 
 [ExtendObjectType(GraphQLObjectType.Query)]
-public class UserQueries
+public class StudentQueries
 {
-    public async Task<User?> GetUserAsync(
-        [ID(nameof(User))] int userId,
+    public async Task<Student?> GetStudentAsync(
+        [ID(nameof(Student))] int studentId,
         ApplicationDbContext context,
         CancellationToken cancellationToken) =>
-        await context.Users
-            .FirstOrDefaultAsync(user => user.Id == userId, cancellationToken);
+        await context.Students
+            .FirstOrDefaultAsync(student => student.Id == studentId, cancellationToken);
 }

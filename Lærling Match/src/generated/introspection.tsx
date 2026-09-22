@@ -16,7 +16,7 @@ export default {
     "types": [
       {
         "kind": "OBJECT",
-        "name": "CreateUserPayload",
+        "name": "CreateStudentPayload",
         "fields": [
           {
             "name": "query",
@@ -31,10 +31,10 @@ export default {
             "args": []
           },
           {
-            "name": "user",
+            "name": "student",
             "type": {
               "kind": "OBJECT",
-              "name": "User",
+              "name": "Student",
               "ofType": null
             },
             "args": []
@@ -47,11 +47,11 @@ export default {
         "name": "Mutation",
         "fields": [
           {
-            "name": "createUser",
+            "name": "createStudent",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "CreateUserPayload",
+                "name": "CreateStudentPayload",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -92,7 +92,7 @@ export default {
         "possibleTypes": [
           {
             "kind": "OBJECT",
-            "name": "User"
+            "name": "Student"
           }
         ]
       },
@@ -153,15 +153,15 @@ export default {
             ]
           },
           {
-            "name": "user",
+            "name": "student",
             "type": {
               "kind": "OBJECT",
-              "name": "User",
+              "name": "Student",
               "ofType": null
             },
             "args": [
               {
-                "name": "userId",
+                "name": "studentId",
                 "type": {
                   "kind": "NON_NULL",
                   "ofType": {
@@ -177,27 +177,39 @@ export default {
       },
       {
         "kind": "OBJECT",
-        "name": "Subscription",
+        "name": "Student",
         "fields": [
           {
-            "name": "onUserCreated",
+            "name": "afterApprenticeShip",
             "type": {
-              "kind": "NON_NULL",
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "certificates",
+            "type": {
+              "kind": "LIST",
               "ofType": {
-                "name": "User",
-                "kind": "OBJECT",
-                "ofType": null
+                "kind": "NON_NULL",
+                "ofType": {
+                  "name": "StudentCertificates",
+                  "kind": "OBJECT",
+                  "ofType": null
+                }
               }
             },
             "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
-        "name": "User",
-        "fields": [
+          },
+          {
+            "name": "description",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
           {
             "name": "id",
             "type": {
@@ -210,7 +222,46 @@ export default {
             "args": []
           },
           {
+            "name": "line",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "mediaLinks",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "name": "StudentSocialMedia",
+                  "kind": "OBJECT",
+                  "ofType": null
+                }
+              }
+            },
+            "args": []
+          },
+          {
             "name": "name",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "profileImage",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "wantedTrade",
             "type": {
               "kind": "SCALAR",
               "name": "Any"
@@ -224,6 +275,120 @@ export default {
             "name": "Node"
           }
         ]
+      },
+      {
+        "kind": "OBJECT",
+        "name": "StudentCertificates",
+        "fields": [
+          {
+            "name": "description",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "id",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "student",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Student",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "studentId",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "StudentSocialMedia",
+        "fields": [
+          {
+            "name": "id",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "mediaUrl",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "student",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "Student",
+                "kind": "OBJECT",
+                "ofType": null
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "studentId",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "Subscription",
+        "fields": [
+          {
+            "name": "onStudentCreated",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "Student",
+                "kind": "OBJECT",
+                "ofType": null
+              }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
       },
       {
         "kind": "SCALAR",
