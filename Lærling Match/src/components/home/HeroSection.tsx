@@ -85,39 +85,19 @@ export default function HeroSection() {
           >
             FRA UTDANNING TIL MULIGHETER
           </Typography>
-
-          <Typography
+          <Box
+            component="img"
+            src="/Logo_Tekst.png"
+            alt="Lærling Match"
             sx={{
+              width: { xs: 260, sm: 420, md: 560 },
+              maxWidth: "100%",
+              height: "auto",
+              display: "block",
+              mx: "auto",
               mb: 3,
-
-              color: darkTheme.palette.text.primary,
-
-              fontSize: {
-                xs: "3rem",
-                sm: "4.5rem",
-                md: "6rem",
-              },
-
-              fontWeight: 800,
-
-              letterSpacing: {
-                xs: "-2px",
-                md: "-5px",
-              },
-
-              lineHeight: 0.95,
             }}
-          >
-            Lærling
-            <Box
-              component="span"
-              sx={{
-                color: darkTheme.palette.secondary.main,
-              }}
-            >
-              Match
-            </Box>
-          </Typography>
+          />
 
           <Typography
             component="h1"

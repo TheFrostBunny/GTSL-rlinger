@@ -31,7 +31,7 @@ export default function Sidebar({
   navItems,
   color,
   appName = "Lærling Link",
-  logo = "/logo.png",
+  logo = "/Logo.png",
   onToggle,
 }: SidebarProps) {
   const location = useLocation();

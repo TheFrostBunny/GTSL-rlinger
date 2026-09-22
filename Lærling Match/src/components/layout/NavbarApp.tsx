@@ -153,7 +153,7 @@ export default function NavbarAPP({
           navItems={navItems}
           color={theme.palette.background.paper}
           appName={appName}
-          logo="/TestLogo.svg"
+          logo="/Logo.png"
           onToggle={() => setCollapsed((value) => !value)}
         />
 

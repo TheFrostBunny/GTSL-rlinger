@@ -30,31 +30,47 @@ export default function Navbar() {
             justifyContent: "space-between",
           }}
         >
-          <Typography
-            component="a"
-            href="#top"
+          
+          <Box
             sx={{
-              color: darkTheme.palette.primary.contrastText,
+              display: "flex",
+              alignItems: "center",
               textDecoration: "none",
-              fontSize: {
-                xs: "1.25rem",
-                md: "1.45rem",
-              },
-              fontWeight: 800,
-              letterSpacing: "-0.5px",
             }}
           >
-            Lærling
             <Box
-              component="span"
+              component={Link}
+              to="/"
               sx={{
-                color: darkTheme.palette.primary.main,
+                display: "flex",
+                alignItems: "center",
+                gap: 1.5,
+                textDecoration: "none",
               }}
             >
-              Match
-            </Box>
-          </Typography>
+              <Box
+                component="img"
+                src="./Logo.png"
+                alt="Lærling Link"
+                sx={{
+                  width: { xs: 42, md: 50 },
+                  height: "auto",
+                  display: "block",
+                }}
+              />
 
+              <Typography
+                sx={{
+                  color: "primary.contrastText",
+                  fontSize: { xs: 18, md: 22 },
+                  fontWeight: 800,
+                  whiteSpace: "nowrap",
+                }}
+              >
+                Lærling Link
+              </Typography>
+            </Box>
+          </Box>
           <Box
             sx={{
               display: {
