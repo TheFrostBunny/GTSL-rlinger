@@ -1,4 +1,5 @@
 import { Route, Routes } from "react-router-dom";
+import AdminPeoplePanel from "../components/admin/AdminPeoplePanel";
 import Home from "../pages/Home";
 import HomePage from "../pages/homePage";
 import FindApprenticeship from "../pages/findApprenticeship";
@@ -9,6 +10,7 @@ import Login from "../pages/loginPage";
 import SignUp from "../pages/signupPage";
 import SettingsPage from "../pages/settingsPage";
 import { NotFoundPage } from "../pages/NotFoundPage";
+import CompanyProfilePage from "../pages/CompanyProfilePage";
 
 export default function AppRoutes() {
   return (
@@ -36,7 +38,7 @@ export default function AppRoutes() {
         element={<Login />}
       />
       <Route
-        path="/registrer"
+        path="/signup"
         element={<SignUp />}
       />
       <Route
@@ -46,6 +48,18 @@ export default function AppRoutes() {
       <Route
         path="*"
         element={<NotFoundPage />}
+      />
+      <Route
+        path="*"
+        element={<Home />}
+      />
+      <Route
+        path="/admin"
+        element={<AdminPeoplePanel />}
+      />
+      <Route
+        path="/bedrift"
+        element={<CompanyProfilePage   />}
       />
     </Routes>
   );

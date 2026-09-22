@@ -3,6 +3,7 @@ import HistoryIcon from "@mui/icons-material/History";
 import AssignmentOutlinedIcon from "@mui/icons-material/AssignmentOutlined";
 import DashboardIntro from "../components/dashboard/DashboardIntro";
 import BusinessIcon from "@mui/icons-material/Business";
+import SettingsIcon from "@mui/icons-material/Settings";
 import HomeIcon from "@mui/icons-material/Home";
 import PersonIcon from "@mui/icons-material/Person";
 import SearchIcon from "@mui/icons-material/Search";
@@ -26,6 +27,7 @@ const HomePage = () => {
           { label: t("nav.myApplications"), href: "/application", icon: <AssignmentOutlinedIcon /> },
           { label: t("nav.history"), href: "/historikk", icon: <HistoryIcon /> },
           { label: t("nav.profile"), href: "/profil", icon: <PersonIcon /> },
+          { label: t("nav.settings"), href: "/settings", icon: <SettingsIcon /> },
         ]
       : [
           { label: t("nav.home"), href: "/app", icon: <HomeIcon /> },

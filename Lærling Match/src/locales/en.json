@@ -9,12 +9,31 @@
     "myApplications": "My applications",
     "history": "History",
     "businessProfile": "Business profile",
-    "createPosition": "Create position"
+    "createPosition": "Create position",
+    "login": "Login",
+    "settings": "Settings"
   },
   "greeting": {
     "morning": "Good morning",
     "day": "Good afternoon",
     "evening": "Good evening"
+  },
+  "dashboard": {
+    "welcome": "Welcome",
+    "backToName": "back, {{name}}",
+    "loadingSuggestions": "Loading your suggestions...",
+    "matchingSuggestions": "{{count}} new companies match your profile this week.",
+    "stats": {
+      "newSuggestions": "new suggestions",
+      "liked": "liked",
+      "awaitingResponse": "awaiting response"
+    }
+  },
+  "findplacement": {
+    "title": "Find apprenticeship",
+    "description": "Browse companies that match your field of study.",
+    "companies": "companies",
+    "searchPlaceholder": "Search for company, field of study, or location..."
   },
   "settings": {
     "title": "Settings",
@@ -32,6 +51,62 @@
   "myApplications": {
     "title": "My applications",
     "description": "View and manage your apprenticeship applications.",
-    "noApplications": "You have not applied for any apprenticeships yet."
+    "noApplications": "You have not applied for any apprenticeships yet.",
+    "filters": {
+      "all": "All ({{count}})",
+      "pending": "Pending ({{count}})",
+      "matched": "Matched ({{count}})",
+      "rejected": "Rejected ({{count}})"
+    }
+  },
+  "about": {
+    "title": "About us",
+    "description": "Learn more about our mission and team."
+  },
+  "goals": {
+    "title": "Our goals",
+    "description": "Learn more about what we aim to achieve."
+  },
+  "howItWorks": {
+    "title": "How it works",
+    "description": "Find out how our platform works."
+  },
+  "profile": {
+    "manageYourProfileInformation": "View and manage your profile information.",
+    "fieldOfStudy": "Field of study",
+    "aboutMe": "About me",
+    "interests": "Interests",
+    "addInterest": "Add interest",
+    "pressSpaceToAdd": "Press space to add",
+    "saveProfile": "Save profile",
+    "cancel": "Cancel",
+    "residence": "Residence",
+    "email": "Email",
+    "editProfile": "Edit profile",
+    "myProfile": "My profile",
+    "student": "Student"
+  },
+  "signup": {
+    "NavnOn": "Name of contact person",
+    "Navn": "Name",
+    "epost": "Email",
+    "passord": "Password",
+    "bekreftPassord": "Confirm password",
+    "opprettBedriftskonto": "Create business account",
+    "opprettLærlingkonto": "Create apprentice account",
+    "harDuAlleredeKonto": "Already have an account?",
+    "loggInn": "Log in"
+  },
+  "history": {
+    "description": "View your past applications and activities."
+  },
+  "common": {
+    "edit": "Edit profile",
+    "save": "Save changes",
+    "cancel": "Cancel"
+  },
+  "companyProfile": {
+    "title": "Company profile",
+    "description": "Manage your company's information."
   }
 }

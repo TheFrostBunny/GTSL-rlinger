@@ -9,12 +9,42 @@
     "myApplications": "Mine søknader",
     "history": "Historikk",
     "businessProfile": "Bedriftsprofil",
-    "createPosition": "Opprett stilling"
+    "createPosition": "Opprett stilling",
+    "login": "Logg inn",
+    "settings": "Innstillinger"
   },
   "greeting": {
     "morning": "God morgen",
     "day": "God ettermiddag",
     "evening": "God kveld"
+  },
+  "dashboard": {
+    "welcome": "Velkommen",
+    "backToName": "tilbake, {{name}}",
+    "loadingSuggestions": "Laster inn forslagene dine...",
+    "matchingSuggestions": "{{count}} nye bedrifter matcher profilen din denne uken.",
+    "stats": {
+      "newSuggestions": "nye forslag",
+      "liked": "du har likt",
+      "awaitingResponse": "venter svar"
+    }
+  },
+  "findplacement": {
+    "title": "Finn lærlingplass",
+    "description": "Bla gjennom lærebedrifter som matcher din fagretning.",
+    "findCompanies": "Finn læreplasser",
+    "findApprentices": "Finn lærlinger",
+    "companyDescription": "Bla gjennom bedrifter som søker lærlinger.",
+    "apprenticeDescription": "Bla gjennom elever som søker læreplass.",
+    "companies": "bedrifter",
+    "apprentices": "elever",
+    "searchPlaceholder": "Søk etter bedrift, fagretning eller sted...",
+    "filter": {
+      "all": "Alle ({{count}})",
+      "pending": "Venter ({{count}})",
+      "matched": "Matchet ({{count}})",
+      "rejected": "Avslått ({{count}})"
+    }
   },
   "settings": {
     "title": "Innstillinger",
@@ -28,5 +58,55 @@
     "dark": "Mørk",
     "light": "Lys",
     "save": "Lagre innstillinger"
+  },
+  "about": {
+    "title": "Om oss",
+    "description": "Lær mer om vårt oppdrag og team."
+  },
+  "goals": {
+    "title": "Våre mål",
+    "description": "Lær mer om hva vi ønsker å oppnå."
+  },
+  "howItWorks": {
+    "title": "Slik fungerer det",
+    "description": "Finn ut hvordan plattformen vår fungerer."
+  },
+  "profile": {
+    "manageYourProfileInformation": "Se og administrer profilinformasjonen din.",
+    "fieldOfStudy": "Fagretning",
+    "aboutMe": "Om meg",
+    "interests": "Interesser",
+    "addInterest": "Legg til interesse",
+    "pressSpaceToAdd": "Trykk mellomrom for å legge til",
+    "saveProfile": "Lagre profil",
+    "cancel": "Avbryt",
+    "residence": "Bosted",
+    "email": "E-post",
+    "editProfile": "Endre profil",
+    "myProfile": "Min profil",
+    "student": "Student"
+  },
+  "signup": {
+    "NavnOn": "Navn på kontaktperson",
+    "Navn": "Navn",
+    "epost": "E-post",
+    "passord": "Passord",
+    "bekreftPassord": "Bekreft passord",
+    "opprettBedriftskonto": "Opprett bedriftskonto",
+    "opprettLærlingkonto": "Opprett lærlingkonto",
+    "harDuAlleredeKonto": "Har du allerede konto?",
+    "loggInn": "Logg inn"
+  },
+  "history": {
+    "description": "Se dine tidligere søknader og aktiviteter."
+  },
+  "common": {
+    "edit": "Rediger profil",
+    "save": "Lagre endringer",
+    "cancel": "Avbryt"
+  },
+  "companyProfile": {
+    "title": "Bedriftsprofil",
+    "description": "Administrer informasjonen om bedriften din."
   }
 }

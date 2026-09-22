@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
+import { useTranslation } from "react-i18next";
 import AppBar from "@mui/material/AppBar";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
@@ -46,6 +47,7 @@ export default function NavbarAPP({
   const [collapsed, setCollapsed] = useState(() => {
     return localStorage.getItem(sidebarStorageKey) === "true";
   });
+  const { t } = useTranslation();
 
   const [userMenuAnchor, setUserMenuAnchor] =
     useState<null | HTMLElement>(null);
@@ -213,7 +215,7 @@ export default function NavbarAPP({
           <SettingsOutlinedIcon
             sx={{ mr: 1.5, color: "text.secondary" }}
           />
-          Settings
+          {t("settings.title")}
         </MenuItem>
 
         <Divider sx={{ borderColor: "divider" }} />
@@ -232,7 +234,7 @@ export default function NavbarAPP({
           onClick={handleLogout}
         >
           <LogoutOutlinedIcon sx={{ mr: 1.5 }} />
-          Logg ut
+          {t("nav.login")}
         </MenuItem>
       </Menu>
     </Box>

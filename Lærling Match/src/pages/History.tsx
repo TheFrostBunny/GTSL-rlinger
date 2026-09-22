@@ -7,6 +7,7 @@ import HomeIcon from "@mui/icons-material/Home";
 import SearchIcon from "@mui/icons-material/Search";
 import AssignmentOutlinedIcon from "@mui/icons-material/AssignmentOutlined";
 import PersonIcon from "@mui/icons-material/Person";
+import SettingsIcon from "@mui/icons-material/Settings";
 import { useTranslation } from "react-i18next";
 import NavbarAPP from "../components/layout/NavbarApp";
 
@@ -59,6 +60,11 @@ export default function History() {
       href: "/profil",
       icon: <PersonIcon />,
     },
+    {
+      label: t("nav.settings"),
+      href: "/settings",
+      icon: <SettingsIcon />,
+    }
   ];
 
   return (
@@ -75,11 +81,11 @@ export default function History() {
           variant="h3"
           sx={{ color: "text.primary", fontWeight: 800, mb: 1 }}
         >
-          Historikk
+          {t("nav.history")}
         </Typography>
 
         <Typography sx={{ color: "text.secondary", mb: 4 }}>
-          Se tidligere søknader og aktiviteter.
+          {t("history.description")}
         </Typography>
 
         <Stack spacing={2}>

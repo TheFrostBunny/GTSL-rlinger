@@ -1,7 +1,10 @@
 import { Box, Button, Container, Stack, Typography } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import { darkTheme } from "../../themes/darkTheme";
 
 export default function HeroSection() {
+  const navigate = useNavigate();
+
   return (
     <Box
       id="top"
@@ -156,6 +159,11 @@ export default function HeroSection() {
             <Button
               variant="contained"
               size="large"
+              onClick={() =>
+                navigate(
+                  "/signup?type=apprentice",
+                )
+              }
               sx={{
                 minWidth: 190,
 
@@ -182,6 +190,11 @@ export default function HeroSection() {
             <Button
               variant="outlined"
               size="large"
+              onClick={() =>
+                navigate(
+                  "/signup?type=company",
+                )
+              }
               sx={{
                 minWidth: 190,
 

@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
@@ -12,13 +11,13 @@ import IconButton from "@mui/material/IconButton";
 import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
 import Autocomplete from "@mui/material/Autocomplete";
-
 import HomeIcon from "@mui/icons-material/Home";
 import SearchIcon from "@mui/icons-material/Search";
 import AssignmentOutlinedIcon from "@mui/icons-material/AssignmentOutlined";
 import HistoryIcon from "@mui/icons-material/History";
 import PersonIcon from "@mui/icons-material/Person";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import SettingsIcon from "@mui/icons-material/Settings";
 import NavbarAPP from "../components/layout/NavbarApp";
 import { StudentFragment, useGetMeQuery } from "../generated/graphql";
 
@@ -86,6 +85,11 @@ export default function Profile() {
       href: "/profil",
       icon: <PersonIcon />,
     },
+    {
+      label: t("nav.settings"),
+      href: "/settings",
+      icon: <SettingsIcon />,
+    }
   ];
 
   return (
@@ -116,7 +120,7 @@ export default function Profile() {
             mb: 1,
           }}
         >
-          Min profil
+          {t("profile.myProfile")}
         </Typography>
 
         <Typography
@@ -125,7 +129,7 @@ export default function Profile() {
             mb: 4,
           }}
         >
-          Se og administrer profilinformasjonen din.
+          {t("profile.manageYourProfileInformation")}
         </Typography>
 
         <Paper
@@ -192,7 +196,7 @@ export default function Profile() {
                     fontSize: 24,
                   }}
                 >
-                  {profile?.name}
+                  {editing ? draftProfile.name : profile?.name}
                 </Typography>
 
                 <Typography
@@ -200,14 +204,14 @@ export default function Profile() {
                     color: "text.secondary",
                   }}
                 >
-                  Elev
+                  {t("profile.student")}
                 </Typography>
               </Box>
 
               {!editing && (
-                <Tooltip title="Endre profil">
+                <Tooltip title={t("profile.editProfile")}>
                   <IconButton
-                    aria-label="Endre profil"
+                    aria-label={t("profile.editProfile")}
                     onClick={startEditing}
                     sx={{
                       color: "primary.main",
@@ -236,13 +240,13 @@ export default function Profile() {
                   mb: 0.5,
                 }}
               >
-                E-post
+                {t("profile.email")}
               </Typography>
 
               {editing ? (
                 <TextField
                   fullWidth
-                  label="E-post"
+                  label={t("profile.email")}
                   type="email"
                   value={profile?.email}
                 />
@@ -267,13 +271,13 @@ export default function Profile() {
                   mb: 0.5,
                 }}
               >
-                Fagretning
+                {t("profile.fieldOfStudy")}
               </Typography>
 
               {editing ? (
                 <TextField
                   fullWidth
-                  label="Fagretning"
+                  label={t("profile.fieldOfStudy")}
                   value={profile?.wantedTrade}
                 />
               ) : (
@@ -297,7 +301,7 @@ export default function Profile() {
                   mb: 0.5,
                 }}
               >
-                Om meg
+                {t("profile.aboutMe")}
               </Typography>
 
               {editing ? (
@@ -305,7 +309,7 @@ export default function Profile() {
                   fullWidth
                   multiline
                   minRows={3}
-                  label="Om meg"
+                  label={t("profile.aboutMe")}
                   value={profile?.description}
                 />
               ) : (
@@ -318,9 +322,6 @@ export default function Profile() {
                 </Typography>
               )}
             </Box>
-
-            {/* Interesser */}
-
             <Box sx={{ width: "100%" }}>
               <Typography
                 sx={{
@@ -328,7 +329,7 @@ export default function Profile() {
                   mb: 1,
                 }}
               >
-                Interesser
+                {t("profile.interests")}
               </Typography>
 
               {editing ? (
@@ -380,9 +381,9 @@ export default function Profile() {
                   renderInput={(params) => (
                     <TextField
                       {...params}
-                      label="Interesser"
-                      placeholder="Legg til interesse"
-                      helperText="Trykk mellomrom for å legge til"
+                      label={t("profile.interests")}
+                      placeholder={t("profile.addInterest")}
+                      helperText={t("profile.pressSpaceToAdd")}
                       onKeyDown={(event) => {
                         if (
                           event.key === " "
@@ -428,8 +429,6 @@ export default function Profile() {
               )}
             </Box>
 
-            {/* Bosted */}
-
             <Box sx={{ width: "100%" }}>
               <Typography
                 sx={{
@@ -437,13 +436,13 @@ export default function Profile() {
                   mb: 0.5,
                 }}
               >
-                Bosted
+                {t("profile.residence")}
               </Typography>
 
               {editing ? (
                 <TextField
                   fullWidth
-                  label="Bosted"
+                  label={t("profile.residence")}
                   value={draftProfile.location}
                   onChange={(event) =>
                     updateDraftProfile(
@@ -477,7 +476,7 @@ export default function Profile() {
                   variant="contained"
                   onClick={saveProfile}
                 >
-                  Lagre profil
+                  {t("profile.saveProfile")}
                 </Button>
 
                 <Button
@@ -485,7 +484,7 @@ export default function Profile() {
                   variant="outlined"
                   onClick={cancelEditing}
                 >
-                  Avbryt
+                  {t("profile.cancel")}
                 </Button>
               </Box>
             )}

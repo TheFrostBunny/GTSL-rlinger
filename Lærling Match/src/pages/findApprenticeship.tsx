@@ -3,6 +3,7 @@ import HomeIcon from "@mui/icons-material/Home";
 import AssignmentOutlinedIcon from "@mui/icons-material/AssignmentOutlined";
 import HistoryIcon from "@mui/icons-material/History";
 import PersonIcon from "@mui/icons-material/Person";
+import SettingsIcon from "@mui/icons-material/Settings";
 import { useTranslation } from "react-i18next";
 import NavbarAPP from "../components/layout/NavbarApp";
 import Findplacement from "../components/FindPlace/Findplacement";
@@ -33,6 +34,11 @@ const FindApprenticeship = () => {
       href: "/profil",
       icon: <PersonIcon />,
     },
+    {
+      label: t("nav.settings"),
+      href: "/settings",
+      icon: <SettingsIcon />,
+    }
   ];
 
   return (

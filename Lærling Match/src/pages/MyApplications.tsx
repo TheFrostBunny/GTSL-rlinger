@@ -11,6 +11,7 @@ import HomeIcon from "@mui/icons-material/Home";
 import AssignmentOutlinedIcon from "@mui/icons-material/AssignmentOutlined";
 import HistoryIcon from "@mui/icons-material/History";
 import PersonIcon from "@mui/icons-material/Person";
+import SettingsIcon from "@mui/icons-material/Settings";
 
 type Application = {
   name: string;
@@ -89,6 +90,7 @@ export default function MyApplications() {
       href: "/profil",
       icon: <PersonIcon />,
     },
+    { label: t("nav.settings"), href: "/settings", icon: <SettingsIcon /> },
   ];
 
   const filteredApplications = applications.filter((application) => {
@@ -141,12 +143,12 @@ export default function MyApplications() {
               key={item}
               label={
                 item === "Alle"
-                  ? "Alle (4)"
+                  ? t("myApplications.filters.all", { count: 4 })
                   : item === "Venter"
-                    ? "Venter (2)"
+                    ? t("myApplications.filters.pending", { count: 2 })
                     : item === "Matchet"
-                      ? "Matchet (1)"
-                      : "Avslått (1)"
+                      ? t("myApplications.filters.matched", { count: 1 })
+                      : t("myApplications.filters.rejected", { count: 1 })
               }
               onClick={() => setFilter(item)}
               sx={{

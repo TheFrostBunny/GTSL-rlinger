@@ -20,7 +20,7 @@ import Stack from "@mui/material/Stack";
 export default function SettingsPage() {
   const { t, i18n } = useTranslation();
 
-  const [notifications, setNotifications] = useState(
+  const [notifications] = useState(
     localStorage.getItem("notifications") !== "false",
   );
   const [language, setLanguage] = useState(
@@ -92,33 +92,6 @@ export default function SettingsPage() {
     },
   };
 
-  const menuProps = {
-    MenuListProps: {
-      dense: true,
-    },
-    PaperProps: {
-      sx: {
-        backgroundColor: "background.paper",
-        color: "text.primary",
-        border: "1px solid",
-        borderColor: "divider",
-        "& .MuiMenuItem-root": {
-          color: "text.primary",
-          "&:hover": {
-            backgroundColor: "action.hover",
-          },
-          "&.Mui-selected": {
-            backgroundColor: "primary.main",
-            color: "primary.contrastText",
-          },
-          "&.Mui-selected:hover": {
-            backgroundColor: "primary.dark",
-          },
-        },
-      },
-    },
-  };
-
   return (
     <NavbarAPP
       appName="Lærling Link"
@@ -151,10 +124,6 @@ export default function SettingsPage() {
             {t("settings.title")}
           </Typography>
 
-          <Typography sx={{ color: "text.secondary", mb: 4 }}>
-            {t("settings.description")}
-          </Typography>
-
           <Stack spacing={3}>
             <Box>
               <Typography sx={{ color: "text.primary", fontWeight: 700 }}>
@@ -182,7 +151,6 @@ export default function SettingsPage() {
                 value={language}
                 label="Språk"
                 sx={selectSx}
-                MenuProps={menuProps}
                 onChange={(event) =>
                   handleLanguageChange(event.target.value)
                 }
@@ -208,7 +176,6 @@ export default function SettingsPage() {
                 value={themeMode}
                 label={t("settings.theme")}
                 sx={selectSx}
-                MenuProps={menuProps}
                 onChange={(event) =>
                   handleThemeChange(event.target.value)
                 }
