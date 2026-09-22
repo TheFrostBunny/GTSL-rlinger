@@ -15,6 +15,22 @@
       "city": "Bergen",
       "initials": "NS",
       "color": "bg-[#d8c8ed]"
+    },
+    {
+      "name": "Fjord Industri",
+      "field": "Mekanikk",
+      "desc": "Læreplass innen mekanisk fagretning.",
+      "city": "Ålesund",
+      "initials": "FI",
+      "color": "bg-[#dfd4b8]"
+    },
+    {
+      "name": "Omsorg Pluss",
+      "field": "Helse",
+      "desc": "Læreplass innen helsearbeiderfaget.",
+      "city": "Trondheim",
+      "initials": "OP",
+      "color": "bg-[#cbe4dc]"
     }
   ],
   "candidates": [
@@ -33,6 +49,22 @@
       "city": "Bergen",
       "initials": "NB",
       "color": "bg-[#d8c8ed]"
+    },
+    {
+      "name": "Sofie Nilsen",
+      "field": "Design og håndverk",
+      "desc": "Kreativ kandidat med sans for detaljer.",
+      "city": "Trondheim",
+      "initials": "SN",
+      "color": "bg-[#dfd4b8]"
+    },
+    {
+      "name": "William Olsen",
+      "field": "Mekanikk",
+      "desc": "Praktisk og motivert kandidat med interesse for maskiner.",
+      "city": "Ålesund",
+      "initials": "WO",
+      "color": "bg-[#cbe4dc]"
     }
   ],
   "applications": [

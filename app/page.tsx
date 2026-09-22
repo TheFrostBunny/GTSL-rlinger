@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import {
+  ArrowLeft,
   ArrowRight,
   BarChart3,
   BriefcaseBusiness,
@@ -99,10 +100,10 @@ function Sidebar({
     >
       <div className="flex items-center gap-4 border-b border-[#2a3545] pb-8">
         <img
-  src="/Logo.png"
-  alt="Lærling Link logo"
-  className="h-14 w-14 object-contain"
-/>
+          src="/Logo.png"
+          alt="Lærling Link logo"
+          className="h-14 w-14 object-contain"
+        />
         <span className="text-[27px] font-bold tracking-tight text-[#f2f3f6]">
           Lærling Link
         </span>
@@ -206,7 +207,7 @@ function Topbar({
           onClick={() => setView(view === "learner" ? "company" : "learner")}
           className="rounded-full bg-[#302b43] px-4 py-2 text-sm font-semibold text-[#d8b3e4]"
         >
-          {view === "learner" ? "Bedrift" : "Elev"}
+          {view === "learner" ? "Elev" : "Bedrift"}
         </button>
 
         <span className="text-lg font-semibold text-[#f2f3f6]">
@@ -250,8 +251,7 @@ export default function Page() {
           ...currentProfile,
           ...parsedProfile,
           name:
-            typeof parsedProfile.name === "string" &&
-            parsedProfile.name.trim()
+            typeof parsedProfile.name === "string" && parsedProfile.name.trim()
               ? parsedProfile.name
               : currentProfile.name,
         }));
@@ -296,37 +296,43 @@ export default function Page() {
     }
   }, [savedApplications, applicationsLoaded]);
 
-  const applyTo = (item: (typeof placements)[number]) => {
-    if (savedApplications.some((application) => application.name === item.name)) {
-      return;
-    }
-
-    setSavedApplications((current) => [
-      ...current,
-      {
-        name: item.name,
-        field: item.field,
-        city: item.city,
-        date: new Date().toLocaleDateString("no-NO"),
-        status: "Venter svar",
-        initials: item.initials,
-        color: "bg-[#a45bc0]",
-      },
-    ]);
-  };
-
   const [applicationFilter, setApplicationFilter] = useState("Alle");
   const [index, setIndex] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [liked, setLiked] = useState<string[]>([]);
+  const [likedByView, setLikedByView] = useState({
+    learner: [] as string[],
+    company: [] as string[],
+  });
+
+  const liked = likedByView[view];
+
+  const toggleLiked = (name: string) => {
+    setLikedByView((current) => {
+      const currentLiked = current[view];
+
+      return {
+        ...current,
+        [view]: currentLiked.includes(name)
+          ? currentLiked.filter((likedName) => likedName !== name)
+          : [...currentLiked, name],
+      };
+    });
+  };
+
+  const showPrevious = () => {
+    setIndex((currentIndex) =>
+      currentIndex === 0 ? list.length - 1 : currentIndex - 1
+    );
+  };
+
+  const showNext = () => {
+    setIndex((currentIndex) => (currentIndex + 1) % list.length);
+  };
+
   const [query, setQuery] = useState("");
   const [activeField, setActiveField] = useState("Alle");
   const list = view === "learner" ? placements : candidates;
   const active = useMemo(() => list[index % list.length], [index, list]);
-  const next = (like: boolean) => {
-    if (like && !liked.includes(active.name)) setLiked([...liked, active.name]);
-    setIndex(index + 1);
-  };
   const filtered = list.filter(
     (item) =>
       (activeField === "Alle" || item.field === activeField) &&
@@ -358,10 +364,7 @@ export default function Page() {
   }, []);
 
   useEffect(() => {
-    localStorage.setItem(
-      SETTINGS_STORAGE_KEY,
-      JSON.stringify(settings)
-    );
+    localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(settings));
   }, [settings]);
 
   const companyProfile = {
@@ -585,22 +588,18 @@ export default function Page() {
 
                 <div className="flex shrink-0 items-center gap-2">
                   <button
-                    className="flex size-12 items-center justify-center rounded-full bg-[#2d3848] text-[#91a4bd] hover:bg-[#394658]"
-                    aria-label="Avvis"
-                  >
-                    <X size={20} />
-                  </button>
-
-                  <button
-                    onClick={() =>
-                      setLiked((current) =>
-                        current.includes(item.name)
-                          ? current.filter((name) => name !== item.name)
-                          : [...current, item.name]
-                      )
+                    onClick={() => toggleLiked(item.name)}
+                    className={`ml-auto flex size-12 shrink-0 items-center justify-center rounded-full ${
+                      liked.includes(item.name)
+                        ? "bg-[#ee6e71] text-[#341b27]"
+                        : "bg-[#2d3848] text-[#9aacc3]"
+                    }`}
+                    aria-label={
+                      liked.includes(item.name)
+                        ? "Fjern liker"
+                        : "Vis interesse"
                     }
-                    className="flex size-12 items-center justify-center rounded-full bg-[#a45bc0] text-white hover:bg-[#b86bc9]"
-                    aria-label="Lik"
+                    aria-pressed={liked.includes(item.name)}
                   >
                     <Heart
                       size={20}
@@ -661,21 +660,22 @@ export default function Page() {
   }
 
   if (page === "profile") {
-    const profileFields = view === "company"
-      ? [
-          ["name", "Bedriftsnavn"],
-          ["email", "Kontakt-e-post"],
-          ["field", "Bransje"],
-          ["interests", "Tjenester"],
-          ["city", "Beliggenhet"],
-        ] as const
-      : [
-          ["name", "Navn"],
-          ["email", "E-post"],
-          ["field", "Fagretning"],
-          ["interests", "Interesser"],
-          ["city", "Bosted"],
-        ] as const;
+    const profileFields =
+      view === "company"
+        ? ([
+            ["name", "Bedriftsnavn"],
+            ["email", "Kontakt-e-post"],
+            ["field", "Bransje"],
+            ["interests", "Tjenester"],
+            ["city", "Beliggenhet"],
+          ] as const)
+        : ([
+            ["name", "Navn"],
+            ["email", "E-post"],
+            ["field", "Fagretning"],
+            ["interests", "Interesser"],
+            ["city", "Bosted"],
+          ] as const);
 
     return (
       <main className="min-h-screen bg-[#0e131b] text-[#f2f3f6]">
@@ -975,38 +975,57 @@ export default function Page() {
             <article className="rounded-[22px] border border-[#303c4e] bg-[#222c3b] p-6 shadow-2xl">
               <div className="flex items-center gap-4">
                 <div
-                  className={`flex size-20 items-center justify-center rounded-2xl ${activeProfile.color} text-2xl font-bold text-[#18202b]`}
+                  className={`flex size-20 shrink-0 items-center justify-center rounded-full ${active.color} text-2xl font-bold text-[#18202b]`}
                 >
-                  {activeProfile.initials}
+                  {active.initials}
                 </div>
-                <div>
-                  <h3 className="text-[22px] font-bold">{activeProfile.name}</h3>
-                  <p className="mt-1 text-[#91a4bd]">
-                    {view === "learner" ? "Elev" : "Bedrift"} · {activeProfile.city}
-                  </p>
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-0">
+                    <h3 className="truncate text-[22px] font-bold">
+                      {active.name}
+                    </h3>
+                    <button
+                      className={`ml-auto flex size-12 shrink-0 items-center justify-center rounded-full ${
+                        liked.includes(active.name)
+                          ? "bg-[#ee6e71] text-[#341b27]"
+                          : "bg-[#2d3848] text-[#9aacc3]"
+                      }`}
+                      aria-label={
+                        liked.includes(active.name)
+                          ? "Fjern liker"
+                          : "Vis interesse"
+                      }
+                      onClick={() => toggleLiked(active.name)}
+                    >
+                      <Heart
+                        fill={
+                          liked.includes(active.name) ? "currentColor" : "none"
+                        }
+                      />
+                    </button>
+                  </div>
+                  <p className=" text-[#91a4bd]">{active.field}</p>
+                  <p className="mt-1 text-[#9aacc3]">{active.city}</p>
                 </div>
-              </div>
-              <div className="mt-6 flex items-center gap-2 text-[#9aacc3]">
-                <span>{activeProfile.city}</span>
               </div>
               <p className="mt-5 leading-6 text-[#b2bfd0]">{active.desc}</p>
               <div className="mt-7 flex items-center justify-between">
                 <button
-                  onClick={() => next(false)}
-                  className="flex size-14 items-center justify-center rounded-full bg-[#2d3848] text-[#9aacc3] hover:bg-[#394658]"
-                  aria-label="Hopp over"
+                  onClick={showPrevious}
+                  className="flex size-12 items-center justify-center rounded-full bg-[#2d3848] text-[#9aacc3] hover:bg-[#394658]"
+                  aria-label="Forrige anbefaling"
                 >
-                  <X />
+                  <ArrowLeft size={16} />
                 </button>
                 <span className="text-sm text-[#71849d]">
                   {(index % list.length) + 1} av {list.length}
                 </span>
                 <button
-                  onClick={() => next(true)}
-                  className="flex size-14 items-center justify-center rounded-full bg-[#ee6e71] text-[#341b27] hover:bg-[#f27e80]"
-                  aria-label="Vis interesse"
+                  onClick={showNext}
+                  className="flex size-12 items-center justify-center rounded-full bg-[#2d3848] text-[#9aacc3] hover:bg-[#394658]"
+                  aria-label="Neste anbefaling"
                 >
-                  <Heart fill="currentColor" />
+                  <ArrowRight size={16} />
                 </button>
               </div>
             </article>
