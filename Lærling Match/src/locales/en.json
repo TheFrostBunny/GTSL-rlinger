@@ -15,5 +15,18 @@
     "morning": "Good morning",
     "day": "Good afternoon",
     "evening": "Good evening"
+  },
+  "settings": {
+    "title": "Settings",
+    "description": "Manage your account settings.",
+    "notifications": "Notifications",
+    "notificationsDescription": "Receive notifications about applications and messages.",
+    "language": "Language",
+    "theme": "Theme",
+    "norwegian": "Norwegian",
+    "english": "English",
+    "dark": "Dark",
+    "light": "Light",
+    "save": "Save settings"
   }
 }
