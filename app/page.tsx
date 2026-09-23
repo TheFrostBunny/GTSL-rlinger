@@ -1706,7 +1706,6 @@ export default function Page() {
                 </button>
               </div>
             </article>
-          </section>
         </div>
         <div className="mt-16 rounded-[22px] border border-[#2b3748] bg-[#151e2a] p-6">
           <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
@@ -1751,6 +1750,7 @@ export default function Page() {
               {settings.profileVisible ? "Ferdig" : translate("getStarted")} <ArrowRight />
             </button>
           </div>
+        </div>
         </div>
       </section>
     </main>
