@@ -265,20 +265,20 @@ function Sidebar({
   const items =
     view === "learner"
       ? [
-          ["Hjem", Home],
-          ["Finn læreplasser", Search],
-          ["Mine søknader", ClipboardList],
-          ["Historikk", BarChart3],
-          ["Min profil", CircleUserRound],
-          ["Innstillinger", Settings],
+          [translate("home"), Home],
+          [translate("browsePlacements"), Search],
+          [translate("applications"), ClipboardList],
+          [translate("history"), BarChart3],
+          [translate("profile"), CircleUserRound],
+          [translate("settings"), Settings],
         ]
       : [
-          ["Hjem", Home],
-          ["Finn kandidater", Search],
-          ["Mine stillinger", ClipboardList],
-          ["Søkere", Users],
-          ["Bedriftsprofil", Building2],
-          ["Innstillinger", Settings],
+          [translate("home"), Home],
+          [translate("browseCandidates"), Search],
+          [translate("applications"), ClipboardList],
+          [translate("candidates"), Users],
+          [translate("companyProfile"), Building2],
+          [translate("settings"), Settings],
         ];
   return (
     <aside
@@ -549,7 +549,7 @@ export default function Page() {
     darkMode: true,
   });
 
-  const text = translations[settings.language];
+  const text = translations[settings.language] ?? translations.Norsk;
 
   const translate = (key: keyof typeof text) => text[key];
 
@@ -1149,13 +1149,13 @@ export default function Page() {
                 onChange={(event) =>
                   setSettings({
                     ...settings,
-                    language: event.target.value as "Norsk" | "English",
+                    language: event.target.value as Language,
                   })
                 }
                 className="mt-5 w-full rounded-xl border border-[#39465a] bg-[#202c3b] px-4 py-3 text-white outline-none focus:border-[#a45bc0]"
               >
-                <option>{translate("norwegian")}</option>
-                <option>{translate("english")}</option>
+                <option value="Norsk">{translate("norwegian")}</option>
+                <option value="English">{translate("english")}</option>
               </select>
             </div>
 
