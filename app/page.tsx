@@ -49,11 +49,22 @@ const COMPANY_PROFILE_STORAGE_KEY = "laerling-link-company-profile";
 type Language = keyof typeof translations;
 type TranslationKey = keyof (typeof translations)["Norsk"];
 type Listing = (typeof placements)[number] | (typeof candidates)[number];
-type ApplicationFilter = "Alle" | "Venter svar" | "Matchet" | "Avslått";
+type ApplicationFilter =
+  | "Alle"
+  | "Venter svar"
+  | "Matchet"
+  | "Godkjent"
+  | "Avslått";
 type BrowseTab = "Alle" | "Favoritter";
 type Application = Listing & {
   date: string;
   status: Exclude<ApplicationFilter, "Alle">;
+  message?: string;
+};
+type ReceivedApplication = (typeof candidates)[number] & {
+  companyName: string;
+  date: string;
+  status: "Venter svar" | "Matchet" | "Godkjent" | "Avslått";
   message?: string;
 };
 
@@ -62,6 +73,7 @@ type PageName =
   | "browse"
   | "applications"
   | "history"
+  | "candidates"
   | "profile"
   | "settings"
   | "details";
@@ -137,8 +149,8 @@ function Sidebar({
       : [
           [translate("home"), Home],
           [translate("browseCandidates"), Search],
-          [translate("applications"), ClipboardList],
-          [translate("candidates"), Users],
+          ["Mottatte søknader", ClipboardList],
+          [translate("history"), BarChart3],
           [translate("companyProfile"), Building2],
           [translate("settings"), Settings],
         ];
@@ -191,9 +203,12 @@ function Sidebar({
             (index === 0 && page === "home") ||
             (index === 1 && page === "browse") ||
             (index === 2 && page === "applications") ||
-            (index === 3 && page === "history") ||
-            (index === 4 && page === "profile") ||
-            (index === 5 && page === "settings");
+            (view === "learner" && index === 3 && page === "history") ||
+            (view === "learner" && index === 4 && page === "profile") ||
+            (view === "learner" && index === 5 && page === "settings") ||
+            (view === "company" && index === 3 && page === "history") ||
+            (view === "company" && index === 4 && page === "profile") ||
+            (view === "company" && index === 5 && page === "settings");
 
           return (
             <button
@@ -202,9 +217,12 @@ function Sidebar({
                 if (index === 0) setPage("home");
                 if (index === 1) setPage("browse");
                 if (index === 2) setPage("applications");
-                if (index === 3) setPage("history");
-                if (index === 4) setPage("profile");
-                if (index === 5) setPage("settings");
+                if (view === "learner" && index === 3) setPage("history");
+                if (view === "learner" && index === 4) setPage("profile");
+                if (view === "learner" && index === 5) setPage("settings");
+                if (view === "company" && index === 3) setPage("history");
+                if (view === "company" && index === 4) setPage("profile");
+                if (view === "company" && index === 5) setPage("settings");
                 setMenuOpen(false);
               }}
               aria-current={selected ? "page" : undefined}
@@ -232,6 +250,7 @@ function Topbar({
   setView,
   setMenuOpen,
   setPage,
+  page,
   onSelectPlacement,
   profileName,
   translate,
@@ -240,6 +259,7 @@ function Topbar({
   setView: (view: "learner" | "company") => void;
   setMenuOpen: (open: boolean) => void;
   setPage: (page: PageName) => void;
+  page: PageName;
   onSelectPlacement: (placement: Listing) => void;
   profileName?: string;
   translate: (key: TranslationKey) => string;
@@ -251,6 +271,24 @@ function Topbar({
       : "Ola Nordmann";
 
   const initials = getInitials(safeProfileName);
+  const pageLabel =
+    page === "home"
+      ? translate("home")
+      : page === "browse"
+      ? view === "learner"
+        ? translate("browsePlacements")
+        : translate("browseCandidates")
+      : page === "applications"
+      ? translate("applications")
+      : page === "history"
+      ? translate("history")
+      : page === "profile"
+      ? view === "learner"
+        ? translate("profile")
+        : translate("companyProfile")
+      : page === "settings"
+      ? translate("settings")
+      : "Detaljer";
 
   return (
     <header className="flex min-h-[80px] items-center justify-between gap-3 border-b border-[#202a38] px-4 lg:ml-[372px] lg:h-[102px] lg:px-12">
@@ -262,10 +300,15 @@ function Topbar({
         <Menu aria-hidden="true" />
       </button>
 
-      <div className="hidden text-sm text-[#91a4bd] lg:block">
-        {view === "learner"
-          ? translate("overview")
-          : translate("companyOverview")}
+      <div className="hidden min-w-0 lg:block">
+        <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#91a4bd]">
+          {view === "learner" ? translate("student") : translate("company")}
+          <span className="mx-2 text-[#53627a]">/</span>
+          {pageLabel}
+        </p>
+        <p className="mt-1 truncate text-sm font-semibold text-[#dce2ea]">
+          {safeProfileName}
+        </p>
       </div>
 
       <div className="ml-auto flex items-center gap-4">
@@ -366,6 +409,9 @@ export default function Page() {
   const [applicationFilter, setApplicationFilter] =
     useState<ApplicationFilter>("Alle");
   const [savedApplications, setSavedApplications] = useState<Application[]>([]);
+  const [receivedApplications, setReceivedApplications] = useState<
+    ReceivedApplication[]
+  >([]);
   const [applicationMessage, setApplicationMessage] = useState("");
   const [applicationSent, setApplicationSent] = useState(false);
   const [settings, setSettings] = useState<SettingsState>({
@@ -381,6 +427,7 @@ export default function Page() {
     useState<HistoryItem[]>(defaultHistory);
   const loadedHistoryKey = useRef<string | null>(null);
   const loadedApplicationsKey = useRef<string | null>(null);
+  const receivedApplicationsLoaded = useRef(false);
 
   const [selectedItem, setSelectedItem] = useState<Listing | null>(null);
 
@@ -642,6 +689,48 @@ export default function Page() {
     );
   }, [favoriteKey, savedApplications]);
 
+  useEffect(() => {
+    const savedReceivedApplications = localStorage.getItem(
+      "laerling-link-received-applications"
+    );
+
+    if (savedReceivedApplications) {
+      try {
+        setReceivedApplications(JSON.parse(savedReceivedApplications));
+      } catch {
+        localStorage.removeItem("laerling-link-received-applications");
+      }
+    } else {
+      setReceivedApplications([]);
+    }
+
+    receivedApplicationsLoaded.current = true;
+  }, [page, view]);
+
+  useEffect(() => {
+    const handleStorageChange = (event: StorageEvent) => {
+      if (event.key !== "laerling-link-received-applications") return;
+
+      try {
+        setReceivedApplications(event.newValue ? JSON.parse(event.newValue) : []);
+      } catch {
+        setReceivedApplications([]);
+      }
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
+  }, []);
+
+  useEffect(() => {
+    if (!receivedApplicationsLoaded.current) return;
+
+    localStorage.setItem(
+      "laerling-link-received-applications",
+      JSON.stringify(receivedApplications)
+    );
+  }, [receivedApplications]);
+
   const translate = (key: TranslationKey) => {
     const language = translations[settings.language] ?? translations.Norsk;
     return language[key] ?? translations.Norsk[key];
@@ -683,6 +772,16 @@ export default function Page() {
   const submitApplication = () => {
     if (!selectedItem || applicationSent) return;
 
+    const applicant =
+      candidates.find((candidate) => candidate.name === profile.name) ?? {
+        ...candidates[0],
+        name: profile.name,
+        field: profile.field,
+        city: profile.city,
+        about: profile.about,
+        interests: profile.interests.split(", "),
+      };
+
     const application: Application = {
       ...selectedItem,
       date: new Date().toLocaleDateString("no-NO"),
@@ -694,8 +793,45 @@ export default function Page() {
       application,
       ...current.filter((item) => item.name !== selectedItem.name),
     ]);
+    setReceivedApplications((current) => [
+      {
+        ...applicant,
+        companyName: selectedItem.name,
+        date: new Date().toLocaleDateString("no-NO"),
+        status: "Venter svar",
+        message: applicationMessage.trim(),
+      },
+      ...current.filter(
+        (item) =>
+          !(item.name === applicant.name && item.companyName === selectedItem.name)
+      ),
+    ]);
     setApplicationSent(true);
     recordHistory(selectedItem, "Søknad sendt");
+  };
+
+  const approveApplication = (applicantName: string) => {
+    const receivedApplication = receivedApplications.find(
+      (application) => application.name === applicantName
+    );
+
+    setReceivedApplications((current) =>
+      current.map((application) =>
+        application.name === applicantName
+          ? { ...application, status: "Godkjent" }
+          : application
+      )
+    );
+
+    if (receivedApplication) {
+      setSavedApplications((current) =>
+        current.map((application) =>
+          application.name === receivedApplication.companyName
+            ? { ...application, status: "Godkjent" }
+            : application
+        )
+      );
+    }
   };
 
   const toggleLiked = (name: string) => {
@@ -749,12 +885,17 @@ export default function Page() {
   }, [view]);
 
   if (page === "applications") {
-    const filteredApplications = savedApplications.filter(
+    const applicationsForView =
+      view === "company"
+        ? receivedApplications
+        : savedApplications;
+    const filteredApplications = applicationsForView.filter(
       (application) =>
         applicationFilter === "Alle" ||
         (applicationFilter === "Venter svar" &&
           application.status === "Venter svar") ||
         (applicationFilter === "Matchet" && application.status === "Matchet") ||
+        (applicationFilter === "Godkjent" && application.status === "Godkjent") ||
         (applicationFilter === "Avslått" && application.status === "Avslått")
     );
 
@@ -778,6 +919,7 @@ export default function Page() {
           setView={setView}
           setMenuOpen={setMenuOpen}
           setPage={setPage}
+          page={page}
           onSelectPlacement={(placement) => {
             selectIdentity(placement);
           }}
@@ -790,11 +932,13 @@ export default function Page() {
             id="applications-heading"
             className="text-5xl font-bold tracking-[-0.03em]"
           >
-            {translate("applications")}
+            {view === "company" ? "Mottatte søknader" : translate("applications")}
           </h1>
 
           <p className="mt-3 text-lg text-[#91a4bd]">
-            {translate("administer")}
+            {view === "company"
+              ? "Se elever som har sendt søknad til bedriften din."
+              : translate("administer")}
           </p>
 
           <div
@@ -803,12 +947,9 @@ export default function Page() {
             aria-label={translate("filters")}
           >
             {(
-              [
-                "Alle",
-                "Venter svar",
-                "Matchet",
-                "Avslått",
-              ] as ApplicationFilter[]
+              (view === "company"
+                ? ["Alle", "Venter svar", "Godkjent", "Avslått"]
+                : ["Alle", "Venter svar", "Matchet", "Godkjent", "Avslått"]) as ApplicationFilter[]
             ).map((filter) => (
               <button
                 key={filter}
@@ -826,7 +967,14 @@ export default function Page() {
           </div>
 
           <div className="mt-9 flex flex-col gap-5">
-            {filteredApplications.map((application) => (
+            {filteredApplications.length === 0 ? (
+              <div className="rounded-2xl border border-[#303c4e] bg-[#182332] p-6 text-[#91a4bd]">
+                {view === "company"
+                  ? "Ingen elever har sendt søknad ennå."
+                  : "Du har ikke sendt noen søknader ennå."}
+              </div>
+            ) : (
+              filteredApplications.map((application) => (
               <article
                 key={application.name}
                 className="flex flex-col gap-5 rounded-[24px] border border-[#29384a] bg-[#172332] p-5 sm:flex-row sm:items-center sm:gap-6 sm:p-8"
@@ -842,23 +990,62 @@ export default function Page() {
                   <p className="mt-2 text-xl text-[#91a4bd]">
                     {application.field} · {application.city}
                   </p>
+                  {view === "company" && (
+                    <p className="mt-2 text-sm font-semibold text-[#d8b3e4]">
+                      Søkt hos {application.companyName}
+                    </p>
+                  )}
                   <p className="mt-3 text-[#91a4bd]">
-                    {translate("sent")} {application.date}
+                    {view === "company" ? "Mottatt" : translate("sent")} {application.date}
                   </p>
+                  {view === "company" && application.message && (
+                    <p className="mt-3 text-sm leading-6 text-[#b2bfd0]">
+                      «{application.message}»
+                    </p>
+                  )}
                 </div>
-                <span
-                  className={`self-start rounded-2xl px-5 py-3 font-bold sm:self-center ${
-                    application.status === "Matchet"
-                      ? "bg-[#a45bc0] text-white"
-                      : application.status === "Avslått"
-                      ? "bg-[#493040] text-[#d9a8c8]"
-                      : "bg-[#293545] text-[#d9b3e4]"
-                  }`}
-                >
-                  {application.status}
-                </span>
+                <div className="flex flex-wrap items-center gap-3">
+                  {view === "company" && (
+                    <>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSelectedItem(application);
+                          setPage("details");
+                        }}
+                        className="rounded-xl border border-[#a45bc0] px-4 py-3 font-semibold text-[#e0b9e7] transition hover:bg-[#a45bc0] hover:text-white"
+                      >
+                        Se profil
+                      </button>
+                      {application.status !== "Godkjent" && (
+                        <button
+                          type="button"
+                          onClick={() => approveApplication(application.name)}
+                          className="inline-flex items-center gap-2 rounded-xl bg-[#9ed8bf] px-4 py-3 font-bold text-[#15251f] transition hover:bg-[#b3e7ce]"
+                        >
+                          <Check aria-hidden="true" size={17} />
+                          Godkjenn
+                        </button>
+                      )}
+                    </>
+                  )}
+                  <span
+                    className={`self-start rounded-2xl px-5 py-3 font-bold sm:self-center ${
+                      application.status === "Matchet"
+                        ? "bg-[#a45bc0] text-white"
+                        : application.status === "Godkjent"
+                        ? "bg-[#284d43] text-[#b3e7ce]"
+                        : application.status === "Avslått"
+                        ? "bg-[#493040] text-[#d9a8c8]"
+                        : "bg-[#293545] text-[#d9b3e4]"
+                    }`}
+                  >
+                    {application.status}
+                  </span>
+                </div>
               </article>
-            ))}
+              ))
+            )}
           </div>
         </section>
       </main>
@@ -891,6 +1078,7 @@ export default function Page() {
           setView={setView}
           setMenuOpen={setMenuOpen}
           setPage={setPage}
+          page={page}
           onSelectPlacement={(placement) => {
             selectIdentity(placement);
           }}
@@ -1011,34 +1199,6 @@ export default function Page() {
 
             {view === "learner" && (
               <div className="mt-8 rounded-2xl border border-[#303c4e] bg-[#202c3b] p-5">
-                <label className="block text-sm font-semibold text-[#91a4bd]">
-                  Velg bedrift
-                  <select
-                    value={selectedItem.name}
-                    onChange={(event) => {
-                      const placement = placements.find(
-                        (item) => item.name === event.target.value
-                      );
-
-                      if (placement) {
-                        setSelectedItem(placement);
-                        setApplicationSent(
-                          savedApplications.some(
-                            (application) => application.name === placement.name
-                          )
-                        );
-                        setApplicationMessage("");
-                      }
-                    }}
-                    className="mt-2 w-full rounded-xl border border-[#39465a] bg-[#172332] px-4 py-3 text-[#f2f3f6] outline-none focus:border-[#a45bc0]"
-                  >
-                    {placements.map((placement) => (
-                      <option key={placement.name} value={placement.name}>
-                        {placement.name} · {placement.city}
-                      </option>
-                    ))}
-                  </select>
-                </label>
                 <h2 className="text-xl font-bold">Søk på læreplassen</h2>
                 {applicationSent ? (
                   <p className="mt-3 text-[#9ed8bf]">
@@ -1082,6 +1242,80 @@ export default function Page() {
       </main>
     );
   }
+  if (page === "candidates" && view === "company") {
+    return (
+      <main
+        aria-labelledby="candidates-heading"
+        className="min-h-screen bg-[#0e131b] text-[#f2f3f6]"
+      >
+        <Sidebar
+          view={view}
+          setView={setView}
+          menuOpen={menuOpen}
+          setMenuOpen={setMenuOpen}
+          page={page}
+          setPage={setPage}
+          translate={translate}
+        />
+        <Topbar
+          view={view}
+          setView={setView}
+          setMenuOpen={setMenuOpen}
+          setPage={setPage}
+          page={page}
+          onSelectPlacement={selectIdentity}
+          profileName={activeProfile.name}
+          translate={translate}
+        />
+        <section className="mx-auto max-w-[1120px] px-6 pb-20 pt-16 lg:ml-[428px] lg:mr-12 lg:px-0">
+          <h1 id="candidates-heading" className="text-5xl font-bold tracking-[-0.03em]">
+            Kandidater
+          </h1>
+          <p className="mt-3 text-lg text-[#91a4bd]">
+            Elever som har sendt søknad til lærebedrifter.
+          </p>
+          <div className="mt-10 flex flex-col gap-5">
+            {receivedApplications.length === 0 ? (
+              <div className="rounded-2xl border border-[#303c4e] bg-[#182332] p-6 text-[#91a4bd]">
+                Ingen elever har sendt søknad ennå.
+              </div>
+            ) : (
+              receivedApplications.map((application, index) => (
+                <article
+                  key={`${application.name}-${application.companyName}-${index}`}
+                  className="rounded-[24px] border border-[#29384a] bg-[#172332] p-6"
+                >
+                  <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+                    <div className={`flex size-16 shrink-0 items-center justify-center rounded-2xl ${application.color} text-xl font-bold text-[#18202b]`}>
+                      {application.initials}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <h2 className="text-2xl font-bold">{application.name}</h2>
+                      <p className="mt-1 text-lg text-[#91a4bd]">
+                        {application.field} · {application.city}
+                      </p>
+                      <p className="mt-2 text-sm text-[#d8b3e4]">
+                        Søkt hos {application.companyName} · {application.date}
+                      </p>
+                    </div>
+                    <span className="self-start rounded-2xl bg-[#293545] px-5 py-3 font-bold text-[#d9b3e4] sm:self-center">
+                      {application.status}
+                    </span>
+                  </div>
+                  {application.message && (
+                    <p className="mt-5 border-t border-[#303c4e] pt-4 leading-7 text-[#b2bfd0]">
+                      «{application.message}»
+                    </p>
+                  )}
+                </article>
+              ))
+            )}
+          </div>
+        </section>
+      </main>
+    );
+  }
+
   if (page === "browse") {
     return (
       <main
@@ -1103,6 +1337,7 @@ export default function Page() {
           setView={setView}
           setMenuOpen={setMenuOpen}
           setPage={setPage}
+          page={page}
           onSelectPlacement={(placement) => {
             selectIdentity(placement);
           }}
@@ -1117,12 +1352,16 @@ export default function Page() {
           >
             {view === "learner"
               ? translate("findApprenticeSpot")
+              : page === "candidates"
+              ? translate("candidates")
               : translate("findCandidates")}
           </h1>
 
           <p className="mt-3 text-lg text-[#91a4bd]">
             {view === "learner"
               ? translate("viewCompanies")
+              : page === "candidates"
+              ? "Se og administrer kandidater som har vist interesse."
               : translate("viewStudents")}
           </p>
 
@@ -1273,6 +1512,7 @@ export default function Page() {
           setView={setView}
           setMenuOpen={setMenuOpen}
           setPage={setPage}
+          page={page}
           onSelectPlacement={(placement) => {
             selectIdentity(placement);
           }}
@@ -1353,6 +1593,7 @@ export default function Page() {
           setView={setView}
           setMenuOpen={setMenuOpen}
           setPage={setPage}
+          page={page}
           onSelectPlacement={(placement) => {
             selectIdentity(placement);
           }}
@@ -1551,6 +1792,7 @@ export default function Page() {
           setView={setView}
           setMenuOpen={setMenuOpen}
           setPage={setPage}
+          page={page}
           onSelectPlacement={(placement) => {
             selectIdentity(placement);
           }}
@@ -1681,6 +1923,7 @@ export default function Page() {
         setView={setView}
         setMenuOpen={setMenuOpen}
         setPage={setPage}
+        page={page}
         onSelectPlacement={(placement) => {
           selectIdentity(placement);
         }}
@@ -1826,7 +2069,8 @@ export default function Page() {
             </article>
           </div>
         </div>
-        <div className="mt-16 rounded-[22px] border border-[#2b3748] bg-[#151e2a] p-6">
+        {!settings.profileVisible && (
+          <div className="mt-16 rounded-[22px] border border-[#2b3748] bg-[#151e2a] p-6">
           <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p className="text-sm font-bold uppercase tracking-[0.18em] text-[#efb4f5]">
@@ -1871,6 +2115,7 @@ export default function Page() {
             </button>
           </div>
         </div>
+        )}
       </section>
     </main>
   );
