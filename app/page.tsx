@@ -53,9 +53,6 @@ type ProfileData = {
   about: string;
 };
 
-type Language = keyof typeof translations;
-type TranslationKey = keyof typeof translations.Norsk;
-
 type SettingsState = {
   language: Language;
   emailNotifications: boolean;
@@ -507,7 +504,14 @@ export default function Page() {
             role="group"
             aria-label={translate("filters")}
           >
-            {["Alle", "Venter svar", "Matchet", "Avslått"].map((filter) => (
+            {(
+              [
+                "Alle",
+                "Venter svar",
+                "Matchet",
+                "Avslått",
+              ] as ApplicationFilter[]
+            ).map((filter) => (
               <button
                 key={filter}
                 onClick={() => setApplicationFilter(filter)}
