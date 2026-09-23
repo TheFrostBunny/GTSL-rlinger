@@ -191,9 +191,7 @@ const translations = {
     choseLanguage: "Chose the language you want to use.",
     notifications: "Notifications and privacy",
     emailNotifications: "Email notifications",
-    recieveUpdates: "Receive updates about applications and matches.",
     visibleProfile: "Visible profile",
-    showProfile: "Let relevant companies to find and view your profilen din.",
     updateProfile: "Update profile",
     greeting: "Good afternoon",
     velcome: "Velcome",
@@ -222,13 +220,50 @@ const translations = {
   },
 } as const;
 
-type Language = keyof typeof translations;
-type SettingsState = {
-  language: Language;
-  emailNotifications: boolean;
-  profileVisible: boolean;
-  darkMode: boolean;
-};
+const translationsWithNynorsk = {
+  ...translations,
+  Nynorsk: {
+    ...translations.Norsk,
+    overview: "Oversyn",
+    companyOverview: "Bedriftsoversyn",
+    home: "Heim",
+    browsePlacements: "Finn læreplassar",
+    browseCandidates: "Finn kandidatar",
+    applications: "Søknadene mine",
+    history: "Historikk",
+    profile: "Profilen min",
+    settings: "Innstillingar",
+    welcome: "Velkomen",
+    back: "Tilbake",
+    viewAll: "Se alle",
+    editProfile: "Rediger profil",
+    getStarted: "Kom i gang",
+    language: "Språk",
+    norwegian: "Norsk",
+    english: "Engelsk",
+    search: "Søk etter bedrift, fagretning eller stad...",
+    companies: "Lærebedrifter",
+    candidates: "Kandidatar",
+    findApprenticeSpot: "Finn læreplass",
+    findCandidates: "Finn kandidatar",
+    viewCompanies: "Sjå lærebedrifter som passar fagretninga di.",
+    viewStudents: "Sjå kandidatar som passar behova dykkar.",
+    personalChoice: "Personlege val",
+    showsAs: "Viser som",
+    student: "Elev",
+    company: "Bedrift",
+    saveChanges: "Lagre endringar",
+    settingTitle: "Tilpass korleis Lærling Link fungerer for deg.",
+    choseLanguage: "Vel språket du ønskjer å bruke.",
+    notifications: "Varsel og personvern",
+    emailNotifications: "E-postvarsel",
+    visibleProfile: "Synleg profil",
+    updateProfile: "Rediger profil",
+  },
+} as const;
+
+type Language = keyof typeof translationsWithNynorsk;
+type TranslationKey = keyof typeof translationsWithNynorsk.Norsk;
 
 function getInitials(name?: string) {
   const safeName = typeof name === "string" ? name.trim() : "";
@@ -243,7 +278,12 @@ function getInitials(name?: string) {
     .toUpperCase();
 }
 
-type TranslationKey = keyof typeof translations.Norsk;
+type SettingsState = {
+  language: Language;
+  emailNotifications: boolean;
+  profileVisible: boolean;
+  darkMode: boolean;
+};
 
 function Sidebar({
   view,
@@ -549,9 +589,11 @@ export default function Page() {
     darkMode: true,
   });
 
-  const text = translations[settings.language] ?? translations.Norsk;
+  const text =
+    translationsWithNynorsk[settings.language] ??
+    translationsWithNynorsk.Norsk;
 
-  const translate = (key: keyof typeof text) => text[key];
+  const translate = (key: TranslationKey) => text[key];
 
   useEffect(() => {
     const savedSettings = localStorage.getItem(SETTINGS_STORAGE_KEY);
@@ -1155,6 +1197,7 @@ export default function Page() {
                 className="mt-5 w-full rounded-xl border border-[#39465a] bg-[#202c3b] px-4 py-3 text-white outline-none focus:border-[#a45bc0]"
               >
                 <option value="Norsk">{translate("norwegian")}</option>
+                <option value="Nynorsk">Nynorsk</option>
                 <option value="English">{translate("english")}</option>
               </select>
             </div>
