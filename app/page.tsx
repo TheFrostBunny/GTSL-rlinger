@@ -1715,7 +1715,7 @@ export default function Page() {
             </h1>
             <p className="mt-8 text-[22px] text-[#91a4bd]">
               {view === "learner"
-                ? `${liked.length}${translate("newCompanyMatches")}`
+                ? `${liked.length} ${translate("newCompanyMatches")}`
                 : translate("findStudents")}
             </p>
             <div className="mt-14 flex gap-16 border-b border-[#263243] pb-8">
