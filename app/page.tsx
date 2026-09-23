@@ -81,11 +81,22 @@ type PageName =
 
 type ProfileData = {
   name: string;
+  sourceName?: string;
   email: string;
   field: string;
   interests: string;
   city: string;
   about: string;
+  skills?: string[];
+  tasks?: string[];
+  requirements?: string[];
+  duration?: string;
+  workMode?: string;
+  employees?: string;
+  education?: string;
+  experience?: string;
+  availability?: string;
+  workPreference?: string;
   uploadedFile?: {
     name: string;
     size: number;
@@ -452,6 +463,10 @@ export default function Page() {
     city: "Oslo",
     about:
       "Jeg er en motivert elev med interesse for teknologi og problemløsning.",
+    education: "Videregående opplæring",
+    experience: "Skoleprosjekter innen IT og teknologi",
+    availability: "Tilgjengelig fra august 2026",
+    workPreference: "På kontoret eller hybrid",
   });
 
   const [profileLoaded, setProfileLoaded] = useState(false);
@@ -487,11 +502,18 @@ export default function Page() {
 
   const [companyProfile, setCompanyProfile] = useState<ProfileData>({
     name: "GreenTech AS",
+    sourceName: placements[0].name,
     email: "kontakt@greentech.no",
     field: "Teknologi og IT",
     interests: "IT-drift, utvikling og digitale løsninger",
     city: "Oslo",
     about: "GreenTech AS tilbyr læreplasser innen teknologi og IT.",
+    skills: placements[0].skills,
+    tasks: placements[0].tasks,
+    requirements: placements[0].requirements,
+    duration: placements[0].duration,
+    workMode: placements[0].workMode,
+    employees: placements[0].employees,
   });
 
   const activeProfile = view === "company" ? companyProfile : profile;
@@ -515,6 +537,21 @@ export default function Page() {
         [key]: value,
       }));
     }
+  };
+
+  const updateCompanyList = (
+    key: "skills" | "tasks" | "requirements",
+    value: string
+  ) => {
+    const items = value
+      .split("\n")
+      .map((item) => item.trim())
+      .filter(Boolean);
+
+    setCompanyProfile((current) => ({
+      ...current,
+      [key]: items,
+    }));
   };
 
   const updateProfileFile = (file: File | null) => {
@@ -553,10 +590,17 @@ export default function Page() {
       setCompanyProfile((current) => ({
         ...current,
         name: item.name,
+        sourceName: item.name,
         field: item.field,
         city: item.city,
         about: item.about,
         interests: item.skills.join(", "),
+        skills: item.skills,
+        tasks: item.tasks,
+        requirements: item.requirements,
+        duration: item.duration,
+        workMode: item.workMode,
+        employees: item.employees,
       }));
     }
 
@@ -564,10 +608,15 @@ export default function Page() {
       setProfile((current) => ({
         ...current,
         name: item.name,
+        sourceName: item.name,
         field: item.field,
         city: item.city,
         about: item.about,
         interests: item.interests.join(", "),
+        education: item.education,
+        experience: item.experience,
+        availability: item.availability,
+        workPreference: item.workPreference,
       }));
     }
 
@@ -737,7 +786,45 @@ export default function Page() {
     return language[key] ?? translations.Norsk[key];
   };
 
-  const list = view === "learner" ? placements : candidates;
+  const list =
+    view === "learner"
+      ? placements.map((placement) =>
+          placement.name === (companyProfile.sourceName ?? companyProfile.name)
+            ? {
+                ...placement,
+                name: companyProfile.name,
+                field: companyProfile.field,
+                desc: companyProfile.about,
+                about: companyProfile.about,
+                city: companyProfile.city,
+                skills: companyProfile.skills ?? placement.skills,
+                tasks: companyProfile.tasks ?? placement.tasks,
+                requirements:
+                  companyProfile.requirements ?? placement.requirements,
+                duration: companyProfile.duration ?? placement.duration,
+                workMode: companyProfile.workMode ?? placement.workMode,
+                employees: companyProfile.employees ?? placement.employees,
+              }
+            : placement
+        )
+      : candidates.map((candidate) =>
+          candidate.name === (profile.sourceName ?? profile.name)
+            ? {
+                ...candidate,
+                name: profile.name,
+                field: profile.field,
+                desc: profile.about,
+                about: profile.about,
+                city: profile.city,
+                interests: profile.interests.split(", "),
+                education: profile.education ?? candidate.education,
+                experience: profile.experience ?? candidate.experience,
+                availability: profile.availability ?? candidate.availability,
+                workPreference:
+                  profile.workPreference ?? candidate.workPreference,
+              }
+            : candidate
+        );
   const filtered = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
 
@@ -825,13 +912,51 @@ export default function Page() {
     );
 
     if (receivedApplication) {
-      setSavedApplications((current) =>
-        current.map((application) =>
-          application.name === receivedApplication.companyName
-            ? { ...application, status: "Godkjent" }
-            : application
-        )
-      );
+      let updatedCurrentLearnerApplications = false;
+
+      for (let index = 0; index < localStorage.length; index += 1) {
+        const storageKey = localStorage.key(index);
+
+        if (!storageKey?.startsWith("laerling-link-applications:learner:")) {
+          continue;
+        }
+
+        const savedLearnerApplications = localStorage.getItem(storageKey);
+
+        try {
+          const learnerApplications: Application[] = savedLearnerApplications
+            ? JSON.parse(savedLearnerApplications)
+            : [];
+          const updatedLearnerApplications = learnerApplications.map(
+            (application) =>
+              application.name === receivedApplication.companyName
+                ? { ...application, status: "Godkjent" as const }
+                : application
+          );
+
+          localStorage.setItem(
+            storageKey,
+            JSON.stringify(updatedLearnerApplications)
+          );
+
+          if (storageKey === `laerling-link-applications:learner:${profile.name}`) {
+            updatedCurrentLearnerApplications = true;
+            setSavedApplications(updatedLearnerApplications);
+          }
+        } catch {
+          localStorage.removeItem(storageKey);
+        }
+      }
+
+      if (!updatedCurrentLearnerApplications && profile.name === applicantName) {
+        setSavedApplications((current) =>
+          current.map((application) =>
+            application.name === receivedApplication.companyName
+              ? { ...application, status: "Godkjent" }
+              : application
+          )
+        );
+      }
     }
   };
 
@@ -978,7 +1103,28 @@ export default function Page() {
               filteredApplications.map((application) => (
               <article
                 key={application.name}
-                className="flex flex-col gap-5 rounded-[24px] border border-[#29384a] bg-[#172332] p-5 sm:flex-row sm:items-center sm:gap-6 sm:p-8"
+                onClick={
+                  view === "learner"
+                    ? () => openDetails(application)
+                    : undefined
+                }
+                onKeyDown={
+                  view === "learner"
+                    ? (event) => {
+                        if (event.key === "Enter" || event.key === " ") {
+                          event.preventDefault();
+                          openDetails(application);
+                        }
+                      }
+                    : undefined
+                }
+                role={view === "learner" ? "button" : undefined}
+                tabIndex={view === "learner" ? 0 : undefined}
+                className={`flex flex-col gap-5 rounded-[24px] border border-[#29384a] bg-[#172332] p-5 sm:flex-row sm:items-center sm:gap-6 sm:p-8 ${
+                  view === "learner"
+                    ? "cursor-pointer transition hover:border-[#a45bc0]"
+                    : ""
+                }`}
               >
                 <div
                   className={`flex size-20 shrink-0 items-center justify-center rounded-2xl ${application.color} text-2xl font-bold`}
@@ -1423,7 +1569,16 @@ export default function Page() {
             {filtered.map((item) => (
               <article
                 key={item.name}
-                className="group flex items-center gap-4 rounded-2xl border border-[#303c4e] bg-[#222c3b] p-4 sm:gap-5 sm:p-5"
+                onClick={() => openDetails(item)}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter" || event.key === " ") {
+                    event.preventDefault();
+                    openDetails(item);
+                  }
+                }}
+                role="button"
+                tabIndex={0}
+                className="group flex cursor-pointer items-center gap-4 rounded-2xl border border-[#303c4e] bg-[#222c3b] p-4 transition hover:border-[#a45bc0] sm:gap-5 sm:p-5"
               >
                 <div
                   className={`flex size-11 shrink-0 items-center justify-center rounded-lg ${item.color} text-sm font-bold text-[#18202b]`}
@@ -1433,13 +1588,7 @@ export default function Page() {
 
                 <div className="min-w-0 flex-1">
                   <h2 className="font-bold">
-                    <button
-                      type="button"
-                      onClick={() => openDetails(item)}
-                      className="text-left hover:underline focus:outline-none focus:ring-2 focus:ring-[#a45bc0]"
-                    >
-                      {item.name}
-                    </button>
+                    {item.name}
                   </h2>
                   <p className="truncate text-sm text-[#91a4bd]">{item.desc}</p>
 
@@ -1693,6 +1842,122 @@ export default function Page() {
                   </div>
                 )}
               </label>
+
+              {view === "company" && (
+                <div className="mt-8 border-t border-[#29384a] pt-8">
+                  <h2 className="text-2xl font-bold">Læreplassinformasjon</h2>
+                  <div className="mt-5 grid gap-5 md:grid-cols-3">
+                    <div className="rounded-xl border border-[#29384a] bg-[#202c3b] p-4">
+                      <p className="text-sm font-semibold text-[#91a4bd]">Varighet</p>
+                      {editingProfile ? (
+                        <input
+                          value={activeProfile.duration ?? ""}
+                          onChange={(event) => updateActiveProfile("duration", event.target.value)}
+                          className="mt-2 w-full rounded-lg border border-[#39465a] bg-[#182332] px-3 py-2 text-[#dce2ea] outline-none focus:border-[#a45bc0]"
+                        />
+                      ) : (
+                        <p className="mt-2 text-[#dce2ea]">{activeProfile.duration}</p>
+                      )}
+                    </div>
+                    <div className="rounded-xl border border-[#29384a] bg-[#202c3b] p-4">
+                      <p className="text-sm font-semibold text-[#91a4bd]">Arbeidsform</p>
+                      {editingProfile ? (
+                        <input
+                          value={activeProfile.workMode ?? ""}
+                          onChange={(event) => updateActiveProfile("workMode", event.target.value)}
+                          className="mt-2 w-full rounded-lg border border-[#39465a] bg-[#182332] px-3 py-2 text-[#dce2ea] outline-none focus:border-[#a45bc0]"
+                        />
+                      ) : (
+                        <p className="mt-2 text-[#dce2ea]">{activeProfile.workMode}</p>
+                      )}
+                    </div>
+                    <div className="rounded-xl border border-[#29384a] bg-[#202c3b] p-4">
+                      <p className="text-sm font-semibold text-[#91a4bd]">Ansatte</p>
+                      {editingProfile ? (
+                        <input
+                          value={activeProfile.employees ?? ""}
+                          onChange={(event) => updateActiveProfile("employees", event.target.value)}
+                          className="mt-2 w-full rounded-lg border border-[#39465a] bg-[#182332] px-3 py-2 text-[#dce2ea] outline-none focus:border-[#a45bc0]"
+                        />
+                      ) : (
+                        <p className="mt-2 text-[#dce2ea]">{activeProfile.employees}</p>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="mt-5 grid gap-5 lg:grid-cols-3">
+                    {[
+                      ["Ferdigheter", activeProfile.skills],
+                      ["Arbeidsoppgaver", activeProfile.tasks],
+                      ["Krav", activeProfile.requirements],
+                    ].map(([title, items]) => (
+                      <div
+                        key={title}
+                        className="rounded-xl border border-[#29384a] bg-[#202c3b] p-4"
+                      >
+                        <p className="font-semibold">{title}</p>
+                        {editingProfile ? (
+                          <textarea
+                            value={items?.join("\n") ?? ""}
+                            onChange={(event) =>
+                              updateCompanyList(
+                                title === "Ferdigheter"
+                                  ? "skills"
+                                  : title === "Arbeidsoppgaver"
+                                  ? "tasks"
+                                  : "requirements",
+                                event.target.value
+                              )
+                            }
+                            rows={5}
+                            className="mt-3 w-full resize-y rounded-lg border border-[#39465a] bg-[#182332] px-3 py-2 text-sm leading-6 text-[#dce2ea] outline-none focus:border-[#a45bc0]"
+                          />
+                        ) : (
+                          <ul className="mt-3 space-y-2 text-sm leading-6 text-[#b2bfd0]">
+                            {items?.map((item) => <li key={item}>• {item}</li>)}
+                          </ul>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {view === "learner" && (
+                <div className="mt-8 border-t border-[#29384a] pt-8">
+                  <h2 className="text-2xl font-bold">Elevinformasjon</h2>
+                  <div className="mt-5 grid gap-5 md:grid-cols-2">
+                    {[
+                      ["education", "Utdanning"],
+                      ["experience", "Erfaring"],
+                      ["availability", "Tilgjengelighet"],
+                      ["workPreference", "Ønsket arbeidsform"],
+                    ].map(([key, label]) => (
+                      <label key={key} className="block">
+                        <span className="mb-2 block text-sm font-semibold text-[#91a4bd]">
+                          {label}
+                        </span>
+                        {editingProfile ? (
+                          <input
+                            value={activeProfile[key as keyof ProfileData] as string ?? ""}
+                            onChange={(event) =>
+                              updateActiveProfile(
+                                key as keyof ProfileData,
+                                event.target.value
+                              )
+                            }
+                            className="w-full rounded-xl border border-[#39465a] bg-[#202c3b] px-4 py-3 text-white outline-none focus:border-[#a45bc0]"
+                          />
+                        ) : (
+                          <div className="rounded-xl border border-[#29384a] bg-[#202c3b] px-4 py-3 text-[#dce2ea]">
+                            {activeProfile[key as keyof ProfileData] as string}
+                          </div>
+                        )}
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               <div className="mt-5">
                 {editingProfile && (
@@ -2006,7 +2271,18 @@ export default function Page() {
                 {translate("seeAll")} <ChevronRight />
               </button>
             </div>
-            <article className="rounded-[22px] border border-[#303c4e] bg-[#222c3b] p-7 shadow-2xl">
+            <article
+              onClick={() => openDetails(active)}
+              onKeyDown={(event) => {
+                if (event.key === "Enter" || event.key === " ") {
+                  event.preventDefault();
+                  openDetails(active);
+                }
+              }}
+              role="button"
+              tabIndex={0}
+              className="cursor-pointer rounded-[22px] border border-[#303c4e] bg-[#222c3b] p-7 shadow-2xl transition hover:border-[#a45bc0]"
+            >
               <div className="flex items-center gap-4">
                 <div
                   className={`flex size-24 shrink-0 items-center justify-center rounded-full ${active.color} text-3xl font-bold text-[#18202b]`}
@@ -2029,7 +2305,10 @@ export default function Page() {
                           ? translate("removeFavorite")
                           : translate("addFavorite")
                       }
-                      onClick={() => toggleLiked(active.name)}
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        toggleLiked(active.name);
+                      }}
                     >
                       <Heart
                         aria-hidden="true"
@@ -2046,7 +2325,10 @@ export default function Page() {
               <p className="mt-5 leading-6 text-[#b2bfd0]">{active.desc}</p>
               <div className="mt-7 flex items-center justify-between">
                 <button
-                  onClick={showPrevious}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    showPrevious();
+                  }}
                   className="flex size-14 items-center justify-center rounded-full bg-[#2d3848] text-[#9aacc3] hover:bg-[#394658]"
                   aria-label="Forrige anbefaling"
                 >
@@ -2056,7 +2338,10 @@ export default function Page() {
                   {(index % list.length) + 1} {translate("of")} {list.length}
                 </span>
                 <button
-                  onClick={showNext}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    showNext();
+                  }}
                   className="flex size-14 items-center justify-center rounded-full bg-[#2d3848] text-[#9aacc3] hover:bg-[#394658]"
                   aria-label="Neste anbefaling"
                 >
