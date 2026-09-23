@@ -363,7 +363,9 @@ function Topbar({
                     ? translate("chooseCompany")
                     : translate("chooseStudent")}
                   <select
-                    defaultValue=""
+                    defaultValue={
+                      view === "company" ? placements[0].name : candidates[0].name
+                    }
                     onChange={(event) => {
                       const selected = (
                         view === "company" ? placements : candidates
@@ -376,7 +378,6 @@ function Topbar({
                     }}
                     className="mt-2 w-full rounded-lg border border-[#39465a] bg-[#202c3b] px-2 py-2 text-sm text-[#f2f3f6] outline-none focus:border-[#a45bc0]"
                   >
-                    <option value="">{translate("choose")}</option>
                     {(view === "company" ? placements : candidates).map(
                       (item) => (
                         <option key={item.name} value={item.name}>
@@ -458,6 +459,8 @@ export default function Page() {
   };
 
   const [editingProfile, setEditingProfile] = useState(false);
+  const [profileBeforeEditing, setProfileBeforeEditing] =
+    useState<ProfileData | null>(null);
 
   const [profile, setProfile] = useState<ProfileData>({
     name: "Ola Nordmann",
@@ -1793,7 +1796,23 @@ export default function Page() {
                 </div>
 
                 <button
-                  onClick={() => setEditingProfile(!editingProfile)}
+                  onClick={() => {
+                    if (editingProfile) {
+                      if (profileBeforeEditing) {
+                        if (view === "company") {
+                          setCompanyProfile(profileBeforeEditing);
+                        } else {
+                          setProfile(profileBeforeEditing);
+                        }
+                      }
+                      setProfileBeforeEditing(null);
+                      setEditingProfile(false);
+                      return;
+                    }
+
+                    setProfileBeforeEditing({ ...activeProfile });
+                    setEditingProfile(true);
+                  }}
                   aria-pressed={editingProfile}
                   className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#a45bc0] px-5 py-3 font-semibold text-[#d8b3e4] transition hover:bg-[#a45bc0] hover:text-white"
                 >
