@@ -59,6 +59,7 @@ type BrowseTab = "Alle" | "Favoritter";
 type Application = Listing & {
   date: string;
   status: Exclude<ApplicationFilter, "Alle">;
+  companyName?: string;
   message?: string;
 };
 type ReceivedApplication = (typeof candidates)[number] & {
@@ -1352,16 +1353,12 @@ export default function Page() {
           >
             {view === "learner"
               ? translate("findApprenticeSpot")
-              : page === "candidates"
-              ? translate("candidates")
               : translate("findCandidates")}
           </h1>
 
           <p className="mt-3 text-lg text-[#91a4bd]">
             {view === "learner"
               ? translate("viewCompanies")
-              : page === "candidates"
-              ? "Se og administrer kandidater som har vist interesse."
               : translate("viewStudents")}
           </p>
 
