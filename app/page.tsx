@@ -161,7 +161,7 @@ function Sidebar({
       : [
           [translate("home"), Home],
           [translate("browseCandidates"), Search],
-          ["Mottatte søknader", ClipboardList],
+              [translate("receivedApplications"), ClipboardList],
           [translate("history"), BarChart3],
           [translate("companyProfile"), Building2],
           [translate("settings"), Settings],
@@ -204,7 +204,9 @@ function Sidebar({
             {view === "learner" ? translate("student") : translate("company")}
           </span>
         </span>
-        <span className="text-sm font-semibold text-[#d8b3e4]">Bytt</span>
+        <span className="text-sm font-semibold text-[#d8b3e4]">
+          {translate("switch")}
+        </span>
       </button>
       <nav
         aria-label={translate("navigation")}
@@ -300,7 +302,7 @@ function Topbar({
         : translate("companyProfile")
       : page === "settings"
       ? translate("settings")
-      : "Detaljer";
+      : translate("details");
 
   return (
     <header className="flex min-h-[80px] items-center justify-between gap-3 border-b border-[#202a38] px-4 lg:ml-[372px] lg:h-[102px] lg:px-12">
@@ -357,7 +359,9 @@ function Topbar({
             <div className="absolute right-0 top-16 z-30 w-52 rounded-2xl border border-[#39465a] bg-[#182332] p-2 shadow-2xl">
               {(view === "learner" || view === "company") && (
                 <label className="block px-4 py-2 text-sm font-semibold text-[#91a4bd]">
-                  {view === "company" ? "Velg bedrift" : "Velg elev"}
+                  {view === "company"
+                    ? translate("chooseCompany")
+                    : translate("chooseStudent")}
                   <select
                     defaultValue=""
                     onChange={(event) => {
@@ -372,7 +376,7 @@ function Topbar({
                     }}
                     className="mt-2 w-full rounded-lg border border-[#39465a] bg-[#202c3b] px-2 py-2 text-sm text-[#f2f3f6] outline-none focus:border-[#a45bc0]"
                   >
-                    <option value="">Velg...</option>
+                    <option value="">{translate("choose")}</option>
                     {(view === "company" ? placements : candidates).map(
                       (item) => (
                         <option key={item.name} value={item.name}>
@@ -1058,12 +1062,14 @@ export default function Page() {
             id="applications-heading"
             className="text-5xl font-bold tracking-[-0.03em]"
           >
-            {view === "company" ? "Mottatte søknader" : translate("applications")}
+            {view === "company"
+              ? translate("receivedApplications")
+              : translate("applications")}
           </h1>
 
           <p className="mt-3 text-lg text-[#91a4bd]">
             {view === "company"
-              ? "Se elever som har sendt søknad til bedriften din."
+              ? translate("receivedApplicationsDescription")
               : translate("administer")}
           </p>
 
@@ -1096,8 +1102,8 @@ export default function Page() {
             {filteredApplications.length === 0 ? (
               <div className="rounded-2xl border border-[#303c4e] bg-[#182332] p-6 text-[#91a4bd]">
                 {view === "company"
-                  ? "Ingen elever har sendt søknad ennå."
-                  : "Du har ikke sendt noen søknader ennå."}
+                  ? translate("noReceivedApplications")
+                  : translate("noSentApplications")}
               </div>
             ) : (
               filteredApplications.map((application) => (
@@ -1139,11 +1145,11 @@ export default function Page() {
                   </p>
                   {view === "company" && (
                     <p className="mt-2 text-sm font-semibold text-[#d8b3e4]">
-                      Søkt hos {application.companyName}
+                      {translate("appliedTo")} {application.companyName}
                     </p>
                   )}
                   <p className="mt-3 text-[#91a4bd]">
-                    {view === "company" ? "Mottatt" : translate("sent")} {application.date}
+                    {view === "company" ? translate("received") : translate("sent")} {application.date}
                   </p>
                   {view === "company" && application.message && (
                     <p className="mt-3 text-sm leading-6 text-[#b2bfd0]">
@@ -1162,7 +1168,7 @@ export default function Page() {
                         }}
                         className="rounded-xl border border-[#a45bc0] px-4 py-3 font-semibold text-[#e0b9e7] transition hover:bg-[#a45bc0] hover:text-white"
                       >
-                        Se profil
+                        {translate("viewProfile")}
                       </button>
                       {application.status !== "Godkjent" && (
                         <button
@@ -1171,7 +1177,7 @@ export default function Page() {
                           className="inline-flex items-center gap-2 rounded-xl bg-[#9ed8bf] px-4 py-3 font-bold text-[#15251f] transition hover:bg-[#b3e7ce]"
                         >
                           <Check aria-hidden="true" size={17} />
-                          Godkjenn
+                          {translate("approve")}
                         </button>
                       )}
                     </>
@@ -1261,7 +1267,9 @@ export default function Page() {
             </div>
 
             <div className="mt-8 border-t border-[#303c4e] pt-6">
-              <h2 className="text-xl font-bold">Om {selectedItem.name}</h2>
+              <h2 className="text-xl font-bold">
+                {translate("about")} {selectedItem.name}
+              </h2>
               <p className="mt-3 leading-7 text-[#b2bfd0]">
                 {selectedItem.about}
               </p>
@@ -1269,7 +1277,7 @@ export default function Page() {
 
             <div className="mt-8 grid gap-5 sm:grid-cols-2">
               <div className="rounded-2xl border border-[#303c4e] bg-[#202c3b] p-5">
-                <h2 className="font-bold">Ferdigheter</h2>
+                    <h2 className="font-bold">{translate("skills")}</h2>
                 <div className="mt-3 flex flex-wrap gap-2">
                   {selectedItem.skills.map((skill) => (
                     <span
@@ -1285,7 +1293,7 @@ export default function Page() {
               {"tasks" in selectedItem ? (
                 <>
                   <div className="rounded-2xl border border-[#303c4e] bg-[#202c3b] p-5">
-                    <h2 className="font-bold">Arbeidsoppgaver</h2>
+                    <h2 className="font-bold">{translate("tasks")}</h2>
                     <ul className="mt-3 space-y-2 text-sm leading-6 text-[#b2bfd0]">
                       {selectedItem.tasks.map((task) => (
                         <li key={task}>• {task}</li>
@@ -1293,7 +1301,7 @@ export default function Page() {
                     </ul>
                   </div>
                   <div className="rounded-2xl border border-[#303c4e] bg-[#202c3b] p-5">
-                    <h2 className="font-bold">Krav</h2>
+                    <h2 className="font-bold">{translate("requirements")}</h2>
                     <ul className="mt-3 space-y-2 text-sm leading-6 text-[#b2bfd0]">
                       {selectedItem.requirements.map((requirement) => (
                         <li key={requirement}>• {requirement}</li>
@@ -1302,19 +1310,23 @@ export default function Page() {
                   </div>
                   <div className="rounded-2xl border border-[#303c4e] bg-[#202c3b] p-5 text-sm text-[#b2bfd0]">
                     <h2 className="font-bold text-[#f2f3f6]">
-                      Praktisk informasjon
+                      {translate("practicalInformation")}
                     </h2>
-                    <p className="mt-3">Varighet: {selectedItem.duration}</p>
-                    <p className="mt-2">Arbeidsform: {selectedItem.workMode}</p>
+                    <p className="mt-3">
+                      {translate("duration")}: {selectedItem.duration}
+                    </p>
                     <p className="mt-2">
-                      Bedriftsstørrelse: {selectedItem.employees}
+                      {translate("workMode")}: {selectedItem.workMode}
+                    </p>
+                    <p className="mt-2">
+                      {translate("employees")}: {selectedItem.employees}
                     </p>
                   </div>
                 </>
               ) : (
                 <>
                   <div className="rounded-2xl border border-[#303c4e] bg-[#202c3b] p-5">
-                    <h2 className="font-bold">Interesser</h2>
+                    <h2 className="font-bold">{translate("interests")}</h2>
                     <div className="mt-3 flex flex-wrap gap-2">
                       {selectedItem.interests.map((interest) => (
                         <span
@@ -1327,17 +1339,23 @@ export default function Page() {
                     </div>
                   </div>
                   <div className="rounded-2xl border border-[#303c4e] bg-[#202c3b] p-5 text-sm leading-6 text-[#b2bfd0]">
-                    <h2 className="font-bold text-[#f2f3f6]">Bakgrunn</h2>
-                    <p className="mt-3">Utdanning: {selectedItem.education}</p>
-                    <p className="mt-2">Erfaring: {selectedItem.experience}</p>
+                    <h2 className="font-bold text-[#f2f3f6]">
+                      {translate("background")}
+                    </h2>
+                    <p className="mt-3">
+                      {translate("education")}: {selectedItem.education}
+                    </p>
+                    <p className="mt-2">
+                      {translate("experience")}: {selectedItem.experience}
+                    </p>
                   </div>
                   <div className="rounded-2xl border border-[#303c4e] bg-[#202c3b] p-5 text-sm leading-6 text-[#b2bfd0]">
                     <h2 className="font-bold text-[#f2f3f6]">
-                      Tilgjengelighet
+                      {translate("availability")}
                     </h2>
                     <p className="mt-3">{selectedItem.availability}</p>
                     <p className="mt-2">
-                      Ønsket arbeidsform: {selectedItem.workPreference}
+                      {translate("desiredWorkMode")}: {selectedItem.workPreference}
                     </p>
                   </div>
                 </>
@@ -1346,22 +1364,22 @@ export default function Page() {
 
             {view === "learner" && (
               <div className="mt-8 rounded-2xl border border-[#303c4e] bg-[#202c3b] p-5">
-                <h2 className="text-xl font-bold">Søk på læreplassen</h2>
+                <h2 className="text-xl font-bold">
+                  {translate("applyForPlacement")}
+                </h2>
                 {applicationSent ? (
-                  <p className="mt-3 text-[#9ed8bf]">
-                    Søknaden er sendt. Du finner den under Mine søknader.
-                  </p>
+                  <p className="mt-3 text-[#9ed8bf]">{translate("applicationSubmitted")}</p>
                 ) : (
                   <>
                     <label className="mt-3 block text-sm text-[#91a4bd]">
-                      Melding til bedriften (valgfritt)
+                      {translate("messageToCompany")}
                       <textarea
                         value={applicationMessage}
                         onChange={(event) =>
                           setApplicationMessage(event.target.value)
                         }
                         rows={4}
-                        placeholder="Skriv litt om hvorfor du ønsker læreplassen..."
+                        placeholder={translate("messagePlaceholder")}
                         className="mt-2 w-full resize-none rounded-xl border border-[#39465a] bg-[#172332] px-4 py-3 text-[#f2f3f6] outline-none focus:border-[#a45bc0]"
                       />
                     </label>
@@ -1369,7 +1387,7 @@ export default function Page() {
                       onClick={submitApplication}
                       className="mt-4 rounded-xl bg-[#a45bc0] px-5 py-3 font-bold text-white transition hover:bg-[#b86bc9]"
                     >
-                      Send søknad
+                      {translate("sendApplication")}
                     </button>
                   </>
                 )}
@@ -1416,15 +1434,15 @@ export default function Page() {
         />
         <section className="mx-auto max-w-[1120px] px-6 pb-20 pt-16 lg:ml-[428px] lg:mr-12 lg:px-0">
           <h1 id="candidates-heading" className="text-5xl font-bold tracking-[-0.03em]">
-            Kandidater
+            {translate("candidateListTitle")}
           </h1>
           <p className="mt-3 text-lg text-[#91a4bd]">
-            Elever som har sendt søknad til lærebedrifter.
+            {translate("candidateListDescription")}
           </p>
           <div className="mt-10 flex flex-col gap-5">
             {receivedApplications.length === 0 ? (
               <div className="rounded-2xl border border-[#303c4e] bg-[#182332] p-6 text-[#91a4bd]">
-                Ingen elever har sendt søknad ennå.
+                {translate("noReceivedApplications")}
               </div>
             ) : (
               receivedApplications.map((application, index) => (
@@ -1442,7 +1460,7 @@ export default function Page() {
                         {application.field} · {application.city}
                       </p>
                       <p className="mt-2 text-sm text-[#d8b3e4]">
-                        Søkt hos {application.companyName} · {application.date}
+                        {translate("appliedTo")} {application.companyName} · {application.date}
                       </p>
                     </div>
                     <span className="self-start rounded-2xl bg-[#293545] px-5 py-3 font-bold text-[#d9b3e4] sm:self-center">
@@ -1845,10 +1863,12 @@ export default function Page() {
 
               {view === "company" && (
                 <div className="mt-8 border-t border-[#29384a] pt-8">
-                  <h2 className="text-2xl font-bold">Læreplassinformasjon</h2>
+                  <h2 className="text-2xl font-bold">
+                    {translate("placementInformation")}
+                  </h2>
                   <div className="mt-5 grid gap-5 md:grid-cols-3">
                     <div className="rounded-xl border border-[#29384a] bg-[#202c3b] p-4">
-                      <p className="text-sm font-semibold text-[#91a4bd]">Varighet</p>
+                      <p className="text-sm font-semibold text-[#91a4bd]">{translate("duration")}</p>
                       {editingProfile ? (
                         <input
                           value={activeProfile.duration ?? ""}
@@ -1860,7 +1880,7 @@ export default function Page() {
                       )}
                     </div>
                     <div className="rounded-xl border border-[#29384a] bg-[#202c3b] p-4">
-                      <p className="text-sm font-semibold text-[#91a4bd]">Arbeidsform</p>
+                      <p className="text-sm font-semibold text-[#91a4bd]">{translate("workMode")}</p>
                       {editingProfile ? (
                         <input
                           value={activeProfile.workMode ?? ""}
@@ -1872,7 +1892,7 @@ export default function Page() {
                       )}
                     </div>
                     <div className="rounded-xl border border-[#29384a] bg-[#202c3b] p-4">
-                      <p className="text-sm font-semibold text-[#91a4bd]">Ansatte</p>
+                      <p className="text-sm font-semibold text-[#91a4bd]">{translate("employees")}</p>
                       {editingProfile ? (
                         <input
                           value={activeProfile.employees ?? ""}
@@ -1887,10 +1907,10 @@ export default function Page() {
 
                   <div className="mt-5 grid gap-5 lg:grid-cols-3">
                     {[
-                      ["Ferdigheter", activeProfile.skills],
-                      ["Arbeidsoppgaver", activeProfile.tasks],
-                      ["Krav", activeProfile.requirements],
-                    ].map(([title, items]) => (
+                      ["skills", translate("skills"), activeProfile.skills],
+                      ["tasks", translate("tasks"), activeProfile.tasks],
+                      ["requirements", translate("requirements"), activeProfile.requirements],
+                    ].map(([key, title, items]) => (
                       <div
                         key={title}
                         className="rounded-xl border border-[#29384a] bg-[#202c3b] p-4"
@@ -1901,11 +1921,7 @@ export default function Page() {
                             value={items?.join("\n") ?? ""}
                             onChange={(event) =>
                               updateCompanyList(
-                                title === "Ferdigheter"
-                                  ? "skills"
-                                  : title === "Arbeidsoppgaver"
-                                  ? "tasks"
-                                  : "requirements",
+                                key as "skills" | "tasks" | "requirements",
                                 event.target.value
                               )
                             }
@@ -1925,13 +1941,15 @@ export default function Page() {
 
               {view === "learner" && (
                 <div className="mt-8 border-t border-[#29384a] pt-8">
-                  <h2 className="text-2xl font-bold">Elevinformasjon</h2>
+                  <h2 className="text-2xl font-bold">
+                    {translate("learnerInformation")}
+                  </h2>
                   <div className="mt-5 grid gap-5 md:grid-cols-2">
                     {[
-                      ["education", "Utdanning"],
-                      ["experience", "Erfaring"],
-                      ["availability", "Tilgjengelighet"],
-                      ["workPreference", "Ønsket arbeidsform"],
+                      ["education", translate("education")],
+                      ["experience", translate("experience")],
+                      ["availability", translate("availability")],
+                      ["workPreference", translate("desiredWorkMode")],
                     ].map(([key, label]) => (
                       <label key={key} className="block">
                         <span className="mb-2 block text-sm font-semibold text-[#91a4bd]">
@@ -2234,14 +2252,27 @@ export default function Page() {
                     : translate("activeCandidates")}
                 </p>
               </div>
-              <div>
+              <button
+                type="button"
+                onClick={() => {
+                  setBrowseTab("Favoritter");
+                  setPage("browse");
+                }}
+                aria-label={
+                  view === "learner"
+                    ? `${translate("liked")}: ${liked.length}`
+                    : `${translate("favourites")}: ${liked.length}`
+                }
+                title="Åpne favoritter"
+                className="cursor-pointer text-left transition hover:text-[#d8b3e4] focus:outline-none focus:ring-2 focus:ring-[#a45bc0] focus:ring-offset-4 focus:ring-offset-[#0e131b]"
+              >
                 <p className="text-4xl font-bold">{liked.length}</p>
                 <p className="mt-1 text-[16px] text-[#91a4bd]">
                   {view === "learner"
                     ? translate("liked")
                     : translate("favourites")}
                 </p>
-              </div>
+              </button>
               <div>
                 <p className="text-4xl font-bold">0</p>
                 <p className="mt-1 text-[16px] text-[#91a4bd]">
@@ -2361,15 +2392,15 @@ export default function Page() {
               <h2 className="mt-2 text-2xl font-bold">
                 {settings.profileVisible
                   ? view === "learner"
-                    ? "Profilen din er synlig"
-                    : "Bedriftsprofilen er publisert"
+                    ? translate("profileIsVisible")
+                    : translate("companyProfileIsPublished")
                   : view === "learner"
                   ? translate("makeProfileVisible")
                   : translate("publishCompany")}
               </h2>
               <p className="mt-2 text-[#91a4bd]">
                 {settings.profileVisible
-                  ? "Du kan når som helst oppdatere profilen din."
+                  ? translate("profileUpdateAnytime")
                   : view === "learner"
                   ? translate("completedProfile")
                   : translate("completedCompanyProfile")}
@@ -2392,7 +2423,7 @@ export default function Page() {
               }}
               disabled={settings.profileVisible}
             >
-              {settings.profileVisible ? "Ferdig" : translate("getStarted")}{" "}
+              {settings.profileVisible ? translate("finished") : translate("getStarted")}{" "}
               <ArrowRight />
             </button>
           </div>
