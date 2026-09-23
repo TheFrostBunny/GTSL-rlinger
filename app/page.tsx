@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   ArrowLeft,
   ArrowRight,
@@ -11,6 +11,7 @@ import {
   ChevronRight,
   CircleUserRound,
   ClipboardList,
+  ChevronDown,
   Heart,
   Home,
   Menu,
@@ -23,7 +24,23 @@ import {
 
 import data from "./data.json";
 
-const { placements, candidates, applications, fields, history, translations } = data;
+const { placements, candidates, translations } = data;
+const fields = [
+  "Alle",
+  ...new Set([...placements, ...candidates].map((item) => item.field)),
+];
+const applications = placements.slice(0, 2).map((placement, index) => ({
+  ...placement,
+  date: index === 0 ? "12. sep 2026" : "8. sep 2026",
+  status: index === 0 ? "Matchet" : "Venter svar",
+}));
+const defaultHistory = applications.map(({ name, field, city, date }) => ({
+  name,
+  field,
+  city,
+  date,
+}));
+type HistoryItem = (typeof defaultHistory)[number] & { activity?: string };
 
 const PROFILE_STORAGE_KEY = "laerling-link-profile";
 const SETTINGS_STORAGE_KEY = "laerling-link-settings";
@@ -33,6 +50,10 @@ type Language = keyof typeof translations;
 type TranslationKey = keyof (typeof translations)["Norsk"];
 type Listing = (typeof placements)[number] | (typeof candidates)[number];
 type ApplicationFilter = "Alle" | "Venter svar" | "Matchet" | "Avslått";
+type BrowseTab = "Alle" | "Favoritter";
+type Application = (typeof applications)[number] & {
+  message?: string;
+};
 
 type PageName =
   | "home"
@@ -189,15 +210,20 @@ function Topbar({
   view,
   setView,
   setMenuOpen,
+  setPage,
+  onSelectPlacement,
   profileName,
   translate,
 }: {
   view: "learner" | "company";
   setView: (view: "learner" | "company") => void;
   setMenuOpen: (open: boolean) => void;
+  setPage: (page: PageName) => void;
+  onSelectPlacement: (placement: Listing) => void;
   profileName?: string;
   translate: (key: TranslationKey) => string;
 }) {
+  const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const safeProfileName =
     typeof profileName === "string" && profileName.trim()
       ? profileName
@@ -229,12 +255,78 @@ function Topbar({
           {view === "learner" ? translate("student") : translate("company")}
         </button>
 
-        <span className="hidden text-lg font-semibold text-[#f2f3f6] sm:block">
-          {safeProfileName}
-        </span>
+        <div className="relative">
+          <button
+            onClick={() => setProfileMenuOpen((open) => !open)}
+            className="flex items-center gap-3 rounded-full p-1 transition hover:bg-[#202c3b]"
+            aria-label="Åpne profilmeny"
+            aria-expanded={profileMenuOpen}
+          >
+            <span className="hidden text-lg font-semibold text-[#f2f3f6] sm:block">
+              {safeProfileName}
+            </span>
+            <div className="flex size-12 items-center justify-center rounded-full border border-[#344155] bg-[#202c3b] text-lg font-bold text-[#9aaec7]">
+              {initials}
+            </div>
+            <ChevronDown
+              size={18}
+              className={`hidden text-[#91a4bd] transition sm:block ${
+                profileMenuOpen ? "rotate-180" : ""
+              }`}
+            />
+          </button>
 
-        <div className="flex size-12 items-center justify-center rounded-full border border-[#344155] bg-[#202c3b] text-lg font-bold text-[#9aaec7]">
-          {initials}
+          {profileMenuOpen && (
+            <div className="absolute right-0 top-16 z-30 w-52 rounded-2xl border border-[#39465a] bg-[#182332] p-2 shadow-2xl">
+              {(view === "learner" || view === "company") && (
+                <label className="block px-4 py-2 text-sm font-semibold text-[#91a4bd]">
+                  {view === "company" ? "Velg bedrift" : "Velg elev"}
+                  <select
+                    defaultValue=""
+                    onChange={(event) => {
+                      const selected = (view === "company"
+                        ? placements
+                        : candidates
+                      ).find((item) => item.name === event.target.value);
+
+                      if (selected) {
+                        onSelectPlacement(selected);
+                        setProfileMenuOpen(false);
+                      }
+                    }}
+                    className="mt-2 w-full rounded-lg border border-[#39465a] bg-[#202c3b] px-2 py-2 text-sm text-[#f2f3f6] outline-none focus:border-[#a45bc0]"
+                  >
+                    <option value="">Velg...</option>
+                    {(view === "company" ? placements : candidates).map((item) => (
+                      <option key={item.name} value={item.name}>
+                        {item.name}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              )}
+              <button
+                onClick={() => {
+                  setPage("profile");
+                  setProfileMenuOpen(false);
+                }}
+                className="flex w-full items-center rounded-xl px-4 py-3 text-left font-semibold text-[#dce2ea] hover:bg-[#243247]"
+              >
+                {view === "company"
+                  ? translate("companyProfile")
+                  : translate("profile")}
+              </button>
+              <button
+                onClick={() => {
+                  setPage("settings");
+                  setProfileMenuOpen(false);
+                }}
+                className="flex w-full items-center rounded-xl px-4 py-3 text-left font-semibold text-[#dce2ea] hover:bg-[#243247]"
+              >
+                {translate("settings")}
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </header>
@@ -247,24 +339,32 @@ export default function Page() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [activeField, setActiveField] = useState("Alle");
+    const [browseTab, setBrowseTab] = useState<BrowseTab>("Alle");
   const [applicationFilter, setApplicationFilter] =
     useState<ApplicationFilter>("Alle");
+  const [savedApplications, setSavedApplications] = useState<Application[]>([]);
+  const [applicationMessage, setApplicationMessage] = useState("");
+  const [applicationSent, setApplicationSent] = useState(false);
   const [settings, setSettings] = useState<SettingsState>({
     language: "Norsk",
     emailNotifications: true,
-    profileVisible: true,
+    profileVisible: false,
     darkMode: false,
   });
-  const [likedByView, setLikedByView] = useState<{
-    learner: string[];
-    company: string[];
-  }>({ learner: [], company: [] });
-  const liked = likedByView[view];
+  const [likedByProfile, setLikedByProfile] = useState<Record<string, string[]>>({});
+  const [historyItems, setHistoryItems] =
+    useState<HistoryItem[]>(defaultHistory);
+  const loadedHistoryKey = useRef<string | null>(null);
+  const loadedApplicationsKey = useRef<string | null>(null);
 
   const [selectedItem, setSelectedItem] = useState<Listing | null>(null);
 
   const openDetails = (item: Listing) => {
     setSelectedItem(item);
+    setApplicationSent(
+      view === "learner" && savedApplications.some((application) => application.name === item.name)
+    );
+    setApplicationMessage("");
     setPage("details");
   };
 
@@ -321,6 +421,13 @@ export default function Page() {
   });
 
   const activeProfile = view === "company" ? companyProfile : profile;
+  const favoriteKey = `${view}:${activeProfile.name}`;
+  const liked = likedByProfile[favoriteKey] ?? [];
+  const isMutualMatch = (itemName: string) => {
+    const otherProfileKey =
+      view === "learner" ? `company:${itemName}` : `learner:${itemName}`;
+    return (likedByProfile[otherProfileKey] ?? []).includes(activeProfile.name);
+  };
 
   const updateActiveProfile = (key: keyof ProfileData, value: string) => {
     if (view === "company") {
@@ -334,6 +441,32 @@ export default function Page() {
         [key]: value,
       }));
     }
+  };
+
+  const selectIdentity = (item: Listing) => {
+    if (view === "company" && "employees" in item) {
+      setCompanyProfile((current) => ({
+        ...current,
+        name: item.name,
+        field: item.field,
+        city: item.city,
+        about: item.about,
+        interests: item.skills.join(", "),
+      }));
+    }
+
+    if (view === "learner" && "education" in item) {
+      setProfile((current) => ({
+        ...current,
+        name: item.name,
+        field: item.field,
+        city: item.city,
+        about: item.about,
+        interests: item.interests.join(", "),
+      }));
+    }
+
+    setPage("home");
   };
 
   useEffect(() => {
@@ -374,7 +507,15 @@ export default function Page() {
 
     if (savedLikes) {
       try {
-        setLikedByView((current) => ({ ...current, ...JSON.parse(savedLikes) }));
+        const parsedLikes = JSON.parse(savedLikes);
+        setLikedByProfile(
+          parsedLikes.learner || parsedLikes.company
+            ? {
+                [`learner:${profile.name}`]: parsedLikes.learner ?? [],
+                [`company:${companyProfile.name}`]: parsedLikes.company ?? [],
+              }
+            : parsedLikes
+        );
       } catch {
         localStorage.removeItem("laerling-link-likes");
       }
@@ -386,8 +527,60 @@ export default function Page() {
   }, [settings]);
 
   useEffect(() => {
-    localStorage.setItem("laerling-link-likes", JSON.stringify(likedByView));
-  }, [likedByView]);
+    localStorage.setItem("laerling-link-likes", JSON.stringify(likedByProfile));
+  }, [likedByProfile]);
+
+  useEffect(() => {
+    if (loadedHistoryKey.current === favoriteKey) return;
+
+    loadedHistoryKey.current = favoriteKey;
+    const historyStorageKey = `laerling-link-history:${favoriteKey}`;
+    const savedHistory = localStorage.getItem(historyStorageKey);
+
+    if (savedHistory) {
+      try {
+        setHistoryItems(JSON.parse(savedHistory));
+      } catch {
+        localStorage.removeItem(historyStorageKey);
+      }
+    } else {
+      setHistoryItems([]);
+    }
+  });
+
+  useEffect(() => {
+    localStorage.setItem(
+      `laerling-link-history:${favoriteKey}`,
+      JSON.stringify(historyItems)
+    );
+  }, [favoriteKey, historyItems]);
+
+  useEffect(() => {
+    if (loadedApplicationsKey.current === favoriteKey) return;
+
+    loadedApplicationsKey.current = favoriteKey;
+    const applicationsStorageKey = `laerling-link-applications:${favoriteKey}`;
+    const savedApplications = localStorage.getItem(applicationsStorageKey);
+
+    if (savedApplications) {
+      try {
+        setSavedApplications(JSON.parse(savedApplications));
+      } catch {
+        localStorage.removeItem(applicationsStorageKey);
+      }
+    } else {
+      setSavedApplications([]);
+    }
+  });
+
+  useEffect(() => {
+    if (loadedApplicationsKey.current !== favoriteKey) return;
+
+    localStorage.setItem(
+      `laerling-link-applications:${favoriteKey}`,
+      JSON.stringify(savedApplications)
+    );
+  }, [favoriteKey, savedApplications]);
 
   const translate = (key: TranslationKey) => {
     const language = translations[settings.language] ?? translations.Norsk;
@@ -399,6 +592,7 @@ export default function Page() {
     const normalizedQuery = query.trim().toLowerCase();
 
     return list.filter((item) => {
+      const matchesTab = browseTab === "Alle" || liked.includes(item.name);
       const matchesField = activeField === "Alle" || item.field === activeField;
       const matchesQuery =
         !normalizedQuery ||
@@ -406,20 +600,77 @@ export default function Page() {
           value.toLowerCase().includes(normalizedQuery)
         );
 
-      return matchesField && matchesQuery;
+      return matchesTab && matchesField && matchesQuery;
     });
-  }, [activeField, list, query]);
+  }, [activeField, browseTab, liked, list, query]);
 
   const [index, setIndex] = useState(0);
   const active = list[index % list.length];
 
-  const toggleLiked = (name: string) => {
-    setLikedByView((current) => ({
+  const recordHistory = (item: Listing, activity: string) => {
+    setHistoryItems((current) => [
+      {
+        name: item.name,
+        field: item.field,
+        city: item.city,
+        date: new Date().toLocaleDateString("no-NO"),
+        activity,
+      },
       ...current,
-      [view]: current[view].includes(name)
-        ? current[view].filter((item) => item !== name)
-        : [...current[view], name],
+    ]);
+  };
+
+  const submitApplication = () => {
+    if (!selectedItem || applicationSent) return;
+
+    const application = {
+      ...selectedItem,
+      date: new Date().toLocaleDateString("no-NO"),
+      status: "Venter svar",
+      message: applicationMessage.trim(),
+    };
+
+    setSavedApplications((current) => [
+      application,
+      ...current.filter((item) => item.name !== selectedItem.name),
+    ]);
+    setApplicationSent(true);
+    recordHistory(selectedItem, "Søknad sendt");
+  };
+
+  const toggleLiked = (name: string) => {
+    const willLike = !liked.includes(name);
+    const item = [...placements, ...candidates].find(
+      (entry) => entry.name === name
+    );
+
+    setLikedByProfile((current) => ({
+      ...current,
+      [favoriteKey]: willLike
+        ? [...liked, name]
+        : liked.filter((item) => item !== name),
     }));
+
+    if (item) {
+      recordHistory(
+        item,
+        !willLike
+          ? "Fjernet fra favoritter"
+          : isMutualMatch(name)
+          ? "Matchet"
+          : "Lagt til i favoritter"
+      );
+    }
+
+    if (view === "learner" && willLike && isMutualMatch(name)) {
+      setSavedApplications((current) =>
+        current.map((application) =>
+          application.name === name
+            ? { ...application, status: "Matchet" }
+            : application
+        )
+      );
+    }
   };
 
   const showPrevious = () => {
@@ -434,10 +685,11 @@ export default function Page() {
     setIndex(0);
     setQuery("");
     setActiveField("Alle");
+    setBrowseTab("Alle");
   }, [view]);
 
   if (page === "applications") {
-    const filteredApplications = applications.filter(
+    const filteredApplications = savedApplications.filter(
       (application) =>
         applicationFilter === "Alle" ||
         (applicationFilter === "Venter svar" &&
@@ -462,6 +714,11 @@ export default function Page() {
           view={view}
           setView={setView}
           setMenuOpen={setMenuOpen}
+          setPage={setPage}
+          onSelectPlacement={(placement) => {
+            selectIdentity(placement);
+          }}
+          profileName={activeProfile.name}
           translate={translate}
         />
 
@@ -496,7 +753,7 @@ export default function Page() {
             {filteredApplications.map((application) => (
               <article
                 key={application.name}
-                className="flex items-center gap-6 rounded-[24px] border border-[#29384a] bg-[#172332] p-8"
+                className="flex flex-col gap-5 rounded-[24px] border border-[#29384a] bg-[#172332] p-5 sm:flex-row sm:items-center sm:gap-6 sm:p-8"
               >
                 <div
                   className={`flex size-20 shrink-0 items-center justify-center rounded-2xl ${application.color} text-2xl font-bold`}
@@ -504,7 +761,7 @@ export default function Page() {
                   {application.initials}
                 </div>
 
-                <div className="flex-1">
+                <div className="min-w-0 flex-1">
                   <h2 className="text-2xl font-bold">{application.name}</h2>
                   <p className="mt-2 text-xl text-[#91a4bd]">
                     {application.field} · {application.city}
@@ -514,7 +771,7 @@ export default function Page() {
                   </p>
                 </div>
                 <span
-                  className={`rounded-2xl px-5 py-3 font-bold ${
+                  className={`self-start rounded-2xl px-5 py-3 font-bold sm:self-center ${
                     application.status === "Matchet"
                       ? "bg-[#a45bc0] text-white"
                       : application.status === "Avslått"
@@ -554,6 +811,11 @@ export default function Page() {
           view={view}
           setView={setView}
           setMenuOpen={setMenuOpen}
+          setPage={setPage}
+          onSelectPlacement={(placement) => {
+            selectIdentity(placement);
+          }}
+          profileName={activeProfile.name}
           translate={translate}
         />
 
@@ -584,13 +846,140 @@ export default function Page() {
             <div className="mt-8 border-t border-[#303c4e] pt-6">
               <h2 className="text-xl font-bold">Om {selectedItem.name}</h2>
               <p className="mt-3 leading-7 text-[#b2bfd0]">
-                {selectedItem.desc}
+                {selectedItem.about}
               </p>
             </div>
 
+            <div className="mt-8 grid gap-5 sm:grid-cols-2">
+              <div className="rounded-2xl border border-[#303c4e] bg-[#202c3b] p-5">
+                <h2 className="font-bold">Ferdigheter</h2>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {selectedItem.skills.map((skill) => (
+                    <span
+                      key={skill}
+                      className="rounded-full bg-[#30384a] px-3 py-1 text-sm text-[#d8b3e4]"
+                    >
+                      {skill}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {"tasks" in selectedItem ? (
+                <>
+                  <div className="rounded-2xl border border-[#303c4e] bg-[#202c3b] p-5">
+                    <h2 className="font-bold">Arbeidsoppgaver</h2>
+                    <ul className="mt-3 space-y-2 text-sm leading-6 text-[#b2bfd0]">
+                      {selectedItem.tasks.map((task) => (
+                        <li key={task}>• {task}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className="rounded-2xl border border-[#303c4e] bg-[#202c3b] p-5">
+                    <h2 className="font-bold">Krav</h2>
+                    <ul className="mt-3 space-y-2 text-sm leading-6 text-[#b2bfd0]">
+                      {selectedItem.requirements.map((requirement) => (
+                        <li key={requirement}>• {requirement}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className="rounded-2xl border border-[#303c4e] bg-[#202c3b] p-5 text-sm text-[#b2bfd0]">
+                    <h2 className="font-bold text-[#f2f3f6]">Praktisk informasjon</h2>
+                    <p className="mt-3">Varighet: {selectedItem.duration}</p>
+                    <p className="mt-2">Arbeidsform: {selectedItem.workMode}</p>
+                    <p className="mt-2">Bedriftsstørrelse: {selectedItem.employees}</p>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="rounded-2xl border border-[#303c4e] bg-[#202c3b] p-5">
+                    <h2 className="font-bold">Interesser</h2>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {selectedItem.interests.map((interest) => (
+                        <span
+                          key={interest}
+                          className="rounded-full bg-[#30384a] px-3 py-1 text-sm text-[#d8b3e4]"
+                        >
+                          {interest}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="rounded-2xl border border-[#303c4e] bg-[#202c3b] p-5 text-sm leading-6 text-[#b2bfd0]">
+                    <h2 className="font-bold text-[#f2f3f6]">Bakgrunn</h2>
+                    <p className="mt-3">Utdanning: {selectedItem.education}</p>
+                    <p className="mt-2">Erfaring: {selectedItem.experience}</p>
+                  </div>
+                  <div className="rounded-2xl border border-[#303c4e] bg-[#202c3b] p-5 text-sm leading-6 text-[#b2bfd0]">
+                    <h2 className="font-bold text-[#f2f3f6]">Tilgjengelighet</h2>
+                    <p className="mt-3">{selectedItem.availability}</p>
+                    <p className="mt-2">Ønsket arbeidsform: {selectedItem.workPreference}</p>
+                  </div>
+                </>
+              )}
+            </div>
+
+            {view === "learner" && (
+              <div className="mt-8 rounded-2xl border border-[#303c4e] bg-[#202c3b] p-5">
+                <label className="block text-sm font-semibold text-[#91a4bd]">
+                  Velg bedrift
+                  <select
+                    value={selectedItem.name}
+                    onChange={(event) => {
+                      const placement = placements.find(
+                        (item) => item.name === event.target.value
+                      );
+
+                      if (placement) {
+                        setSelectedItem(placement);
+                        setApplicationSent(
+                          savedApplications.some(
+                            (application) => application.name === placement.name
+                          )
+                        );
+                        setApplicationMessage("");
+                      }
+                    }}
+                    className="mt-2 w-full rounded-xl border border-[#39465a] bg-[#172332] px-4 py-3 text-[#f2f3f6] outline-none focus:border-[#a45bc0]"
+                  >
+                    {placements.map((placement) => (
+                      <option key={placement.name} value={placement.name}>
+                        {placement.name} · {placement.city}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <h2 className="text-xl font-bold">Søk på læreplassen</h2>
+                {applicationSent ? (
+                  <p className="mt-3 text-[#9ed8bf]">
+                    Søknaden er sendt. Du finner den under Mine søknader.
+                  </p>
+                ) : (
+                  <>
+                    <label className="mt-3 block text-sm text-[#91a4bd]">
+                      Melding til bedriften (valgfritt)
+                      <textarea
+                        value={applicationMessage}
+                        onChange={(event) => setApplicationMessage(event.target.value)}
+                        rows={4}
+                        placeholder="Skriv litt om hvorfor du ønsker læreplassen..."
+                        className="mt-2 w-full resize-none rounded-xl border border-[#39465a] bg-[#172332] px-4 py-3 text-[#f2f3f6] outline-none focus:border-[#a45bc0]"
+                      />
+                    </label>
+                    <button
+                      onClick={submitApplication}
+                      className="mt-4 rounded-xl bg-[#a45bc0] px-5 py-3 font-bold text-white transition hover:bg-[#b86bc9]"
+                    >
+                      Send søknad
+                    </button>
+                  </>
+                )}
+              </div>
+            )}
+
             <button
               onClick={() => toggleLiked(selectedItem.name)}
-              className="mt-8 rounded-xl bg-[#a45bc0] px-5 py-3 font-bold text-white transition hover:bg-[#b86bc9]"
+              className="mt-5 rounded-xl border border-[#a45bc0] px-5 py-3 font-bold text-[#d8b3e4] transition hover:bg-[#a45bc0] hover:text-white"
             >
               {liked.includes(selectedItem.name)
                 ? translate("removeFromFavorites")
@@ -618,6 +1007,11 @@ export default function Page() {
           view={view}
           setView={setView}
           setMenuOpen={setMenuOpen}
+          setPage={setPage}
+          onSelectPlacement={(placement) => {
+            selectIdentity(placement);
+          }}
+          profileName={activeProfile.name}
           translate={translate}
         />
 
@@ -644,7 +1038,25 @@ export default function Page() {
             />
           </div>
 
-          <div className="mt-5 flex flex-wrap gap-3">
+          <p className="mt-5 text-sm font-semibold text-[#91a4bd]">Viser</p>
+          <div className="mt-2 flex flex-wrap gap-3">
+            {(["Alle", "Favoritter"] as BrowseTab[]).map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setBrowseTab(tab)}
+                className={`rounded-full border px-5 py-2 text-sm font-semibold ${
+                  browseTab === tab
+                    ? "border-[#a45bc0] bg-[#a45bc0] text-white"
+                    : "border-[#29384a] bg-[#182332] text-[#91a4bd] hover:bg-[#243247]"
+                }`}
+              >
+                {tab}
+              </button>
+            ))}
+          </div>
+
+          <p className="mt-5 text-sm font-semibold text-[#91a4bd]">Fagområde</p>
+          <div className="mt-2 flex flex-wrap gap-3">
             {fields.map((field) => (
               <button
                 key={field}
@@ -699,6 +1111,11 @@ export default function Page() {
                     <span className="rounded-full bg-[#30384a] px-3 py-1 text-xs text-[#d8b3e4]">
                       {item.field}
                     </span>
+                    {isMutualMatch(item.name) && (
+                      <span className="rounded-full bg-[#a45bc0] px-3 py-1 text-xs font-bold text-white">
+                        Matchet
+                      </span>
+                    )}
                   </div>
                 </div>
                 <button
@@ -748,6 +1165,11 @@ export default function Page() {
           view={view}
           setView={setView}
           setMenuOpen={setMenuOpen}
+          setPage={setPage}
+          onSelectPlacement={(placement) => {
+            selectIdentity(placement);
+          }}
+          profileName={activeProfile.name}
           translate={translate}
         />
 
@@ -761,9 +1183,9 @@ export default function Page() {
           </p>
 
           <div className="mt-10 flex flex-col gap-5">
-            {history.map((item) => (
+            {historyItems.map((item, index) => (
               <article
-                key={item.name}
+                key={`${item.name}-${item.date}-${index}`}
                 className="rounded-[24px] border border-[#29384a] bg-[#172332] p-7"
               >
                 <h2 className="text-2xl font-bold">{item.name}</h2>
@@ -773,7 +1195,7 @@ export default function Page() {
                 </p>
 
                 <p className="mt-3 text-lg text-[#91a4bd]">
-                  {translate("applicationSent")} · {item.date}
+                  {item.activity ?? translate("applicationSent")} · {item.date}
                 </p>
               </article>
             ))}
@@ -817,6 +1239,10 @@ export default function Page() {
           view={view}
           setView={setView}
           setMenuOpen={setMenuOpen}
+          setPage={setPage}
+          onSelectPlacement={(placement) => {
+            selectIdentity(placement);
+          }}
           profileName={activeProfile.name}
           translate={translate}
         />
@@ -941,7 +1367,11 @@ export default function Page() {
           view={view}
           setView={setView}
           setMenuOpen={setMenuOpen}
-          profileName={profile.name || "Ola Nordmann"}
+          setPage={setPage}
+          onSelectPlacement={(placement) => {
+            selectIdentity(placement);
+          }}
+          profileName={activeProfile.name}
           translate={translate}
         />
 
@@ -1059,16 +1489,15 @@ export default function Page() {
         view={view}
         setView={setView}
         setMenuOpen={setMenuOpen}
+        setPage={setPage}
+        onSelectPlacement={(placement) => {
+          selectIdentity(placement);
+        }}
+        profileName={activeProfile.name}
         translate={translate}
       />
       <section className="mx-auto max-w-[1120px] px-4 pb-12 pt-8 sm:px-6 lg:ml-[428px] lg:mr-12 lg:px-0">
-        <div
-          className={`flex flex-col gap-10 ${
-            view === "learner"
-              ? "xl:flex-row xl:items-start xl:justify-between"
-              : ""
-          }`}
-        >
+        <div className="flex flex-col gap-10 xl:flex-row xl:items-start xl:justify-between">
           <div className="max-w-[720px]">
             <p className="text-[18px] text-[#8fa2bc]">
               {translate("greeting")}
@@ -1092,10 +1521,7 @@ export default function Page() {
             </h1>
             <p className="mt-8 text-[22px] text-[#91a4bd]">
               {view === "learner"
-                ? `${
-                    likedByView[view === "learner" ? "company" : "learner"]
-                      .length
-                  }${translate("newCompanyMatches")}`
+                ? `${liked.length}${translate("newCompanyMatches")}`
                 : translate("findStudents")}
             </p>
             <div className="mt-14 flex gap-16 border-b border-[#263243] pb-8">
@@ -1127,7 +1553,9 @@ export default function Page() {
           </div>
           <div
             className={`w-full ${
-              view === "learner" ? "max-w-[470px] xl:pt-24" : "max-w-[565px]"
+              view === "learner"
+                ? "max-w-[470px] xl:pt-24"
+                : "max-w-[565px] xl:pt-24"
             }`}
             id="anbefalinger"
           >
@@ -1144,10 +1572,10 @@ export default function Page() {
                 {translate("seeAll")} <ChevronRight />
               </button>
             </div>
-            <article className="rounded-[22px] border border-[#303c4e] bg-[#222c3b] p-6 shadow-2xl">
+            <article className="rounded-[22px] border border-[#303c4e] bg-[#222c3b] p-7 shadow-2xl">
               <div className="flex items-center gap-4">
                 <div
-                  className={`flex size-20 shrink-0 items-center justify-center rounded-full ${active.color} text-2xl font-bold text-[#18202b]`}
+                  className={`flex size-24 shrink-0 items-center justify-center rounded-full ${active.color} text-3xl font-bold text-[#18202b]`}
                 >
                   {active.initials}
                 </div>
@@ -1157,7 +1585,7 @@ export default function Page() {
                       {active.name}
                     </h3>
                     <button
-                      className={`ml-auto flex size-12 shrink-0 items-center justify-center rounded-full ${
+                      className={`ml-auto flex size-14 shrink-0 items-center justify-center rounded-full ${
                         liked.includes(active.name)
                           ? "bg-[#ee6e71] text-[#341b27]"
                           : "bg-[#2d3848] text-[#9aacc3]"
@@ -1184,7 +1612,7 @@ export default function Page() {
               <div className="mt-7 flex items-center justify-between">
                 <button
                   onClick={showPrevious}
-                  className="flex size-12 items-center justify-center rounded-full bg-[#2d3848] text-[#9aacc3] hover:bg-[#394658]"
+                  className="flex size-14 items-center justify-center rounded-full bg-[#2d3848] text-[#9aacc3] hover:bg-[#394658]"
                   aria-label="Forrige anbefaling"
                 >
                   <ArrowLeft size={16} />
@@ -1194,7 +1622,7 @@ export default function Page() {
                 </span>
                 <button
                   onClick={showNext}
-                  className="flex size-12 items-center justify-center rounded-full bg-[#2d3848] text-[#9aacc3] hover:bg-[#394658]"
+                  className="flex size-14 items-center justify-center rounded-full bg-[#2d3848] text-[#9aacc3] hover:bg-[#394658]"
                   aria-label="Neste anbefaling"
                 >
                   <ArrowRight size={16} />
@@ -1210,22 +1638,40 @@ export default function Page() {
                 {translate("nextStep")}
               </p>
               <h2 className="mt-2 text-2xl font-bold">
-                {view === "learner"
+                {settings.profileVisible
+                  ? view === "learner"
+                    ? "Profilen din er synlig"
+                    : "Bedriftsprofilen er publisert"
+                  : view === "learner"
                   ? translate("makeProfileVisible")
                   : translate("publishCompany")}
               </h2>
               <p className="mt-2 text-[#91a4bd]">
-                {view === "learner"
+                {settings.profileVisible
+                  ? "Du kan når som helst oppdatere profilen din."
+                  : view === "learner"
                   ? translate("completedProfile")
                   : translate("completedCompanyProfile")}
               </p>
             </div>
             <button
               type="button"
-              className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#c65ccf] px-5 py-3 font-bold text-white hover:bg-[#d26ddb]"
-              onClick={() => setPage("profile")}
+              className={`inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 font-bold text-white ${
+                settings.profileVisible
+                  ? "cursor-default bg-[#344155] text-[#9aacc3]"
+                  : "bg-[#c65ccf] hover:bg-[#d26ddb]"
+              }`}
+              onClick={() => {
+                if (!settings.profileVisible) {
+                  setSettings((current) => ({
+                    ...current,
+                    profileVisible: true,
+                  }));
+                }
+              }}
+              disabled={settings.profileVisible}
             >
-              {translate("getStarted")} <ArrowRight />
+              {settings.profileVisible ? "Ferdig" : translate("getStarted")} <ArrowRight />
             </button>
           </div>
         </div>

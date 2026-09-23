@@ -4,33 +4,102 @@
       "name": "GreenTech AS",
       "field": "IT",
       "desc": "Søker lærling innen IT og teknologi.",
+      "about": "GreenTech AS utvikler digitale løsninger for små og mellomstore bedrifter. Som lærling får du jobbe i et inkluderende teknologimiljø med fokus på læring og utvikling.",
       "city": "Oslo",
       "initials": "GT",
-      "color": "bg-[#cbe4dc]"
+      "color": "bg-[#cbe4dc]",
+      "skills": ["IT-drift", "Nettverk", "Feilsøking", "Kundeservice"],
+      "tasks": [
+        "Installere og vedlikeholde datamaskiner",
+        "Hjelpe ansatte med tekniske problemer",
+        "Administrere brukere og tilganger",
+        "Bistå med nettverk og sikkerhet"
+      ],
+      "requirements": [
+        "Interesse for IT og teknologi",
+        "Lærevillig og ansvarsbevisst",
+        "Gode samarbeidsevner"
+      ],
+      "duration": "2 år",
+      "workMode": "På kontoret",
+      "employees": "25 ansatte"
     },
     {
       "name": "Nordic Solutions",
       "field": "Utvikling",
       "desc": "Spennende læreplass innen utvikling.",
+      "about": "Nordic Solutions lager moderne nettsider og digitale tjenester for kunder i hele Norden. Her får du erfaring med både frontend og backend i ekte kundeprosjekter.",
       "city": "Bergen",
       "initials": "NS",
-      "color": "bg-[#d8c8ed]"
+      "color": "bg-[#d8c8ed]",
+      "skills": ["HTML og CSS", "JavaScript", "React", "Problemløsning"],
+      "tasks": [
+        "Utvikle og teste nettsider",
+        "Arbeide med brukergrensesnitt",
+        "Delta i planlegging av prosjekter",
+        "Feilsøke og forbedre eksisterende løsninger"
+      ],
+      "requirements": [
+        "Interesse for programmering",
+        "Kreativ og strukturert",
+        "Villig til å lære nye teknologier"
+      ],
+      "duration": "2 år",
+      "workMode": "Hybrid",
+      "employees": "18 ansatte"
     },
     {
       "name": "Fjord Industri",
       "field": "Mekanikk",
       "desc": "Læreplass innen mekanisk fagretning.",
+      "about": "Fjord Industri arbeider med produksjon, reparasjon og vedlikehold av industrielle maskiner. Du får praktisk erfaring i et trygt verkstedmiljø med erfarne fagfolk.",
       "city": "Ålesund",
       "initials": "FI",
-      "color": "bg-[#dfd4b8]"
+      "color": "bg-[#dfd4b8]",
+      "skills": [
+        "Mekanisk arbeid",
+        "Maskinvedlikehold",
+        "Teknisk tegning",
+        "Måleteknikk"
+      ],
+      "tasks": [
+        "Utføre service på maskiner",
+        "Montere og demontere komponenter",
+        "Bruke håndverktøy og måleinstrumenter",
+        "Følge rutiner for HMS og kvalitet"
+      ],
+      "requirements": [
+        "Praktisk interesse",
+        "Nøyaktig og pålitelig",
+        "Interesse for maskiner og verktøy"
+      ],
+      "duration": "2 år",
+      "workMode": "På verksted",
+      "employees": "42 ansatte"
     },
     {
       "name": "Omsorg Pluss",
       "field": "Helse",
       "desc": "Læreplass innen helsearbeiderfaget.",
+      "about": "Omsorg Pluss tilbyr omsorgs- og helsetjenester til eldre og personer med ulike hjelpebehov. Som lærling blir du en del av et varmt og faglig sterkt arbeidsmiljø.",
       "city": "Trondheim",
       "initials": "OP",
-      "color": "bg-[#cbe4dc]"
+      "color": "bg-[#cbe4dc]",
+      "skills": ["Omsorg", "Kommunikasjon", "Dokumentasjon", "Helsefag"],
+      "tasks": [
+        "Følge opp brukere i hverdagen",
+        "Bistå med personlig stell og måltider",
+        "Dokumentere observasjoner",
+        "Samarbeide med helsepersonell og pårørende"
+      ],
+      "requirements": [
+        "Omsorgsfull og tålmodig",
+        "Gode kommunikasjonsevner",
+        "Interesse for mennesker og helse"
+      ],
+      "duration": "2 år",
+      "workMode": "På arbeidsstedet",
+      "employees": "65 ansatte"
     }
   ],
   "candidates": [
@@ -38,81 +107,71 @@
       "name": "Emma Hansen",
       "field": "IT",
       "desc": "Motivert kandidat med interesse for programmering.",
+      "about": "Emma er en lærevillig og kreativ kandidat som liker å løse tekniske problemer. Hun ønsker å utvikle seg videre innen IT-drift og programmering.",
       "city": "Oslo",
       "initials": "EH",
-      "color": "bg-[#cbe4dc]"
+      "color": "bg-[#cbe4dc]",
+      "skills": ["HTML og CSS", "Python", "Feilsøking", "Microsoft 365"],
+      "interests": ["Programmering", "Nettverk", "Cybersikkerhet"],
+      "education": "VG2 Informasjonsteknologi",
+      "experience": "Har jobbet med skoleprosjekter innen nettsider og enkel programmering.",
+      "availability": "Tilgjengelig fra august 2026",
+      "workPreference": "Kontor eller hybrid"
     },
     {
       "name": "Noah Berg",
       "field": "Elektro",
       "desc": "Nysgjerrig kandidat med relevant fagbakgrunn.",
+      "about": "Noah er praktisk anlagt og interessert i elektronikk, strøm og tekniske installasjoner. Han trives godt med å arbeide både selvstendig og sammen med andre.",
       "city": "Bergen",
       "initials": "NB",
-      "color": "bg-[#d8c8ed]"
+      "color": "bg-[#d8c8ed]",
+      "skills": ["Elektromontasje", "Kabelarbeid", "Måleteknikk", "HMS"],
+      "interests": ["Elektronikk", "Automatisering", "Tekniske installasjoner"],
+      "education": "VG2 Elenergi og ekom",
+      "experience": "Praksis fra skoleverksted og mindre elektriske prosjekter.",
+      "availability": "Tilgjengelig fra august 2026",
+      "workPreference": "Praktisk arbeid"
     },
     {
       "name": "Sofie Nilsen",
       "field": "Design og håndverk",
       "desc": "Kreativ kandidat med sans for detaljer.",
+      "about": "Sofie er kreativ, nøyaktig og interessert i visuell kommunikasjon. Hun liker å utvikle ideer fra skisse til ferdig produkt.",
       "city": "Trondheim",
       "initials": "SN",
-      "color": "bg-[#dfd4b8]"
+      "color": "bg-[#dfd4b8]",
+      "skills": [
+        "Illustrasjon",
+        "Grafisk design",
+        "Farge og form",
+        "Adobe-programmer"
+      ],
+      "interests": ["Branding", "Illustrasjon", "Digital design"],
+      "education": "VG2 Design og håndverk",
+      "experience": "Har laget plakater, logoer og innhold til skoleprosjekter.",
+      "availability": "Tilgjengelig fra august 2026",
+      "workPreference": "Kreativt arbeidsmiljø"
     },
     {
       "name": "William Olsen",
       "field": "Mekanikk",
       "desc": "Praktisk og motivert kandidat med interesse for maskiner.",
+      "about": "William liker praktisk arbeid og har stor interesse for hvordan maskiner fungerer. Han er arbeidsvillig, nøyaktig og ønsker å lære mer om mekanisk vedlikehold.",
       "city": "Ålesund",
       "initials": "WO",
-      "color": "bg-[#cbe4dc]"
-    }
-  ],
-  "applications": [
-    {
-      "name": "GreenTech AS",
-      "field": "IT-driftsfaget",
-      "city": "Oslo",
-      "date": "12. sep 2026",
-      "status": "Matchet",
-      "initials": "GT",
-      "color": "bg-[#a45bc0]"
-    },
-    {
-      "name": "Fjord Industri",
-      "field": "Mekanikk",
-      "city": "Ålesund",
-      "date": "04. sep 2026",
-      "status": "Venter svar",
-      "initials": "FI",
-      "color": "bg-[#dfd4b8]"
-    }
-  ],
-  "fields": [
-    "Alle",
-    "IT",
-    "Bygg og anlegg",
-    "Helse",
-    "Mekanikk",
-    "Mediaproduksjon"
-  ],
-  "history": [
-    {
-      "name": "GreenTech AS",
-      "field": "IT-driftsfaget",
-      "city": "Oslo",
-      "date": "12. sep 2026"
-    },
-    {
-      "name": "Nordic Solutions",
-      "field": "Utviklerfaget",
-      "city": "Bergen",
-      "date": "15. sep 2026"
-    },
-    {
-      "name": "Fjord Industri",
-      "field": "Mekanikerfaget",
-      "city": "Ålesund",
-      "date": "18. sep 2026"
+      "color": "bg-[#cbe4dc]",
+      "skills": [
+        "Mekanisk montering",
+        "Bruk av håndverktøy",
+        "Vedlikehold",
+        "Teknisk problemløsning"
+      ],
+      "interests": ["Maskiner", "Kjøretøy", "Produksjon"],
+      "education": "VG2 Industriteknologi",
+      "experience": "Erfaring fra verksted gjennom skole og fritidsprosjekter.",
+      "availability": "Tilgjengelig fra august 2026",
+      "workPreference": "Verksted og praktisk arbeid"
     }
   ],
   "translations": {
@@ -263,7 +322,7 @@
       "showProfile": "Let relevant companies find your profile.",
       "updateProfile": "Update profile",
       "greeting": "Good afternoon",
-      "velcome": "Velcome",
+      "velcome": "Welcome",
       "backWord": "back",
       "findYour": "Find your",
       "nextApprentice": "next apprentice",
