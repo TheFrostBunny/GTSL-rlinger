@@ -237,7 +237,6 @@
       "showProfile": "La relevante bedrifter finne profilen din.",
       "updateProfile": "Rediger profil",
       "greeting": "God ettermiddag",
-      "velcome": "Velkommen",
       "backWord": "tilbake",
       "findYour": "Finn din",
       "nextApprentice": "neste lærling",
@@ -275,7 +274,11 @@
       "editMode": "Redigeringsmodus",
       "languageSelect": "Velg språk",
       "emailNotificationsToggle": "Slå e-postvarsler av eller på",
-      "profileVisibleToggle": "Slå synlig profil av eller på"
+      "profileVisibleToggle": "Slå synlig profil av eller på",
+      "cancel": "Avbryt",
+      "uploadFile": "Last opp fil",
+      "uploadFileHelp": "Vel eit bilete eller dokument. Fila blir lagra lokalt i denne nettlesaren.",
+      "selectedFile": "Vald fil"
     },
     "English": {
       "overview": "Overview",
@@ -339,7 +342,6 @@
       "showProfile": "Let relevant companies find your profile.",
       "updateProfile": "Update profile",
       "greeting": "Good afternoon",
-      "velcome": "Welcome",
       "backWord": "back",
       "findYour": "Find your",
       "nextApprentice": "next apprentice",
@@ -377,7 +379,11 @@
       "editMode": "Edit mode",
       "languageSelect": "Choose language",
       "emailNotificationsToggle": "Turn email notifications on or off",
-      "profileVisibleToggle": "Turn visible profile on or off"
+      "profileVisibleToggle": "Turn visible profile on or off",
+      "cancel": "Cancel",
+      "uploadFile": "Upload file",
+      "uploadFileHelp": "Choose an image or document. The file details are saved locally in this browser.",
+      "selectedFile": "Selected file"
     },
     "Nynorsk": {
       "overview": "Oversyn",
@@ -441,7 +447,6 @@
       "showProfile": "La relevante bedrifter finne profilen din.",
       "updateProfile": "Rediger profil",
       "greeting": "God ettermiddag",
-      "velcome": "Velkomen",
       "backWord": "tilbake",
       "findYour": "Finn din",
       "nextApprentice": "neste lærling",
@@ -479,7 +484,11 @@
       "editMode": "Redigeringsmodus",
       "languageSelect": "Vel språk",
       "emailNotificationsToggle": "Slå e-postvarsel av eller på",
-      "profileVisibleToggle": "Slå synleg profil av eller på"
+      "profileVisibleToggle": "Slå synleg profil av eller på",
+      "cancel": "Avbryt",
+      "uploadFile": "Last opp fil",
+      "uploadFileHelp": "Vel eit bilete eller dokument. Fildetaljane blir lagra lokalt i denne nettlesaren.",
+      "selectedFile": "Vald fil"
     }
   }
 }

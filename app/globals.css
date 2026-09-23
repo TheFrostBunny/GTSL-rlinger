@@ -161,3 +161,36 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer utilities {
+  .text-\[\#71849d\] {
+    color: #a9b8ca !important;
+  }
+
+  .text-\[\#8fa2bc\],
+  .text-\[\#91a4bd\] {
+    color: #c0cedf !important;
+  }
+
+  .text-\[\#9aacc3\],
+  .text-\[\#9aaec7\] {
+    color: #c7d3e1 !important;
+  }
+
+  .text-\[\#b2bfd0\] {
+    color: #d7e0ea !important;
+  }
+
+  .text-\[\#dce2ea\] {
+    color: #f0f4f8 !important;
+  }
+
+  .border-\[\#29384a\],
+  .border-\[\#303c4e\] {
+    border-color: #435267 !important;
+  }
+
+  .border-\[\#39465a\] {
+    border-color: #53647a !important;
+  }
+}

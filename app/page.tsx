@@ -51,7 +51,9 @@ type TranslationKey = keyof (typeof translations)["Norsk"];
 type Listing = (typeof placements)[number] | (typeof candidates)[number];
 type ApplicationFilter = "Alle" | "Venter svar" | "Matchet" | "Avslått";
 type BrowseTab = "Alle" | "Favoritter";
-type Application = (typeof applications)[number] & {
+type Application = Listing & {
+  date: string;
+  status: Exclude<ApplicationFilter, "Alle">;
   message?: string;
 };
 
@@ -71,6 +73,12 @@ type ProfileData = {
   interests: string;
   city: string;
   about: string;
+  uploadedFile?: {
+    name: string;
+    size: number;
+    type: string;
+    dataUrl?: string;
+  };
 };
 
 type SettingsState = {
@@ -91,6 +99,12 @@ function getInitials(name?: string) {
     .join("")
     .slice(0, 2)
     .toUpperCase();
+}
+
+function formatFileSize(size: number) {
+  if (size < 1024) return `${size} B`;
+  if (size < 1024 * 1024) return `${(size / 1024).toFixed(1)} KB`;
+  return `${(size / (1024 * 1024)).toFixed(1)} MB`;
 }
 
 function Sidebar({
@@ -292,9 +306,8 @@ function Topbar({
                   <select
                     defaultValue=""
                     onChange={(event) => {
-                      const selected = (view === "company"
-                        ? placements
-                        : candidates
+                      const selected = (
+                        view === "company" ? placements : candidates
                       ).find((item) => item.name === event.target.value);
 
                       if (selected) {
@@ -305,11 +318,13 @@ function Topbar({
                     className="mt-2 w-full rounded-lg border border-[#39465a] bg-[#202c3b] px-2 py-2 text-sm text-[#f2f3f6] outline-none focus:border-[#a45bc0]"
                   >
                     <option value="">Velg...</option>
-                    {(view === "company" ? placements : candidates).map((item) => (
-                      <option key={item.name} value={item.name}>
-                        {item.name}
-                      </option>
-                    ))}
+                    {(view === "company" ? placements : candidates).map(
+                      (item) => (
+                        <option key={item.name} value={item.name}>
+                          {item.name}
+                        </option>
+                      )
+                    )}
                   </select>
                 </label>
               )}
@@ -347,7 +362,7 @@ export default function Page() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [activeField, setActiveField] = useState("Alle");
-    const [browseTab, setBrowseTab] = useState<BrowseTab>("Alle");
+  const [browseTab, setBrowseTab] = useState<BrowseTab>("Alle");
   const [applicationFilter, setApplicationFilter] =
     useState<ApplicationFilter>("Alle");
   const [savedApplications, setSavedApplications] = useState<Application[]>([]);
@@ -359,7 +374,9 @@ export default function Page() {
     profileVisible: false,
     darkMode: false,
   });
-  const [likedByProfile, setLikedByProfile] = useState<Record<string, string[]>>({});
+  const [likedByProfile, setLikedByProfile] = useState<
+    Record<string, string[]>
+  >({});
   const [historyItems, setHistoryItems] =
     useState<HistoryItem[]>(defaultHistory);
   const loadedHistoryKey = useRef<string | null>(null);
@@ -370,7 +387,8 @@ export default function Page() {
   const openDetails = (item: Listing) => {
     setSelectedItem(item);
     setApplicationSent(
-      view === "learner" && savedApplications.some((application) => application.name === item.name)
+      view === "learner" &&
+        savedApplications.some((application) => application.name === item.name)
     );
     setApplicationMessage("");
     setPage("details");
@@ -449,6 +467,37 @@ export default function Page() {
         [key]: value,
       }));
     }
+  };
+
+  const updateProfileFile = (file: File | null) => {
+    if (!file) return;
+
+    const saveFile = (dataUrl?: string) => {
+      const fileMetadata = {
+        name: file.name,
+        size: file.size,
+        type: file.type,
+        dataUrl,
+      };
+
+      if (view === "company") {
+        setCompanyProfile((current) => ({
+          ...current,
+          uploadedFile: fileMetadata,
+        }));
+      } else {
+        setProfile((current) => ({
+          ...current,
+          uploadedFile: fileMetadata,
+        }));
+      }
+    };
+
+    const reader = new FileReader();
+    reader.onload = () =>
+      saveFile(typeof reader.result === "string" ? reader.result : undefined);
+    reader.onerror = () => saveFile();
+    reader.readAsDataURL(file);
   };
 
   const selectIdentity = (item: Listing) => {
@@ -634,7 +683,7 @@ export default function Page() {
   const submitApplication = () => {
     if (!selectedItem || applicationSent) return;
 
-    const application = {
+    const application: Application = {
       ...selectedItem,
       date: new Date().toLocaleDateString("no-NO"),
       status: "Venter svar",
@@ -917,10 +966,14 @@ export default function Page() {
                     </ul>
                   </div>
                   <div className="rounded-2xl border border-[#303c4e] bg-[#202c3b] p-5 text-sm text-[#b2bfd0]">
-                    <h2 className="font-bold text-[#f2f3f6]">Praktisk informasjon</h2>
+                    <h2 className="font-bold text-[#f2f3f6]">
+                      Praktisk informasjon
+                    </h2>
                     <p className="mt-3">Varighet: {selectedItem.duration}</p>
                     <p className="mt-2">Arbeidsform: {selectedItem.workMode}</p>
-                    <p className="mt-2">Bedriftsstørrelse: {selectedItem.employees}</p>
+                    <p className="mt-2">
+                      Bedriftsstørrelse: {selectedItem.employees}
+                    </p>
                   </div>
                 </>
               ) : (
@@ -944,9 +997,13 @@ export default function Page() {
                     <p className="mt-2">Erfaring: {selectedItem.experience}</p>
                   </div>
                   <div className="rounded-2xl border border-[#303c4e] bg-[#202c3b] p-5 text-sm leading-6 text-[#b2bfd0]">
-                    <h2 className="font-bold text-[#f2f3f6]">Tilgjengelighet</h2>
+                    <h2 className="font-bold text-[#f2f3f6]">
+                      Tilgjengelighet
+                    </h2>
                     <p className="mt-3">{selectedItem.availability}</p>
-                    <p className="mt-2">Ønsket arbeidsform: {selectedItem.workPreference}</p>
+                    <p className="mt-2">
+                      Ønsket arbeidsform: {selectedItem.workPreference}
+                    </p>
                   </div>
                 </>
               )}
@@ -993,7 +1050,9 @@ export default function Page() {
                       Melding til bedriften (valgfritt)
                       <textarea
                         value={applicationMessage}
-                        onChange={(event) => setApplicationMessage(event.target.value)}
+                        onChange={(event) =>
+                          setApplicationMessage(event.target.value)
+                        }
                         rows={4}
                         placeholder="Skriv litt om hvorfor du ønsker læreplassen..."
                         className="mt-2 w-full resize-none rounded-xl border border-[#39465a] bg-[#172332] px-4 py-3 text-[#f2f3f6] outline-none focus:border-[#a45bc0]"
@@ -1334,7 +1393,7 @@ export default function Page() {
                   className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#a45bc0] px-5 py-3 font-semibold text-[#d8b3e4] transition hover:bg-[#a45bc0] hover:text-white"
                 >
                   <Pencil size={17} />
-                  {editingProfile ? "Avbryt" : "Rediger profil"}
+                  {editingProfile ? translate("cancel") : translate("editMode")}
                 </button>
               </div>
 
@@ -1396,6 +1455,65 @@ export default function Page() {
                   </div>
                 )}
               </label>
+
+              <div className="mt-5">
+                {editingProfile && (
+                  <>
+                    <label
+                      htmlFor="profile-file"
+                      className="mb-2 block text-sm font-semibold text-[#91a4bd]"
+                    >
+                      {translate("uploadFile")}
+                    </label>
+                    <input
+                      id="profile-file"
+                      type="file"
+                      accept="image/*,.pdf,.doc,.docx"
+                      onChange={(event) =>
+                        updateProfileFile(event.target.files?.[0] ?? null)
+                      }
+                      className="block w-full rounded-xl border border-[#39465a] bg-[#202c3b] px-4 py-3 text-sm text-[#dce2ea] file:mr-4 file:rounded-lg file:border-0 file:bg-[#a45bc0] file:px-3 file:py-2 file:font-semibold file:text-white"
+                    />
+                    <p className="mt-2 text-sm text-[#91a4bd]">
+                      {translate("uploadFileHelp")}
+                    </p>
+                  </>
+                )}
+
+                {activeProfile.uploadedFile && (
+                  <div
+                    className="rounded-xl border border-[#29384a] bg-[#202c3b] px-4 py-3 text-sm text-[#dce2ea]"
+                    role="status"
+                  >
+                    <p className="font-semibold">{translate("selectedFile")}</p>
+                    <p className="mt-1 break-all">
+                      {activeProfile.uploadedFile.name}
+                    </p>
+                    <p className="mt-1 text-[#91a4bd]">
+                      {formatFileSize(activeProfile.uploadedFile.size)}
+                      {activeProfile.uploadedFile.type
+                        ? ` · ${activeProfile.uploadedFile.type}`
+                        : ""}
+                    </p>
+                    {activeProfile.uploadedFile.dataUrl &&
+                      activeProfile.uploadedFile.type.startsWith("image/") && (
+                        <img
+                          src={activeProfile.uploadedFile.dataUrl}
+                          alt={activeProfile.uploadedFile.name}
+                          className="mt-4 max-h-64 w-full rounded-lg object-contain"
+                        />
+                      )}
+                    {activeProfile.uploadedFile.dataUrl &&
+                      activeProfile.uploadedFile.type === "application/pdf" && (
+                        <iframe
+                          src={activeProfile.uploadedFile.dataUrl}
+                          title={activeProfile.uploadedFile.name}
+                          className="mt-4 h-96 w-full rounded-lg border border-[#39465a]"
+                        />
+                      )}
+                  </div>
+                )}
+              </div>
 
               {editingProfile && (
                 <button
@@ -1581,7 +1699,7 @@ export default function Page() {
             >
               {view === "learner" ? (
                 <>
-                  {translate("velcome")}
+                  {translate("welcome")}
                   <br />
                   {translate("backWord")}, {profile.name}
                 </>
@@ -1706,12 +1824,12 @@ export default function Page() {
                 </button>
               </div>
             </article>
-          </section>
+          </div>
         </div>
         <div className="mt-16 rounded-[22px] border border-[#2b3748] bg-[#151e2a] p-6">
           <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <p className="text-sm font-bold uppercase tracking-[0.18em] text-[#b85ac4]">
+              <p className="text-sm font-bold uppercase tracking-[0.18em] text-[#efb4f5]">
                 {translate("nextStep")}
               </p>
               <h2 className="mt-2 text-2xl font-bold">
@@ -1736,7 +1854,7 @@ export default function Page() {
               className={`inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 font-bold text-white ${
                 settings.profileVisible
                   ? "cursor-default bg-[#344155] text-[#9aacc3]"
-                  : "bg-[#c65ccf] hover:bg-[#d26ddb]"
+                  : "bg-[#9f45ad] hover:bg-[#b052c0]"
               }`}
               onClick={() => {
                 if (!settings.profileVisible) {
@@ -1748,7 +1866,8 @@ export default function Page() {
               }}
               disabled={settings.profileVisible}
             >
-              {settings.profileVisible ? "Ferdig" : translate("getStarted")} <ArrowRight />
+              {settings.profileVisible ? "Ferdig" : translate("getStarted")}{" "}
+              <ArrowRight />
             </button>
           </div>
         </div>
