@@ -23,7 +23,7 @@ import {
 
 import data from "./data.json";
 
-const { placements, candidates, applications, fields, history } = data;
+const { placements, candidates, applications, fields, history, translations } = data;
 
 const PROFILE_STORAGE_KEY = "laerling-link-profile";
 const SETTINGS_STORAGE_KEY = "laerling-link-settings";
@@ -47,223 +47,12 @@ type ProfileData = {
   about: string;
 };
 
-const translations = {
-  Norsk: {
-    overview: "Oversikt",
-    companyOverview: "Bedriftsoversikt",
-    home: "Hjem",
-    browsePlacements: "Finn læreplasser",
-    browseCandidates: "Finn kandidater",
-    applications: "Mine søknader",
-    history: "Historikk",
-    profile: "Min profil",
-    settings: "Innstillinger",
-    welcome: "Velkommen",
-    back: "Tilbake",
-    viewAll: "Se alle",
-    editProfile: "Rediger profil",
-    getStarted: "Kom i gang",
-    language: "Språk",
-    norwegian: "Norsk",
-    english: "English",
-    administer: "Se og administrer søknadene dine.",
-    sent: "Sendt",
-    backToOverView: "← Tilbake til oversikten",
-    addToFavorites: "Legg til i favoritter",
-    removeFromFavorites: "Fjern fra favoritter",
-    findApprenticeSpot: "Finn læreplass",
-    findCandidates: "Finn kandidater",
-    viewCompanies: "Bla gjennom lærebedrifter som matcher din fagretning.",
-    viewStudents: "Bla gjennom kandidater som matcher deres behov.",
-    search: "Søk etter bedrift, fagretning eller sted...",
-    companies: "Lærebedrift",
-    candidates: "Kandidater",
-    removeFavorite: "Fjern liker",
-    addFavorite: "Vis interesse",
-    historyTitle: "Se dine tidligere søknader og aktiviteter.",
-    applicationSent: "Søknad sendt",
-    companyName: "Bedriftsnavn",
-    companyEmail: "Kontakt-e-post",
-    companyField: "Bransje",
-    companyInterests: "Tjenester",
-    companyCity: "Beliggenhet",
-    studentName: "Navn",
-    studentEmail: "E-post",
-    studentField: "Fagretning",
-    studentInterests: "Interesser",
-    studentCity: "Bosted",
-    account: "Konto og informasjon",
-    myProfile: "Min profil",
-    companyProfile: "Bedriftsprofil",
-    manageProfile: "Se og administrer profilinformasjonen din.",
-    manageCompanyProfile: "Hold bedriftsinformasjonen oppdatert.",
-    student: "Student",
-    company: "Bedrift",
-    aboutMe: "Om meg",
-    saveChanges: "Lagre endringer",
-    settingTitle: "Tilpass hvordan Lærling Link fungerer for deg.",
-    choseLanguage: "Velg språket du ønsker å bruke.",
-    notifications: "Varsler og personvern",
-    emailNotifications: "E-postvarsler",
-    recieveUpdates: "Motta oppdateringer om søknader og matcher.",
-    visibleProfile: "Synlig profil",
-    showProfile: "La relevante bedrifter finne profilen din.",
-    updateProfile: "Rediger profil",
-    greeting: "God ettermiddag",
-    velcome: "Velkommen",
-    backWord: "tilbake",
-    findYour: "Finn din",
-    nextApprentice: "neste lærling",
-    newCompanyMatches: "nye bedrifter matcher profilen din denne uken.",
-    findStudents: "Finn motiverte talenter som passer til deres fagmiljø.",
-    newSuggestions: "nye forslag",
-    activeCandidates: "aktive kandidater",
-    liked: "du har likt",
-    favourites: "favoritter",
-    awaitingAnswer: "venter svar",
-    recommendedCompanies: "Anbefalte læreplasser",
-    recommendedCandidates: "Anbefalte kandidater",
-    seeAll: "Se alle",
-    of: "av",
-    nextStep: "Neste steg",
-    makeProfileVisible: "Gjør profilen din synlig",
-    publishCompany: "Publiser en ny læreplass",
-    completedProfile: "En komplett profil gir deg 3x flere relevante matcher.",
-    completedCompanyProfile:
-      "Nå flere relevante kandidater med en tydelig stillingsprofil.",
-    personalChoice: "Personlige valg",
-    showsAs: "Viser som",
-  },
-  English: {
-    overview: "Overview",
-    companyOverview: "Company overview",
-    home: "Home",
-    browsePlacements: "Find apprenticeships",
-    browseCandidates: "Find candidates",
-    applications: "My applications",
-    history: "History",
-    profile: "My profile",
-    settings: "Settings",
-    welcome: "Welcome",
-    back: "Back",
-    viewAll: "View all",
-    editProfile: "Edit profile",
-    getStarted: "Get started",
-    language: "Language",
-    norwegian: "Norwegian",
-    english: "English",
-    administer: "See and administer your applications.",
-    sent: "Sent",
-    backToOverView: "← Back to overview",
-    addToFavorites: "Add to favorites",
-    removeFromFavorites: "Remove from favorites",
-    findApprenticeSpot: "Find apprenticeship",
-    findCandidates: "Find candidates",
-    viewCompanies: "View training companies that match your path.",
-    viewStudents: "View candidates that match your needs.",
-    search: "Search for a company, path eller location...",
-    companies: "Training companies",
-    candidates: "Candidates",
-    removeFavorite: "Remove like",
-    addFavorite: "Show interest",
-    historyTitle: "See your previous applications and activities.",
-    applicationSent: "Application sent",
-    companyName: "Company name",
-    companyEmail: "Contact email",
-    companyField: "Field",
-    companyInterests: "Services",
-    companyCity: "Location",
-    studentName: "Name",
-    studentEmail: "Email",
-    studentField: "Path",
-    studentInterests: "Interests",
-    studentCity: "Address",
-    account: "Account and information",
-    myProfile: "My profile",
-    companyProfile: "Compay profile",
-    manageProfile: "See and administrate your profile information.",
-    manageCompanyProfile: "Keep company information updated.",
-    student: "Student",
-    company: "Company",
-    aboutMe: "About me",
-    saveChanges: "Save changes",
-    settingTitle: "Adjust how Lærling Link works for you.",
-    choseLanguage: "Chose the language you want to use.",
-    notifications: "Notifications and privacy",
-    emailNotifications: "Email notifications",
-    visibleProfile: "Visible profile",
-    updateProfile: "Update profile",
-    greeting: "Good afternoon",
-    velcome: "Velcome",
-    backWord: "back",
-    findYour: "Find your",
-    nextApprentice: "next apprentice",
-    newCompanyMatches: "new company matches your profile this week.",
-    findStudents: "Find motivated talents that fit your environment.",
-    newSuggestions: "new suggestions",
-    activeCandidates: "active candidates",
-    liked: "you have liked",
-    favourites: "favourites",
-    awaitingAnswer: "awaiting answer",
-    recommendedCompanies: "Recommended companies",
-    recommendedCandidates: "Recommended candidates",
-    seeAll: "See all",
-    of: "of",
-    nextStep: "Next step",
-    makeProfileVisible: "Make your profile visible",
-    publishCompany: "Publish company",
-    completedProfile: "A complete profile gives you 3x more relevant matches.",
-    completedCompanyProfile:
-      "Reach more relevant candidates with a clear job profile.",
-    personalChoice: "Personal choices",
-    showsAs: "Shows as",
-  },
-} as const;
-
-const translationsWithNynorsk = {
-  ...translations,
-  Nynorsk: {
-    ...translations.Norsk,
-    overview: "Oversyn",
-    companyOverview: "Bedriftsoversyn",
-    home: "Heim",
-    browsePlacements: "Finn læreplassar",
-    browseCandidates: "Finn kandidatar",
-    applications: "Søknadene mine",
-    history: "Historikk",
-    profile: "Profilen min",
-    settings: "Innstillingar",
-    welcome: "Velkomen",
-    back: "Tilbake",
-    viewAll: "Se alle",
-    editProfile: "Rediger profil",
-    getStarted: "Kom i gang",
-    language: "Språk",
-    norwegian: "Norsk",
-    english: "Engelsk",
-    search: "Søk etter bedrift, fagretning eller stad...",
-    companies: "Lærebedrifter",
-    candidates: "Kandidatar",
-    findApprenticeSpot: "Finn læreplass",
-    findCandidates: "Finn kandidatar",
-    viewCompanies: "Sjå lærebedrifter som passar fagretninga di.",
-    viewStudents: "Sjå kandidatar som passar behova dykkar.",
-    personalChoice: "Personlege val",
-    showsAs: "Viser som",
-    student: "Elev",
-    company: "Bedrift",
-    saveChanges: "Lagre endringar",
-    settingTitle: "Tilpass korleis Lærling Link fungerer for deg.",
-    choseLanguage: "Vel språket du ønskjer å bruke.",
-    notifications: "Varsel og personvern",
-    emailNotifications: "E-postvarsel",
-    visibleProfile: "Synleg profil",
-    updateProfile: "Rediger profil",
-  },
-} as const;
-
-type Language = keyof typeof translationsWithNynorsk;
-type TranslationKey = keyof typeof translationsWithNynorsk.Norsk;
+type SettingsState = {
+  language: Language;
+  emailNotifications: boolean;
+  profileVisible: boolean;
+  darkMode: boolean;
+};
 
 function getInitials(name?: string) {
   const safeName = typeof name === "string" ? name.trim() : "";
@@ -277,13 +66,6 @@ function getInitials(name?: string) {
     .slice(0, 2)
     .toUpperCase();
 }
-
-type SettingsState = {
-  language: Language;
-  emailNotifications: boolean;
-  profileVisible: boolean;
-  darkMode: boolean;
-};
 
 function Sidebar({
   view,
@@ -589,10 +371,7 @@ export default function Page() {
     darkMode: true,
   });
 
-  const text =
-    translationsWithNynorsk[settings.language] ??
-    translationsWithNynorsk.Norsk;
-
+  const text = translations[settings.language] ?? translations.Norsk;
   const translate = (key: TranslationKey) => text[key];
 
   useEffect(() => {
