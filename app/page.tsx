@@ -30,6 +30,11 @@ const PROFILE_STORAGE_KEY = "laerling-link-profile";
 const SETTINGS_STORAGE_KEY = "laerling-link-settings";
 const COMPANY_PROFILE_STORAGE_KEY = "laerling-link-company-profile";
 
+type Language = keyof typeof translations;
+type TranslationKey = keyof (typeof translations)["Norsk"];
+type Listing = (typeof placements)[number] | (typeof candidates)[number];
+type ApplicationFilter = "Alle" | "Venter svar" | "Matchet" | "Avslått";
+
 type PageName =
   | "home"
   | "browse"
@@ -255,12 +260,26 @@ function Topbar({
 export default function Page() {
   const [view, setView] = useState<"learner" | "company">("learner");
   const [page, setPage] = useState<PageName>("home");
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [query, setQuery] = useState("");
+  const [activeField, setActiveField] = useState("Alle");
+  const [applicationFilter, setApplicationFilter] =
+    useState<ApplicationFilter>("Alle");
+  const [settings, setSettings] = useState<SettingsState>({
+    language: "Norsk",
+    emailNotifications: true,
+    profileVisible: true,
+    darkMode: false,
+  });
+  const [likedByView, setLikedByView] = useState<{
+    learner: string[];
+    company: string[];
+  }>({ learner: [], company: [] });
+  const liked = likedByView[view];
 
-  const [selectedItem, setSelectedItem] = useState<
-    (typeof placements)[number] | null
-  >(null);
+  const [selectedItem, setSelectedItem] = useState<Listing | null>(null);
 
-  const openDetails = (item: (typeof placements)[number]) => {
+  const openDetails = (item: Listing) => {
     setSelectedItem(item);
     setPage("details");
   };
@@ -307,107 +326,6 @@ export default function Page() {
       localStorage.setItem(PROFILE_STORAGE_KEY, JSON.stringify(profile));
     }
   }, [profile, profileLoaded]);
-
-  const [savedApplications, setSavedApplications] =
-    useState<typeof applications>(applications);
-  const [applicationsLoaded, setApplicationsLoaded] = useState(false);
-
-  useEffect(() => {
-    const saved = localStorage.getItem("laerling-link-applications");
-
-    if (saved) {
-      try {
-        setSavedApplications(JSON.parse(saved));
-      } catch {
-        localStorage.removeItem("laerling-link-applications");
-      }
-    }
-
-    setApplicationsLoaded(true);
-  }, []);
-
-  useEffect(() => {
-    if (applicationsLoaded) {
-      localStorage.setItem(
-        "laerling-link-applications",
-        JSON.stringify(savedApplications)
-      );
-    }
-  }, [savedApplications, applicationsLoaded]);
-
-  const [applicationFilter, setApplicationFilter] = useState("Alle");
-  const [index, setIndex] = useState(0);
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [likedByView, setLikedByView] = useState({
-    learner: [] as string[],
-    company: [] as string[],
-  });
-
-  const liked = likedByView[view];
-
-  const toggleLiked = (name: string) => {
-    setLikedByView((current) => {
-      const currentLiked = current[view];
-
-      return {
-        ...current,
-        [view]: currentLiked.includes(name)
-          ? currentLiked.filter((likedName) => likedName !== name)
-          : [...currentLiked, name],
-      };
-    });
-  };
-
-  const showPrevious = () => {
-    setIndex((currentIndex) =>
-      currentIndex === 0 ? list.length - 1 : currentIndex - 1
-    );
-  };
-
-  const showNext = () => {
-    setIndex((currentIndex) => (currentIndex + 1) % list.length);
-  };
-
-  const [query, setQuery] = useState("");
-  const [activeField, setActiveField] = useState("Alle");
-  const list = view === "learner" ? placements : candidates;
-  const active = useMemo(() => list[index % list.length], [index, list]);
-  const filtered = list.filter(
-    (item) =>
-      (activeField === "Alle" || item.field === activeField) &&
-      (item.name.toLowerCase().includes(query.toLowerCase()) ||
-        item.field.toLowerCase().includes(query.toLowerCase()) ||
-        item.city.toLowerCase().includes(query.toLowerCase()))
-  );
-
-  const [settings, setSettings] = useState<SettingsState>({
-    language: "Norsk",
-    emailNotifications: true,
-    profileVisible: true,
-    darkMode: true,
-  });
-
-  const text = translations[settings.language] ?? translations.Norsk;
-  const translate = (key: TranslationKey) => text[key];
-
-  useEffect(() => {
-    const savedSettings = localStorage.getItem(SETTINGS_STORAGE_KEY);
-
-    if (savedSettings) {
-      try {
-        setSettings((current) => ({
-          ...current,
-          ...JSON.parse(savedSettings),
-        }));
-      } catch {
-        localStorage.removeItem(SETTINGS_STORAGE_KEY);
-      }
-    }
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(settings));
-  }, [settings]);
 
   const [companyProfile, setCompanyProfile] = useState<ProfileData>({
     name: "GreenTech AS",
@@ -458,8 +376,90 @@ export default function Page() {
     );
   }, [companyProfile]);
 
+  useEffect(() => {
+    const savedSettings = localStorage.getItem(SETTINGS_STORAGE_KEY);
+    const savedLikes = localStorage.getItem("laerling-link-likes");
+
+    if (savedSettings) {
+      try {
+        setSettings((current) => ({
+          ...current,
+          ...JSON.parse(savedSettings),
+        }));
+      } catch {
+        localStorage.removeItem(SETTINGS_STORAGE_KEY);
+      }
+    }
+
+    if (savedLikes) {
+      try {
+        setLikedByView((current) => ({
+          ...current,
+          ...JSON.parse(savedLikes),
+        }));
+      } catch {
+        localStorage.removeItem("laerling-link-likes");
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(settings));
+  }, [settings]);
+
+  useEffect(() => {
+    localStorage.setItem("laerling-link-likes", JSON.stringify(likedByView));
+  }, [likedByView]);
+
+  const translate = (key: TranslationKey) => {
+    const language = translations[settings.language] ?? translations.Norsk;
+    return language[key] ?? translations.Norsk[key];
+  };
+
+  const list = view === "learner" ? placements : candidates;
+  const filtered = useMemo(() => {
+    const normalizedQuery = query.trim().toLowerCase();
+
+    return list.filter((item) => {
+      const matchesField = activeField === "Alle" || item.field === activeField;
+      const matchesQuery =
+        !normalizedQuery ||
+        [item.name, item.field, item.city, item.desc].some((value) =>
+          value.toLowerCase().includes(normalizedQuery)
+        );
+
+      return matchesField && matchesQuery;
+    });
+  }, [activeField, list, query]);
+
+  const [index, setIndex] = useState(0);
+  const active = list[index % list.length];
+
+  const toggleLiked = (name: string) => {
+    setLikedByView((current) => ({
+      ...current,
+      [view]: current[view].includes(name)
+        ? current[view].filter((item) => item !== name)
+        : [...current[view], name],
+    }));
+  };
+
+  const showPrevious = () => {
+    setIndex((current) => (current - 1 + list.length) % list.length);
+  };
+
+  const showNext = () => {
+    setIndex((current) => (current + 1) % list.length);
+  };
+
+  useEffect(() => {
+    setIndex(0);
+    setQuery("");
+    setActiveField("Alle");
+  }, [view]);
+
   if (page === "applications") {
-    const filteredApplications = savedApplications.filter(
+    const filteredApplications = applications.filter(
       (application) =>
         applicationFilter === "Alle" ||
         (applicationFilter === "Venter svar" &&
@@ -921,12 +921,12 @@ export default function Page() {
               </div>
 
               <div className="mt-6">
-                <h2 className="text-3xl font-bold">{profile.name}</h2>
+                <h2 className="text-3xl font-bold">{activeProfile.name}</h2>
                 <p className="mt-1 text-[#91a4bd]">
                   {view === "learner"
                     ? translate("student")
                     : translate("company")}
-                  · {profile.city}
+                  · {activeProfile.city}
                 </p>
               </div>
 
@@ -941,7 +941,7 @@ export default function Page() {
                       <input
                         id={`profile-${key}`}
                         aria-label={label}
-                        value={profile[key]}
+                        value={activeProfile[key]}
                         onChange={(event) =>
                           updateActiveProfile(key, event.target.value)
                         }
@@ -949,7 +949,7 @@ export default function Page() {
                       />
                     ) : (
                       <div className="rounded-xl border border-[#29384a] bg-[#202c3b] px-4 py-3 text-[#dce2ea]">
-                        {profile[key]}
+                        {activeProfile[key]}
                       </div>
                     )}
                   </label>
@@ -974,7 +974,7 @@ export default function Page() {
                   />
                 ) : (
                   <div className="rounded-xl border border-[#29384a] bg-[#202c3b] px-4 py-3 leading-7 text-[#dce2ea]">
-                    {profile.about}
+                    {activeProfile.about}
                   </div>
                 )}
               </label>
@@ -1143,7 +1143,13 @@ export default function Page() {
         translate={translate}
       />
       <section className="mx-auto max-w-[1120px] px-4 pb-12 pt-8 sm:px-6 lg:ml-[428px] lg:mr-12 lg:px-0">
-        <div className="flex flex-col gap-10 xl:flex-row xl:items-start xl:justify-between">
+        <div
+          className={`flex flex-col gap-10 ${
+            view === "learner"
+              ? "xl:flex-row xl:items-start xl:justify-between"
+              : ""
+          }`}
+        >
           <div className="max-w-[720px]">
             <p className="text-[18px] text-[#8fa2bc]">
               {translate("greeting")}
