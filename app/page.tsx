@@ -130,6 +130,7 @@ function Sidebar({
         ];
   return (
     <aside
+      aria-label={translate("navigation")}
       className={`fixed inset-y-0 left-0 z-20 flex h-dvh w-[300px] max-w-[85vw] flex-col overflow-y-scroll overscroll-contain border-r border-[#293446] bg-[#17212e] px-5 py-5 sm:px-7 sm:py-7 ${
         menuOpen ? "flex" : "hidden"
       } lg:flex`}
@@ -146,17 +147,16 @@ function Sidebar({
         <button
           className="ml-auto text-[#dce2ea] lg:hidden"
           onClick={() => setMenuOpen(false)}
-          aria-label="Lukk meny"
+          aria-label={translate("closeMenu")}
         >
-          <X />
+          <X aria-hidden="true" />
         </button>
       </div>
       <button
         onClick={() => setView(view === "learner" ? "company" : "learner")}
         className="mt-5 flex w-full items-center justify-between rounded-2xl border border-[#39465a] bg-[#202c3b] px-5 py-4 text-left transition hover:border-[#b85cc7] hover:bg-[#283548]"
-        aria-label={`Bytt til ${
-          view === "learner" ? "bedriftsvisning" : "elevvisning"
-        }`}
+        aria-label={translate("switchView")}
+        aria-pressed={view === "company"}
       >
         <span>
           <span className="block text-xs font-medium uppercase tracking-[0.16em] text-[#91a4bd]">
@@ -168,7 +168,10 @@ function Sidebar({
         </span>
         <span className="text-sm font-semibold text-[#d8b3e4]">Bytt</span>
       </button>
-      <nav className="mt-8 flex flex-col gap-2 pb-8">
+      <nav
+        aria-label={translate("navigation")}
+        className="mt-8 flex flex-col gap-2 pb-8"
+      >
         {items.map(([label, Icon], index) => {
           const selected =
             (index === 0 && page === "home") ||
@@ -190,13 +193,17 @@ function Sidebar({
                 if (index === 5) setPage("settings");
                 setMenuOpen(false);
               }}
+              aria-current={selected ? "page" : undefined}
               className={`flex min-h-12 shrink-0 items-center gap-4 rounded-2xl px-4 py-3 text-left text-base font-medium transition sm:text-lg ${
                 selected
                   ? "bg-[#2d2944] text-white"
                   : "text-[#9aaec7] hover:bg-[#202c3b] hover:text-white"
               }`}
             >
-              <Icon className={selected ? "text-[#a85ab6]" : ""} />
+              <Icon
+                aria-hidden="true"
+                className={selected ? "text-[#a85ab6]" : ""}
+              />
               {String(label)}
             </button>
           );
@@ -236,9 +243,9 @@ function Topbar({
       <button
         className="text-[#dce2ea] lg:hidden"
         onClick={() => setMenuOpen(true)}
-        aria-label="Åpne meny"
+        aria-label={translate("openMenu")}
       >
-        <Menu />
+        <Menu aria-hidden="true" />
       </button>
 
       <div className="hidden text-sm text-[#91a4bd] lg:block">
@@ -250,6 +257,7 @@ function Topbar({
       <div className="ml-auto flex items-center gap-4">
         <button
           onClick={() => setView(view === "learner" ? "company" : "learner")}
+          aria-label={translate("switchView")}
           className="rounded-full bg-[#302b43] px-4 py-2 text-sm font-semibold text-[#d8b3e4]"
         >
           {view === "learner" ? translate("student") : translate("company")}
@@ -499,7 +507,10 @@ export default function Page() {
 
     if (savedSettings) {
       try {
-        setSettings((current) => ({ ...current, ...JSON.parse(savedSettings) }));
+        setSettings((current) => ({
+          ...current,
+          ...JSON.parse(savedSettings),
+        }));
       } catch {
         localStorage.removeItem(SETTINGS_STORAGE_KEY);
       }
@@ -699,7 +710,10 @@ export default function Page() {
     );
 
     return (
-      <main className="min-h-screen bg-[#0e131b] text-[#f2f3f6]">
+      <main
+        aria-labelledby="applications-heading"
+        className="min-h-screen bg-[#0e131b] text-[#f2f3f6]"
+      >
         <Sidebar
           view={view}
           setView={setView}
@@ -723,7 +737,10 @@ export default function Page() {
         />
 
         <section className="mx-auto max-w-[1120px] px-4 pb-12 pt-8 sm:px-6 lg:ml-[428px] lg:mr-12 lg:px-0">
-          <h1 className="text-5xl font-bold tracking-[-0.03em]">
+          <h1
+            id="applications-heading"
+            className="text-5xl font-bold tracking-[-0.03em]"
+          >
             {translate("applications")}
           </h1>
 
@@ -731,13 +748,23 @@ export default function Page() {
             {translate("administer")}
           </p>
 
-          <div className="mt-10 flex flex-wrap gap-3">
+          <div
+            className="mt-10 flex flex-wrap gap-3"
+            role="group"
+            aria-label={translate("filters")}
+          >
             {(
-              ["Alle", "Venter svar", "Matchet", "Avslått"] as ApplicationFilter[]
+              [
+                "Alle",
+                "Venter svar",
+                "Matchet",
+                "Avslått",
+              ] as ApplicationFilter[]
             ).map((filter) => (
               <button
                 key={filter}
                 onClick={() => setApplicationFilter(filter)}
+                aria-pressed={applicationFilter === filter}
                 className={`rounded-2xl px-6 py-3 font-semibold ${
                   applicationFilter === filter
                     ? "bg-[#a45bc0] text-white"
@@ -796,7 +823,10 @@ export default function Page() {
     }
 
     return (
-      <main className="min-h-screen bg-[#0e131b] text-[#f2f3f6]">
+      <main
+        aria-labelledby="details-heading"
+        className="min-h-screen bg-[#0e131b] text-[#f2f3f6]"
+      >
         <Sidebar
           view={view}
           setView={setView}
@@ -834,7 +864,10 @@ export default function Page() {
                 {selectedItem.initials}
               </div>
               <div>
-                <h1 className="text-3xl font-bold sm:text-4xl">
+                <h1
+                  id="details-heading"
+                  className="text-3xl font-bold sm:text-4xl"
+                >
                   {selectedItem.name}
                 </h1>
                 <p className="mt-2 text-[#91a4bd]">
@@ -992,7 +1025,10 @@ export default function Page() {
   }
   if (page === "browse") {
     return (
-      <main className="min-h-screen bg-[#0e131b] text-[#f2f3f6]">
+      <main
+        aria-labelledby="browse-heading"
+        className="min-h-screen bg-[#0e131b] text-[#f2f3f6]"
+      >
         <Sidebar
           view={view}
           setView={setView}
@@ -1016,7 +1052,10 @@ export default function Page() {
         />
 
         <section className="mx-auto max-w-[1300px] px-6 pb-20 pt-16 lg:ml-[428px] lg:mr-12 lg:px-0">
-          <h1 className="text-5xl font-bold tracking-[-0.03em]">
+          <h1
+            id="browse-heading"
+            className="text-5xl font-bold tracking-[-0.03em]"
+          >
             {view === "learner"
               ? translate("findApprenticeSpot")
               : translate("findCandidates")}
@@ -1029,8 +1068,9 @@ export default function Page() {
           </p>
 
           <div className="mt-8 flex items-center gap-3 rounded-full border border-[#303c4e] bg-[#182332] px-5 py-4">
-            <Search className="text-white" size={22} />
+            <Search aria-hidden="true" className="text-white" size={22} />
             <input
+              aria-label={translate("searchLabel")}
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               placeholder={translate("search")}
@@ -1061,6 +1101,7 @@ export default function Page() {
               <button
                 key={field}
                 onClick={() => setActiveField(field)}
+                aria-pressed={activeField === field}
                 className={`rounded-full border px-5 py-2 text-sm font-semibold ${
                   activeField === field
                     ? "border-[#a45bc0] bg-[#a45bc0] text-white"
@@ -1072,7 +1113,11 @@ export default function Page() {
             ))}
           </div>
 
-          <p className="mt-7 text-sm text-[#91a4bd]">
+          <p
+            className="mt-7 text-sm text-[#91a4bd]"
+            role="status"
+            aria-live="polite"
+          >
             {filtered.length}{" "}
             {view === "learner"
               ? translate("companies")
@@ -1083,16 +1128,7 @@ export default function Page() {
             {filtered.map((item) => (
               <article
                 key={item.name}
-                onClick={() => openDetails(item)}
-                onKeyDown={(event) => {
-                  if (event.key === "Enter" || event.key === " ") {
-                    event.preventDefault();
-                    openDetails(item);
-                  }
-                }}
-                tabIndex={0}
-                role="button"
-                className="group flex cursor-pointer items-center gap-4 rounded-2xl border border-[#303c4e] bg-[#222c3b] p-4 transition hover:-translate-y-0.5 hover:border-[#a45bc0] hover:bg-[#283548] focus:outline-none focus:ring-2 focus:ring-[#a45bc0] sm:gap-5 sm:p-5"
+                className="group flex items-center gap-4 rounded-2xl border border-[#303c4e] bg-[#222c3b] p-4 sm:gap-5 sm:p-5"
               >
                 <div
                   className={`flex size-11 shrink-0 items-center justify-center rounded-lg ${item.color} text-sm font-bold text-[#18202b]`}
@@ -1101,7 +1137,15 @@ export default function Page() {
                 </div>
 
                 <div className="min-w-0 flex-1">
-                  <h2 className="font-bold">{item.name}</h2>
+                  <h2 className="font-bold">
+                    <button
+                      type="button"
+                      onClick={() => openDetails(item)}
+                      className="text-left hover:underline focus:outline-none focus:ring-2 focus:ring-[#a45bc0]"
+                    >
+                      {item.name}
+                    </button>
+                  </h2>
                   <p className="truncate text-sm text-[#91a4bd]">{item.desc}</p>
 
                   <div className="mt-2 flex gap-2">
@@ -1136,6 +1180,7 @@ export default function Page() {
                   aria-pressed={liked.includes(item.name)}
                 >
                   <Heart
+                    aria-hidden="true"
                     size={20}
                     fill={liked.includes(item.name) ? "currentColor" : "none"}
                   />
@@ -1150,7 +1195,10 @@ export default function Page() {
 
   if (page === "history") {
     return (
-      <main className="min-h-screen bg-[#0e131b] text-[#f2f3f6]">
+      <main
+        aria-labelledby="history-heading"
+        className="min-h-screen bg-[#0e131b] text-[#f2f3f6]"
+      >
         <Sidebar
           view={view}
           setView={setView}
@@ -1174,7 +1222,10 @@ export default function Page() {
         />
 
         <section className="mx-auto max-w-[1250px] px-6 pb-20 pt-16 lg:ml-[428px] lg:mr-12 lg:px-0">
-          <h1 className="text-5xl font-bold tracking-[-0.03em]">
+          <h1
+            id="history-heading"
+            className="text-5xl font-bold tracking-[-0.03em]"
+          >
             {translate("history")}
           </h1>
 
@@ -1224,7 +1275,10 @@ export default function Page() {
           ] as const);
 
     return (
-      <main className="min-h-screen bg-[#0e131b] text-[#f2f3f6]">
+      <main
+        aria-labelledby="profile-heading"
+        className="min-h-screen bg-[#0e131b] text-[#f2f3f6]"
+      >
         <Sidebar
           view={view}
           setView={setView}
@@ -1250,7 +1304,10 @@ export default function Page() {
         <section className="mx-auto max-w-[1120px] px-6 pb-20 pt-16 lg:ml-[428px] lg:mr-12 lg:px-0">
           <p className="text-lg text-[#91a4bd]">{translate("account")}</p>
 
-          <h1 className="mt-3 text-5xl font-bold tracking-[-0.03em]">
+          <h1
+            id="profile-heading"
+            className="mt-3 text-5xl font-bold tracking-[-0.03em]"
+          >
             {view === "learner"
               ? translate("myProfile")
               : translate("companyProfile")}
@@ -1273,6 +1330,7 @@ export default function Page() {
 
                 <button
                   onClick={() => setEditingProfile(!editingProfile)}
+                  aria-pressed={editingProfile}
                   className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#a45bc0] px-5 py-3 font-semibold text-[#d8b3e4] transition hover:bg-[#a45bc0] hover:text-white"
                 >
                   <Pencil size={17} />
@@ -1299,6 +1357,8 @@ export default function Page() {
 
                     {editingProfile ? (
                       <input
+                        id={`profile-${key}`}
+                        aria-label={label}
                         value={activeProfile[key]}
                         onChange={(event) =>
                           updateActiveProfile(key, event.target.value)
@@ -1321,6 +1381,8 @@ export default function Page() {
 
                 {editingProfile ? (
                   <textarea
+                    id="profile-about"
+                    aria-label={translate("aboutMe")}
                     value={activeProfile.about}
                     onChange={(event) =>
                       updateActiveProfile("about", event.target.value)
@@ -1352,7 +1414,10 @@ export default function Page() {
 
   if (page === "settings") {
     return (
-      <main className="min-h-screen bg-[#0e131b] text-[#f2f3f6]">
+      <main
+        aria-labelledby="settings-heading"
+        className="min-h-screen bg-[#0e131b] text-[#f2f3f6]"
+      >
         <Sidebar
           view={view}
           setView={setView}
@@ -1379,7 +1444,9 @@ export default function Page() {
           <p className="text-lg text-[#91a4bd]">
             {translate("personalChoice")}
           </p>
-          <h1 className="mt-3 text-5xl font-bold">{translate("settings")}</h1>
+          <h1 id="settings-heading" className="mt-3 text-5xl font-bold">
+            {translate("settings")}
+          </h1>
           <p className="mt-3 text-lg text-[#91a4bd]">
             {translate("settingTitle")}
           </p>
@@ -1392,6 +1459,7 @@ export default function Page() {
               </p>
 
               <select
+                aria-label={translate("languageSelect")}
                 value={settings.language}
                 onChange={(event) =>
                   setSettings({
@@ -1422,6 +1490,7 @@ export default function Page() {
                   </span>
                 </span>
                 <input
+                  aria-label={translate("emailNotificationsToggle")}
                   type="checkbox"
                   checked={settings.emailNotifications}
                   onChange={(event) =>
@@ -1444,6 +1513,7 @@ export default function Page() {
                   </span>
                 </span>
                 <input
+                  aria-label={translate("profileVisibleToggle")}
                   type="checkbox"
                   checked={settings.profileVisible}
                   onChange={(event) =>
@@ -1475,7 +1545,10 @@ export default function Page() {
   }
 
   return (
-    <main className="min-h-screen bg-[#0e131b] text-[#f2f3f6]">
+    <main
+      aria-labelledby="home-heading"
+      className="min-h-screen bg-[#0e131b] text-[#f2f3f6]"
+    >
       <Sidebar
         view={view}
         setView={setView}
@@ -1502,7 +1575,10 @@ export default function Page() {
             <p className="text-[18px] text-[#8fa2bc]">
               {translate("greeting")}
             </p>
-            <h1 className="mt-7 text-6xl font-bold leading-[0.98] tracking-[-0.055em] text-[#f4f5f7] sm:text-7xl">
+            <h1
+              id="home-heading"
+              className="mt-7 text-6xl font-bold leading-[0.98] tracking-[-0.055em] text-[#f4f5f7] sm:text-7xl"
+            >
               {view === "learner" ? (
                 <>
                   {translate("velcome")}
@@ -1560,7 +1636,7 @@ export default function Page() {
             id="anbefalinger"
           >
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-xl font-bold">
+              <h2 id="recommendations-heading" className="text-xl font-bold">
                 {view === "learner"
                   ? translate("recommendedCompanies")
                   : translate("recommendedCandidates")}
@@ -1592,12 +1668,13 @@ export default function Page() {
                       }`}
                       aria-label={
                         liked.includes(active.name)
-                          ? "Fjern liker"
-                          : "Vis interesse"
+                          ? translate("removeFavorite")
+                          : translate("addFavorite")
                       }
                       onClick={() => toggleLiked(active.name)}
                     >
                       <Heart
+                        aria-hidden="true"
                         fill={
                           liked.includes(active.name) ? "currentColor" : "none"
                         }
@@ -1615,7 +1692,7 @@ export default function Page() {
                   className="flex size-14 items-center justify-center rounded-full bg-[#2d3848] text-[#9aacc3] hover:bg-[#394658]"
                   aria-label="Forrige anbefaling"
                 >
-                  <ArrowLeft size={16} />
+                  <ArrowLeft aria-hidden="true" size={16} />
                 </button>
                 <span className="text-sm text-[#71849d]">
                   {(index % list.length) + 1} {translate("of")} {list.length}
@@ -1625,11 +1702,11 @@ export default function Page() {
                   className="flex size-14 items-center justify-center rounded-full bg-[#2d3848] text-[#9aacc3] hover:bg-[#394658]"
                   aria-label="Neste anbefaling"
                 >
-                  <ArrowRight size={16} />
+                  <ArrowRight aria-hidden="true" size={16} />
                 </button>
               </div>
             </article>
-          </div>
+          </section>
         </div>
         <div className="mt-16 rounded-[22px] border border-[#2b3748] bg-[#151e2a] p-6">
           <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
